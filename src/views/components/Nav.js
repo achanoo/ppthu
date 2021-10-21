@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { Link } from 'react-router-dom'
 import { styled, alpha } from '@mui/material/styles'
 import AppBar from '@mui/material/AppBar'
 import Avatar from '@mui/material/Avatar'
@@ -23,6 +24,11 @@ import useMediaQuery from '@mui/material/useMediaQuery'
 import PcNavbar from '../layout/PcNavbar'
 import Sidebar from '../layout/Sidebar'
 
+import { useGlobalContext } from '../context/context'
+
+//profile menu
+import ProfileMenu from './../layout/profileMenu'
+
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
   borderRadius: '50px',
@@ -35,7 +41,7 @@ const Search = styled('div')(({ theme }) => ({
   color: '#000',
   [theme.breakpoints.up('sm')]: {
     marginLeft: theme.spacing(1),
-    width: 'auto',
+    width: '34ch',
   },
 }))
 
@@ -83,6 +89,11 @@ const CreatePantpoe = styled('div')(({ theme }) => ({
 export default function SearchAppBar() {
   const theme = useTheme()
   const ismatch = useMediaQuery(theme.breakpoints.up('md'))
+
+  const { user } = useGlobalContext()
+
+  const isAuthenticated = user && user.access_token
+
   return (
     <Box sx={{ flexGrow: 1 }} style={{ padding: 0 }}>
       <AppBar position='static' style={{ backgroundColor: '#fff' }}>
@@ -102,10 +113,21 @@ export default function SearchAppBar() {
               inputProps={{ 'aria-label': 'search' }}
             />
           </Search>
-          <Button style={{ color: '#000' }}>Log In</Button>
-          <CustomButton size='small' style={{ color: '#fff' }}>
-            Create a Pant Poe
-          </CustomButton>
+
+          {isAuthenticated ? (
+            <ProfileMenu />
+          ) : (
+            <>
+              <Button style={{ color: '#000' }}>Log In</Button>
+
+              <CustomButton size='small' style={{ color: '#fff' }}>
+                <Link to='/login' className='linkBtn'>
+                  Create a Pant Poe
+                </Link>
+              </CustomButton>
+            </>
+          )}
+
           {ismatch || <Sidebar />}
         </Toolbar>
       </AppBar>

@@ -1,10 +1,11 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import './index.css'
-import App from './pages/App'
+import App from './views/App'
 import CssBaseline from '@mui/material/CssBaseline'
-import { styled, createTheme, ThemeProvider } from '@material-ui/core/styles'
+import { styled, createTheme, ThemeProvider } from '@mui/material/styles'
 import reportWebVitals from './reportWebVitals'
+import { AppContextProvider } from './views/context/context'
 
 const theme1 = createTheme({
   palette: {
@@ -33,10 +34,12 @@ const theme1 = createTheme({
 // console.log(theme)
 
 ReactDOM.render(
-  <ThemeProvider theme={theme1}>
-    <CssBaseline />
-    <App />
-  </ThemeProvider>,
+  <AppContextProvider>
+    <ThemeProvider theme={theme1}>
+      <CssBaseline />
+      <App />
+    </ThemeProvider>
+  </AppContextProvider>,
   document.getElementById('root')
 )
 

@@ -6,7 +6,7 @@ import Button from '@mui/material/Button'
 import avatarlog from '../../assets/avatar1.jpeg'
 import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@mui/styles'
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos'
 
 const useStyles = makeStyles((theme) => ({

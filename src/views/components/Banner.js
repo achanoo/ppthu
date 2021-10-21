@@ -1,5 +1,5 @@
 import Box from '@mui/material/Box'
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@mui/styles'
 import banner from '../../assets/banner.png'
 
 const useStyles = makeStyles((theme) => ({
