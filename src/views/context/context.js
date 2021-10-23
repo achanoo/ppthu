@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useHistory } from 'react-router-dom'
 
 const AppContext = React.createContext()
 
@@ -9,6 +10,7 @@ const formData = {
 }
 
 const AppContextProvider = ({ children }) => {
+  let history = useHistory()
   const [bearToken, setBearToken] = useState('')
   const [user, setUser] = useState(
     JSON.parse(localStorage.getItem('user')) || {}
@@ -50,16 +52,15 @@ const AppContextProvider = ({ children }) => {
       body: JSON.stringify(googleresponse),
     })
       .then((res) => res.json())
-      .then(
-        (res) =>
-          new Promise(function () {
-            const data = res.data
-            if (data.status === 'Active') {
-              setUser(data)
-              localStorage.setItem('user', JSON.stringify(data))
-            }
-          })
-      )
+      .then((res) => {
+        console.log(res)
+        const data = res.data
+        if (data.status === 'Active') {
+          setUser(data)
+          localStorage.setItem('user', JSON.stringify(data))
+          history.push('/home')
+        }
+      })
     // store returned user somehow
   }
 
@@ -79,6 +80,7 @@ const AppContextProvider = ({ children }) => {
         if (data.status === 'Active') {
           setUser(data)
           localStorage.setItem('user', JSON.stringify(data))
+          history.push('/home')
         }
       })
       .catch((err) => console.log(err))

@@ -101,8 +101,9 @@ export default function SearchAppBar() {
           <Avatar alt='Remy Sharp' src={logo} sx={{ width: 54, height: 54 }} />
 
           {ismatch || <Grid flexGrow='1'></Grid>}
+          {isAuthenticated && <Grid flexGrow='1'></Grid>}
 
-          {ismatch && <PcNavbar />}
+          {ismatch && !isAuthenticated && <PcNavbar />}
 
           <Search style={{ display: ismatch ? '' : 'none' }}>
             <SearchIconWrapper>

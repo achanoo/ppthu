@@ -6,6 +6,7 @@ import CssBaseline from '@mui/material/CssBaseline'
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles'
 import reportWebVitals from './reportWebVitals'
 import { AppContextProvider } from './views/context/context'
+import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom'
 
 const theme1 = createTheme({
   palette: {
@@ -34,12 +35,14 @@ const theme1 = createTheme({
 // console.log(theme)
 
 ReactDOM.render(
-  <AppContextProvider>
-    <ThemeProvider theme={theme1}>
-      <CssBaseline />
-      <App />
-    </ThemeProvider>
-  </AppContextProvider>,
+  <Router>
+    <AppContextProvider>
+      <ThemeProvider theme={theme1}>
+        <CssBaseline />
+        <App />
+      </ThemeProvider>
+    </AppContextProvider>
+  </Router>,
   document.getElementById('root')
 )
 

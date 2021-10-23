@@ -17,4 +17,7 @@ export const CustomButton = styled('button')(({ theme }) => ({
   },
   boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
   textTransform: 'capitalize',
+  '&:hover': {
+    cursor: 'pointer',
+  },
 }))

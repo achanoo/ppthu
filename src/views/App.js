@@ -25,19 +25,31 @@ import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom'
 
 import AuthWrapper from './pages/AuthWrapper'
 import { useGlobalContext } from './context/context'
+import PrivateRoute from '../routes/PrivateRoute'
+import UserHome from './pages/user/Home'
+import CreatorHome from './pages/creator/home'
 
 function App() {
   const [isSelected, setSelected] = useState(false)
 
   return (
-    <Router>
+    <>
       <Nav></Nav>
       <Switch>
         <Route exact={true} path='/' component={Home} />
         <Route path='/login' component={Login} />
+
+        <PrivateRoute exact={true} path='/home'>
+          <UserHome></UserHome>
+        </PrivateRoute>
+
+        <PrivateRoute exact={true} path='/creator-home'>
+          <CreatorHome></CreatorHome>
+        </PrivateRoute>
+
         <Route path='*' component={Error} />
       </Switch>
-    </Router>
+    </>
   )
 }
 

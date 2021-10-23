@@ -13,13 +13,10 @@ const Login = () => {
   const handleSubmit = (e) => {
     e.preventDefault()
     login({ email: email, password: password, role: 2 })
-
-    history.push('/')
   }
 
   const handleGoogle = (googleData) => {
     responseGoogle(googleData)
-    history.push('/')
   }
 
   return (
