@@ -4,6 +4,7 @@ import Login from './pages/Login'
 import Error from './pages/Error'
 import Home from './pages'
 import Nav from './components/Nav'
+import Edit from './pages/Edit'
 
 import imgtwo from './../assets/inmgtwo.png'
 
@@ -24,7 +25,7 @@ import TopicCard from './layout/TopicCard'
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom'
 
 import AuthWrapper from './pages/AuthWrapper'
-import { useGlobalContext } from './context/context'
+import { useGlobalContext } from './context/AuthContext'
 import PrivateRoute from '../routes/PrivateRoute'
 import UserHome from './pages/user/Home'
 import CreatorHome from './pages/creator/home'
@@ -46,6 +47,8 @@ function App() {
         <PrivateRoute exact={true} path='/creator-home'>
           <CreatorHome></CreatorHome>
         </PrivateRoute>
+
+        <Route path='/edit' component={Edit} />
 
         <Route path='*' component={Error} />
       </Switch>

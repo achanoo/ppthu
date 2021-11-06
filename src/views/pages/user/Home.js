@@ -1,5 +1,5 @@
 import React from 'react'
-import { useGlobalContext } from './../../context/context'
+import { useGlobalContext } from './../../context/AuthContext'
 import styled from 'styled-components'
 import { useTheme } from '@mui/material/styles'
 import { makeStyles } from '@mui/styles'

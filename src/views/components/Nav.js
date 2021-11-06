@@ -24,7 +24,7 @@ import useMediaQuery from '@mui/material/useMediaQuery'
 import PcNavbar from '../layout/PcNavbar'
 import Sidebar from '../layout/Sidebar'
 
-import { useGlobalContext } from '../context/context'
+import { useGlobalContext } from '../context/AuthContext'
 
 //profile menu
 import ProfileMenu from './../layout/profileMenu'

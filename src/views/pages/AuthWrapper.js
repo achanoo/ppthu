@@ -1,7 +1,7 @@
 import React from 'react'
 
 import styled from 'styled-components'
-import { useGlobalContext } from './../context/context'
+import { useGlobalContext } from './../context/AuthContext'
 
 function AuthWrapper({ children, ...other }) {
   const { token } = useGlobalContext()

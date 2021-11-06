@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { CustomButton } from '../layout/CutomerButton'
 import { TextField, Box, Button } from '@mui/material'
 import GoogleLogin from 'react-google-login'
-import { useGlobalContext } from '../context/context'
+import { useGlobalContext } from '../context/AuthContext'
 import { useHistory } from 'react-router-dom'
 const Login = () => {
   const history = useHistory()

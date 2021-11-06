@@ -5,7 +5,7 @@ import App from './views/App'
 import CssBaseline from '@mui/material/CssBaseline'
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles'
 import reportWebVitals from './reportWebVitals'
-import { AppContextProvider } from './views/context/context'
+import { AppContextProvider } from './views/context/AuthContext'
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom'
 
 const theme1 = createTheme({

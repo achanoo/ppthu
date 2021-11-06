@@ -1,4 +1,5 @@
 import React from 'react'
+import { useHistory, Link } from 'react-router-dom'
 import { makeStyles } from '@mui/styles'
 import Grid from '@mui/material/Grid'
 import Box from '@mui/material/Box'
@@ -20,6 +21,8 @@ import PeopleIcon from '@mui/icons-material/People'
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn'
 import ListAltIcon from '@mui/icons-material/ListAlt'
 import ButtonGroup from '@mui/material/ButtonGroup'
+import { CustomButton } from './../../layout/CutomerButton'
+import DeleteIcon from '@mui/icons-material/Delete'
 const useStyles = makeStyles((theme) => ({
   sideMenu: {
     minHeight: '100vh',
@@ -41,6 +44,14 @@ const useStyles = makeStyles((theme) => ({
     transition: 'all 300ms cubic-bezier(0.19, 1, 0.22, 1) 0s',
     fontWeight: '700 !important',
   },
+  firstdiv: {
+    border: '1px solid rgb(229,227,221) !important',
+    borderRadius: '4px',
+    padding: theme.spacing(2),
+    display: 'flex',
+    justifyContent: 'space-around',
+  },
+
   iconBtn: {
     backgroundColor: 'rgb(229, 227, 221)',
     width: '2.25rem',
@@ -60,6 +71,63 @@ const useStyles = makeStyles((theme) => ({
   },
   info: {
     paddingTop: '30px',
+  },
+  activePantpoe: {
+    borderRight: '1px solid rgb(229,227,221)',
+    paddingRight: theme.spacing(2),
+  },
+  icon: {
+    paddingRight: theme.spacing(1),
+  },
+  income: {
+    paddingLeft: theme.spacing(2),
+  },
+
+  overview: {
+    '& h4,p,a': {
+      margin: 0,
+    },
+    '& h4': {
+      fontSize: '1.625rem',
+    },
+    '& p': {
+      marginBottom: theme.spacing(1),
+    },
+  },
+  boxBorder: {
+    borderRadius: '4px',
+    border: '1px solid rgb(229,227,221)',
+    padding: theme.spacing(2),
+  },
+  boxBordertwo: {
+    borderRadius: '4px',
+    border: '1px solid rgb(229,227,221)',
+    paddingTop: theme.spacing(2),
+    paddingBottom: theme.spacing(2),
+    '& h6 , div': {
+      paddingLeft: theme.spacing(2),
+      paddingRight: theme.spacing(2),
+    },
+    '& h6': {
+      paddingBottom: theme.spacing(2),
+    },
+    '& div': {
+      paddingTop: theme.spacing(1),
+      textAlign: 'center',
+    },
+  },
+  mtop: {
+    marginTop: theme.spacing(2),
+  },
+  smallTitle: {
+    fontSize: '1rem',
+    fontWeight: 700,
+    margin: 0,
+  },
+  actionIcon: {
+    '& .MuiIconButton-root ': {
+      backgroundColor: 'rgb(229,227,221)',
+    },
   },
 }))
 const CreatorHome = () => {
@@ -159,17 +227,105 @@ const CreatorHome = () => {
         <div className={classes.info}>
           <h1>Hi, aye chan oo!</h1>
         </div>
-        <Grid container>
-          <Grid item sm={8}>
-            <Typography variant='body1'>OVERVIEW</Typography>
-            <ButtonGroup variant='text' aria-label='text button group'>
-              <Button>One</Button>
-              <Button>Two</Button>
-              <Button>Three</Button>
-            </ButtonGroup>
+        <Grid container spacing={3}>
+          <Grid item sm={7}>
+            <Typography variant='subtitle1'>OVERVIEW</Typography>
+            <Box className={classes.firstdiv}>
+              <Box display='flex' className={classes.activePantpoe}>
+                <PeopleIcon className={classes.icon} fontSize='large' />
+                <Box className={classes.overview}>
+                  <h4>0</h4>
+                  <p>active pantpoes</p>
+                  <Link>View Relationship manager</Link>
+                </Box>
+              </Box>
+              {/* inconme start */}
+              <Box display='flex' className={classes.income}>
+                <MonetizationOnIcon className={classes.icon} fontSize='large' />
+                <Box className={classes.overview}>
+                  <h4>0</h4>
+                  <p>per month</p>
+                  <Link>View earnings dashboard</Link>
+                </Box>
+              </Box>
+            </Box>
+
+            {/* make post start */}
+
+            <Typography variant='subtitle1' mt={5}>
+              NEXT STEPS
+            </Typography>
+            <Box className={`${classes.boxBorder}`}>
+              <Typography variant='h6' gutterBottom component='div'>
+                Make your first post
+              </Typography>
+              <Typography variant='subtitle1' color='gray'>
+                Create at least one post for your page before you announce so
+                your fans can see what they're getting for their membership.
+              </Typography>
+              <Box
+                className={classes.actionIcon}
+                display='flex'
+                justifyContent='space-around'
+              >
+                <div>
+                  <IconButton aria-label='delete'>
+                    <DeleteIcon />
+                  </IconButton>
+                  <Typography>Text</Typography>
+                </div>
+
+                <div>
+                  <IconButton aria-label='delete'>
+                    <DeleteIcon />
+                  </IconButton>
+                  <Typography>Image</Typography>
+                </div>
+                <div>
+                  <IconButton aria-label='delete'>
+                    <DeleteIcon />
+                  </IconButton>
+                  <Typography>Video</Typography>
+                </div>
+                <div>
+                  <IconButton aria-label='delete'>
+                    <DeleteIcon />
+                  </IconButton>
+                  <Typography>Audio</Typography>
+                </div>
+                <div>
+                  <IconButton aria-label='delete'>
+                    <DeleteIcon />
+                  </IconButton>
+                  <Typography>Link</Typography>
+                </div>
+                <div>
+                  <IconButton aria-label='delete'>
+                    <DeleteIcon />
+                  </IconButton>
+                  <Typography>Poll</Typography>
+                </div>
+              </Box>
+            </Box>
           </Grid>
-          <Grid item sm={4}>
-            helo world
+          <Grid item sm={5}>
+            <Typography variant='subtitle1'>RECENT ACTIVITY</Typography>
+            <Box className={`${classes.boxBorder}`}>
+              <h6 className={classes.smallTitle}>
+                No unread messages from patrons
+              </h6>
+              <Link>View Messages</Link>
+            </Box>
+            <Box className={`${classes.boxBordertwo} ${classes.mtop}`}>
+              <h6 className={classes.smallTitle}>RECENT POSTS</h6>
+              <Divider />
+              <div>
+                <Typography variant='subtitle1' color='gray'>
+                  You haven't posted anything yet
+                </Typography>
+                <CustomButton>Make a post</CustomButton>
+              </div>
+            </Box>
           </Grid>
         </Grid>
       </Grid>
