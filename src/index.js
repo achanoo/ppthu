@@ -1,12 +1,11 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import './index.css'
-import App from './views/App'
+import App from './App'
+import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom'
 import CssBaseline from '@mui/material/CssBaseline'
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles'
-import reportWebVitals from './reportWebVitals'
-import { AppContextProvider } from './views/context/AuthContext'
-import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom'
+import { AuthProvider } from './context/AuthContext'
 
 const theme1 = createTheme({
   palette: {
@@ -32,21 +31,13 @@ const theme1 = createTheme({
   // },
 })
 
-// console.log(theme)
-
 ReactDOM.render(
   <Router>
-    <AppContextProvider>
+    <AuthProvider>
       <ThemeProvider theme={theme1}>
-        <CssBaseline />
         <App />
       </ThemeProvider>
-    </AppContextProvider>
+    </AuthProvider>
   </Router>,
   document.getElementById('root')
 )
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals()
