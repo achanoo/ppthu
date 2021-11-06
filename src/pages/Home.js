@@ -111,7 +111,7 @@ const Home = () => {
                 What's PantPoe?
               </Typography>
               <Typography variant='body2' className={classes.blogcontent}>
-                On PantPoe ,you cna let your fans become active participants in
+                On PantPoe ,you can let your fans become active participants in
                 the work they love by offering them a monthly membership. You
                 give them access to exculsive content, community, and insight
                 inot your creative process.In exchange,you get the freedom to do

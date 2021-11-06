@@ -11,3 +11,40 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.my-facebook-button-class{
+  color:yellow;
+  background: rgb(51,149,255);
+  background:
+    linear-gradient(0deg, rgba(51,149,255,1) 0%, rgba(3,224,255,1) 100%);
+  borderRadius: 50px;
+  border: 0;
+  color: white;
+  height: 48;
+  padding: 0 30px;
+}
+
+
+.form-control {
+  background-color: #fff !important;
+  color: #333;
+  height: 55px !important;
+  width: 100% !important;
+}
+.react-tel-input {
+  margin: 30px auto !important;
+}
+
+.flag-dropdown {
+  background-color: #fff !important;
+}
+
+
+.textCenter{
+  text-align: center;
+}
+
+.FaintBox{
+  border:1px solid rgb(229,227,221);
+  border-radius: 4px;
+}

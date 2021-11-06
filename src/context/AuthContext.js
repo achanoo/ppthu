@@ -22,6 +22,7 @@ const AuthProvider = ({ children }) => {
   useEffect(() => {
     dispatch({ type: 'IS_AUTHENTICATED' })
   }, [])
+
   const loginbyAccount = async (formdata) => {
     //console.log(formdata)
     try {
@@ -51,8 +52,33 @@ const AuthProvider = ({ children }) => {
     // window.location.reload()
   }
 
+  const loginByPovider = async (data) => {
+    const formData = data
+
+    try {
+      const response = await axios({
+        method: 'post',
+        url: `${BaseUrl}/auth/google`,
+        data: formData,
+      })
+      const data = response.data.data
+      //console.log(data)
+      if (data.status === 'Active') {
+        localStorage.setItem('token', JSON.stringify(data.access_token))
+        localStorage.setItem('user', JSON.stringify(data))
+        dispatch({ type: 'LOGIN_SUCCESS', payload: data })
+        history.push('/Edit')
+      }
+    } catch (error) {
+      //dispatch({ type: GET_PRODUCTS_ERROR })
+      console.log('there is  error!')
+    }
+  }
+
   return (
-    <AuthContext.Provider value={{ ...state, loginbyAccount, logout }}>
+    <AuthContext.Provider
+      value={{ ...state, loginbyAccount, loginByPovider, logout }}
+    >
       {children}
     </AuthContext.Provider>
   )

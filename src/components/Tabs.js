@@ -68,9 +68,9 @@ export default function BasicTabs() {
               style={{ fontVariant: 'normal' }}
             />
             <Tab label='Tiers' {...a11yProps(1)} />
-            <Tab label='Getting Paid' {...a11yProps(2)} />
+            {/* <Tab label='Getting Paid' {...a11yProps(2)} />
             <Tab label='Page Settings' {...a11yProps(3)} />
-            <Tab label='Preview' {...a11yProps(4)} />
+            <Tab label='Preview' {...a11yProps(4)} /> */}
           </Tabs>
         </Box>
 
@@ -80,12 +80,12 @@ export default function BasicTabs() {
         <TabPanel value={value} index={1}>
           <Tiers />
         </TabPanel>
-        <TabPanel value={value} index={2}>
+        {/* <TabPanel value={value} index={2}>
           <GettingPaid />
         </TabPanel>
         <TabPanel value={value} index={3}>
           <PageSetting />
-        </TabPanel>
+        </TabPanel> */}
       </Box>
     </Toolbar>
   )

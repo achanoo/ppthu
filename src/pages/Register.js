@@ -1,17 +1,39 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import styled from 'styled-components'
-import { CustomButton } from './../layout/CutomerButton'
-import { TextField, Box } from '@mui/material'
+import { CButton } from '../layout/CCButton'
 
-const Login = () => {
+import {
+  TextField,
+  Box,
+  Button,
+  Fade,
+  Backdrop,
+  Typography,
+} from '@mui/material'
+import GoogleLogin from 'react-google-login'
+import facebookLogo from './../assets/logos/icons8-facebook.svg'
+import FacebookLogin from './Facebook'
+import Google from './Google'
+import Modal from '@mui/material/Modal'
+
+import { useHistory } from 'react-router-dom'
+import { useAuthContext } from '../context/AuthContext'
+import axios from 'axios'
+
+import 'react-phone-input-2/lib/style.css'
+
+const Register = () => {
+  // console.log(getCountryCallingCode('MM'))
+
   return (
     <Wrapper>
       <div>
         <h2>Sign Up</h2>
         <div className='container'>
-          <div className='btn'>Sign up with Google</div>
-          <div className='btn'>Sign up with Facebook</div>
+          <Google />
 
+          <FacebookLogin />
           <div className='line'>
             <div className='liner'></div>
             <div className='linerSec'>
@@ -20,40 +42,54 @@ const Login = () => {
             <div className='liner'></div>
           </div>
 
-          <form action=''>
-            <Box className='form-control'>
-              <label htmlFor=''>Name</label>
+          <form>
+            <Box className='cus-form-control'>
+              <label htmlFor='name'>Name</label>
               <TextField
-                id='outlined-basic'
+                id='name'
+                type='text'
                 className='input-field'
                 fullWidth
               />
             </Box>
 
-            <Box className='form-control'>
-              <label htmlFor=''>Name</label>
+            <Box className='cus-form-control'>
+              <label htmlFor='email'>Email</label>
               <TextField
-                id='outlined-basic'
+                id='email'
+                type='email'
                 className='input-field'
                 fullWidth
               />
             </Box>
-            <Box className='form-control'>
-              <label htmlFor=''>Name</label>
+
+            <Box className='cus-form-control'>
+              <label htmlFor='password'>Password</label>
               <TextField
-                id='outlined-basic'
+                id='password'
+                type='password'
                 className='input-field'
                 fullWidth
               />
             </Box>
-            <Box className='form-control'>
-              <label htmlFor=''>Name</label>
+
+            <Box className='cus-form-control'>
+              <label htmlFor='confirmPassword'>Confirm Password</label>
               <TextField
-                id='outlined-basic'
+                id='confirmPassword'
+                type='password'
                 className='input-field'
                 fullWidth
               />
             </Box>
+
+            <Button type='submit' className='btn btn-filled'>
+              Sign Up
+            </Button>
+            <p style={{ textAlign: 'center' }}>
+              By signing up, you agree to Patreon's Terms of Use, Privacy Policy
+              and Cookie Policy.
+            </p>
           </form>
         </div>
       </div>
@@ -66,19 +102,14 @@ const Wrapper = styled.section`
   place-items: center;
   .container {
     width: 90vw;
-    max-width: 600px;
-    text-align: center;
+    max-width: 500px;
     border: 1px solid rgb(229, 227, 221);
     border-radius: 4px;
-    min-height: 600px;
-    padding: 20px;
+    height: auto;
+    padding: 30px 20px;
   }
-  img {
-    margin-bottom: 2rem;
-  }
-  h2 {
-    margin-bottom: 1.5rem;
-    text-align: center;
+  .hideDiv {
+    display: none;
   }
   .btn {
     display: flex;
@@ -92,6 +123,20 @@ const Wrapper = styled.section`
     padding: 0px 30px;
     text-transform: capitalize;
     margin: 6px 0px;
+    width: 100%;
+  }
+  .btn-filled {
+    background: rgb(245, 244, 242);
+    color: #333333bd;
+    border: 0px;
+  }
+
+  img {
+    margin-bottom: 2rem;
+  }
+  h2 {
+    margin-bottom: 1.5rem;
+    text-align: center;
   }
   .line {
     -webkit-box-align: center;
@@ -129,15 +174,17 @@ const Wrapper = styled.section`
     font-size: 1rem !important;
     line-height: 1.5 !important;
   }
-  .form-control {
+
+  .cus-form-control {
     text-align: start;
+    padding: 10px 0px;
   }
-  .form-control label {
+  .cus-form-control label {
     color: #333333bd;
   }
-  .form-control .input-field {
+  .cus-form-control .input-field {
     margin: 0.5rem 0px;
     background: rgb(245, 244, 242);
   }
 `
-export default Login
+export default Register
