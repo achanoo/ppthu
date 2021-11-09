@@ -7,7 +7,7 @@ import Home from './Home'
 import PhoneSignUp from './phoneAuth/Signup'
 
 import UserHome from './user/Home'
-import CreatorHome from './creator/Home'
+import CreatorHome from './creator/home'
 
 import PostCreate from './post/Create'
 
