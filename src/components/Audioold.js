@@ -9,6 +9,7 @@ import { FaPlay } from 'react-icons/fa'
 import { FaPause } from 'react-icons/fa'
 import { FaBackward } from 'react-icons/fa'
 import { FaForward } from 'react-icons/fa'
+import 
 export const Audio = () => {
   // useReference
   const audioPlayer = useRef() //for our audio
