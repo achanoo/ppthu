@@ -1,20 +1,23 @@
-import React from 'react'
 import { Route, Redirect } from 'react-router-dom'
 
-const PrivateRoute = ({ children, ...others }) => {
-  //const { user } = useGlobalContext()
-  //const isAuthenticated = user && //user.access_token
-
+function PrivateRoute({ children, isAuthenticated, ...rest }) {
   return (
     <Route
-      {...others}
-
-      // render={() => {
-      //   return isAuthenticated ? children : <Redirect to='/login' />
-      // }}
-    >
-      {children}
-    </Route>
+      {...rest}
+      render={({ location }) =>
+        isAuthenticated ? (
+          children
+        ) : (
+          <Redirect
+            to={{
+              pathname: '/login',
+              state: { from: location },
+            }}
+          />
+        )
+      }
+    />
   )
 }
+
 export default PrivateRoute

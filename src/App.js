@@ -1,6 +1,5 @@
 import React from 'react'
-import { NavBar } from './components'
-
+import { NavBar, ImageGrid } from './components'
 import {
   Home,
   Footer,
@@ -22,6 +21,9 @@ import {
   useHistory,
 } from 'react-router-dom'
 
+import { PostProvider } from './context/PostContext'
+import { RouterRounded } from '@mui/icons-material'
+
 function App() {
   return (
     <>
@@ -36,17 +38,21 @@ function App() {
         <Route path='/register/phone' component={PhoneSignUp} />
         <Route path='/edit' component={Edit} />
 
-        <PrivateRoute exact={true} path='/home'>
-          <UserHome></UserHome>
-        </PrivateRoute>
+        <Route path='/home'>
+          <UserHome />
+        </Route>
 
-        <PrivateRoute exact={true} path='/creator-home'>
-          <CreatorHome></CreatorHome>
-        </PrivateRoute>
+        <Route path='/creator-home'>
+          <CreatorHome />
+        </Route>
 
-        <PrivateRoute exact={true} path='/create-post'>
-          <PostCreate></PostCreate>
-        </PrivateRoute>
+        <Route path='/gi'>
+          <ImageGrid />
+        </Route>
+
+        <PostProvider>
+          <Route path='/post-create' component={PostCreate} />
+        </PostProvider>
 
         <Route path='*' component={Error} />
       </Switch>

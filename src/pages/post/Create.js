@@ -1,142 +1,284 @@
-import React from 'react'
-import { Grid, Box } from '@mui/material'
+import React, { useState } from 'react'
+import { Grid, Box, Typography, TextField, Divider } from '@mui/material'
+import Radio from '@mui/material/Radio'
+import RadioGroup from '@mui/material/RadioGroup'
+import FormControlLabel from '@mui/material/FormControlLabel'
+import FormControl from '@mui/material/FormControl'
+import FormLabel from '@mui/material/FormLabel'
+
+import FormGroup from '@mui/material/FormGroup'
+import FormHelperText from '@mui/material/FormHelperText'
+
+import Checkbox from '@mui/material/Checkbox'
 import { makeStyles } from '@mui/styles'
 import ImageList from '@mui/material/ImageList'
 import ImageListItem from '@mui/material/ImageListItem'
-
-function srcset(image, size, rows = 1, cols = 1) {
-  return {
-    src: `${image}?w=${size * cols}&h=${size * rows}&fit=crop&auto=format`,
-    srcSet: `${image}?w=${size * cols}&h=${
-      size * rows
-    }&fit=crop&auto=format&dpr=2 2x`,
-  }
-}
+import CloseIcon from '@mui/icons-material/Close'
+import { itemData } from './../../assets/data'
+import OptionTabs from './CreatePostTab'
+import { usePostContext } from './../../context/PostContext'
+import { Audio } from '../../components/Audio'
+import Gridview from './../../components/Gridview'
+import { CButton } from '../../layout/CCButton'
 const useStyles = makeStyles((theme) => ({
   container: {
     marginTop: '10vh',
     width: '100%',
-    maxHeight: '100vh',
     [theme.breakpoints.down('md')]: {
       padding: '8px',
     },
   },
   item: {
-    padding: '8px 14px !important',
+    padding: '19px 0px !important',
   },
   PostCreateDiv: {
     width: '100%',
   },
+  TitleTab: {
+    borderBottom: '1px solid rgb(229,227,221)',
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    flexWrap: 'wrap',
+    padding: '0px 14px 8px 14px',
+  },
+
   title: {
     color: 'rgb(36, 30, 18)',
     fontWeight: '700 !important',
     fontSize: '0.875rem !important',
+    textTransform: 'uppercase',
+  },
+  postTitle: {
+    margin: '20px 0',
+    appearance: 'none',
+    background: 'none',
+    width: '100%',
+    border: 'none',
+    resize: 'none',
+    fontWeight: 'bold',
+    fontSize: ' 1.625rem !important',
+  },
+  postDiv: {
+    border: 'none',
+    width: '100%',
+    cursor: 'text',
+    height: '100px',
+    resize: 'none',
+    overflow: 'hidden',
+    overflowY: 'auto',
+    '&:focus': {
+      height: '200px',
+      resize: 'none',
+      overflow: 'hidden',
+      overflowY: 'auto',
+    },
+  },
+  optionDiv: {
+    marginTop: theme.spacing(1),
+    paddingLeft: theme.spacing(2.5),
+    paddingRight: theme.spacing(2.5),
+    display: 'grid',
+  },
+  SubTitle: {
+    fontWeight: '800px',
+    textTransform: 'uppercase',
+    marginBottom: 0,
+  },
+  divider: {
+    border: '1px solid rbg(201,201,200)',
+    margin: '16px 0px',
   },
 }))
 const PostCreate = () => {
+  // for checkbox
+  const [state, setState] = React.useState({
+    gilad: true,
+    jason: false,
+    antoine: false,
+  })
+
+  const handleChangecheck = (event) => {
+    setState({
+      ...state,
+      [event.target.name]: event.target.checked,
+    })
+  }
+
+  const { gilad, jason, antoine } = state
+  const error = [gilad, jason, antoine].filter((v) => v).length !== 2
+  // end
+
+  const {
+    isImageSelected,
+    imageData,
+    isVideoSelected,
+    video,
+    isAudioSelected,
+    audio,
+  } = usePostContext()
+
   const classes = useStyles()
-  const itemData = [
-    {
-      img: 'https://images.unsplash.com/photo-1551963831-b3b1ca40c98e',
-      title: 'Breakfast',
-      rows: 2,
-      cols: 2,
-    },
-    {
-      img: 'https://images.unsplash.com/photo-1551782450-a2132b4ba21d',
-      title: 'Burger',
-    },
-    {
-      img: 'https://images.unsplash.com/photo-1522770179533-24471fcdba45',
-      title: 'Camera',
-    },
-    {
-      img: 'https://images.unsplash.com/photo-1444418776041-9c7e33cc5a9c',
-      title: 'Coffee',
-      cols: 2,
-    },
-    {
-      img: 'https://images.unsplash.com/photo-1533827432537-70133748f5c8',
-      title: 'Hats',
-      cols: 2,
-    },
-    {
-      img: 'https://images.unsplash.com/photo-1558642452-9d2a7deb7f62',
-      title: 'Honey',
-      author: '@arwinneil',
-      rows: 2,
-      cols: 2,
-    },
-    {
-      img: 'https://images.unsplash.com/photo-1516802273409-68526ee1bdd6',
-      title: 'Basketball',
-    },
-    {
-      img: 'https://images.unsplash.com/photo-1518756131217-31eb79b20e8f',
-      title: 'Fern',
-    },
-    {
-      img: 'https://images.unsplash.com/photo-1597645587822-e99fa5d45d25',
-      title: 'Mushrooms',
-      rows: 2,
-      cols: 2,
-    },
-    {
-      img: 'https://images.unsplash.com/photo-1567306301408-9b74779a11af',
-      title: 'Tomato basil',
-    },
-    {
-      img: 'https://images.unsplash.com/photo-1471357674240-e1a485acb3e1',
-      title: 'Sea star',
-    },
-    {
-      img: 'https://images.unsplash.com/photo-1589118949245-7d38baf380d6',
-      title: 'Bike',
-      cols: 2,
-    },
-  ]
+  const [title, setTitle] = useState('')
+  const [post, setPost] = useState('')
+
+  const handlePost = (data) => {
+    //console.log(post)
+    setPost(post)
+  }
+
+  const CancelPostHandling = () => {
+    console.log('posting is cancel and reach home!')
+  }
+
+  const ChangefileHandler = (e) => {
+    console.log(e.target.files)
+    // setFiles(e.target.files[0]);
+  }
+
   return (
     <>
       <Grid container className={classes.container}>
         <Grid item xs={12} sm={12} md={2}></Grid>
-        <Grid item xs={12} sm={12} md={7}>
+        <Grid item xs={12} sm={12} md={8}>
           <Grid container spacing={{ xs: 0, sm: 0, md: 2 }}>
             <Grid
               item
               xs={12}
               sm={12}
-              md={10}
+              md={8}
               className={` ${classes.item} FaintBox ${classes.PostCreateDiv}`}
             >
               {/* post creating start */}
               <Box className={classes.TitleTab}>
-                <span className={classes.title}>Create Post</span>
-                <ImageList
-                  sx={{ width: 500, height: 450 }}
-                  variant='quilted'
-                  cols={4}
-                  rowHeight={121}
+                <Typography
+                  variant='subtitle1'
+                  component='div'
+                  className={classes.title}
                 >
-                  {itemData.map((item) => (
-                    <ImageListItem
-                      key={item.img}
-                      cols={item.cols || 1}
-                      rows={item.rows || 1}
-                      onClick={(e) => console.log(e.target)}
-                    >
-                      <img
-                        {...srcset(item.img, 121, item.rows, item.cols)}
-                        alt={item.title}
-                        loading='lazy'
-                      />
-                    </ImageListItem>
-                  ))}
-                </ImageList>
+                  Create Post
+                </Typography>
+                <CloseIcon onClick={CancelPostHandling} />
+              </Box>
+              {/* Post title */}
+              <Box style={{ padding: '8px' }}>
+                <input
+                  type='text'
+                  className={classes.postTitle}
+                  name='postTitle'
+                  value={title}
+                  placeholder='Post title(required)'
+                  onChange={(e) => setTitle(e.target.value)}
+                />
+
+                <textarea
+                  className={classes.postDiv}
+                  placeholder="what's on your mind"
+                  onChange={(e) => handlePost(e.target.value)}
+                ></textarea>
+
+                {/* preview start here */}
+                <Box>
+                  {isImageSelected && <Gridview images={imageData} />}
+
+                  {isVideoSelected && (
+                    <video
+                      src={video}
+                      style={{ width: '100%', height: 'auto' }}
+                      controls
+                    ></video>
+                  )}
+
+                  <Box style={{ display: 'flex', justifyContent: 'center' }}>
+                    <Audio />
+                  </Box>
+                  {isAudioSelected && <audio src={audio} controls autoPlay />}
+                </Box>
+                {/* preview start here */}
+                <OptionTabs />
               </Box>
               {/* post creating end */}
             </Grid>
-            <Grid item xs={12} sm={12} md={2}>
-              Fileter div
+            <Grid item xs={12} sm={12} md={4}>
+              <CButton fullWidth>Publish Now</CButton>
+              <Box className={`${classes.optionDiv} FaintBox`}>
+                {/* who can see first */}
+                <h4 variant='h6' className={classes.SubTitle}>
+                  Who can see first?
+                </h4>
+                <FormControl component='fieldset'>
+                  <RadioGroup
+                    aria-label='gender'
+                    defaultValue='female'
+                    name='radio-buttons-group'
+                  >
+                    <FormControlLabel
+                      value='public'
+                      control={<Radio />}
+                      label='public'
+                    />
+                    <FormControlLabel
+                      value='pantpoethuonly'
+                      control={<Radio />}
+                      label='pantpoethu only'
+                    />
+                    <FormControlLabel
+                      value='tierChoices'
+                      control={<Radio />}
+                      label='Select Tier'
+                    />
+                  </RadioGroup>
+                </FormControl>
+                <Divider className={classes.divider} />
+
+                {/* Select tier access*/}
+                <h4 variant='h6' className={classes.SubTitle}>
+                  Select which tiers have access
+                </h4>
+                <FormControl
+                  sx={{ m: 3 }}
+                  component='fieldset'
+                  variant='standard'
+                >
+                  {/* <FormLabel component='legend'>
+                    Assign responsibility
+                  </FormLabel> */}
+                  <FormGroup>
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={gilad}
+                          onChange={handleChangecheck}
+                          name='gilad'
+                        />
+                      }
+                      label='Gilad Gray'
+                    />
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={jason}
+                          onChange={handleChangecheck}
+                          name='jason'
+                        />
+                      }
+                      label='Jason Killian'
+                    />
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={antoine}
+                          onChange={handleChangecheck}
+                          name='antoine'
+                        />
+                      }
+                      label='Antoine Llorca'
+                    />
+                  </FormGroup>
+                  <FormHelperText>Be careful</FormHelperText>
+                </FormControl>
+                <Divider className={classes.divider} />
+              </Box>
             </Grid>
           </Grid>
         </Grid>

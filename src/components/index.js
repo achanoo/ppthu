@@ -10,6 +10,7 @@ import Sidebar from './Sidebar'
 import TabContent from './TabContent'
 import Tabs from './Tabs'
 import Tiers from './Tiers'
+import ImageGrid from './ImageGrid'
 
 export {
   Banner,
@@ -24,4 +25,5 @@ export {
   TabContent,
   Tabs,
   Tiers,
+  ImageGrid,
 }
