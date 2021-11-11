@@ -275,7 +275,7 @@ const PostCreate = () => {
                       label='Antoine Llorca'
                     />
                   </FormGroup>
-                  <FormHelperText>Be careful</FormHelperText>
+                  <FormHelperText>Be careful of what</FormHelperText>
                 </FormControl>
                 <Divider className={classes.divider} />
               </Box>
