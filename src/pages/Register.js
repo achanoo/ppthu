@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 import { CButton } from '../layout/CCButton'
 
@@ -17,14 +17,77 @@ import FacebookLogin from './Facebook'
 import Google from './Google'
 import Modal from '@mui/material/Modal'
 
-import { useHistory } from 'react-router-dom'
 import { useAuthContext } from '../context/AuthContext'
 import axios from 'axios'
 
 import 'react-phone-input-2/lib/style.css'
 
 const Register = () => {
+  const { registerByaccount } = useAuthContext()
+  const [state, setState] = useState({
+    name: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+    isError: {
+      email: '',
+      password: '',
+      confirmPassword: '',
+    },
+  })
+  const history = useHistory()
   // console.log(getCountryCallingCode('MM'))
+
+  const formValChange = (e) => {
+    const { name, value } = e.target
+    const regExp = RegExp(/^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/)
+
+    const { isError, email, name: ename, password, confirmPassword } = state
+
+    if (name === 'email') {
+      isError.email = regExp.test(value) ? '' : 'Email address is invalid!'
+    }
+
+    if (name === 'password') {
+      if (confirmPassword.length > 0) {
+        isError.confirmPassword =
+          value == confirmPassword ? '' : 'ConfirmPassword is not match!'
+      } else {
+        isError.password =
+          value.length < 8 ? '"Atleast 6 characaters required"' : ''
+      }
+    }
+
+    if (name === 'confirmPassword') {
+      isError.confirmPassword =
+        value == password ? '' : 'ConfirmPassword is not match!'
+    }
+
+    setState({
+      ...state,
+      isError,
+      [name]: value,
+    })
+  }
+
+  const handleSubmitForm = (e) => {
+    e.preventDefault()
+    const formdata = {
+      name: state.name,
+      email: state.email,
+      password: state.password,
+      password_confirmation: state.confirmPassword,
+      dob: '',
+      categories: '[2]',
+      role_id: '2',
+    }
+    //console.log(formdata)
+    registerByaccount(formdata)
+  }
+
+  const RegisterByPhone = () => {
+    history.push('/register/phone')
+  }
 
   return (
     <Wrapper>
@@ -34,6 +97,15 @@ const Register = () => {
           <Google />
 
           <FacebookLogin />
+
+          <Button
+            onClick={RegisterByPhone}
+            fullWidth
+            className='btn btn-facebook'
+          >
+            continue with phone number
+          </Button>
+
           <div className='line'>
             <div className='liner'></div>
             <div className='linerSec'>
@@ -42,14 +114,17 @@ const Register = () => {
             <div className='liner'></div>
           </div>
 
-          <form>
+          <form onSubmit={handleSubmitForm}>
             <Box className='cus-form-control'>
               <label htmlFor='name'>Name</label>
               <TextField
                 id='name'
                 type='text'
+                name='name'
                 className='input-field'
                 fullWidth
+                onChange={formValChange}
+                variant='outlined'
               />
             </Box>
 
@@ -58,8 +133,15 @@ const Register = () => {
               <TextField
                 id='email'
                 type='email'
+                error={state.isError.email.length > 0 ? true : false}
+                name='email'
                 className='input-field'
                 fullWidth
+                helperText={
+                  state.isError.email.length > 0 ? state.isError.email : ''
+                }
+                onChange={formValChange}
+                variant='outlined'
               />
             </Box>
 
@@ -68,18 +150,36 @@ const Register = () => {
               <TextField
                 id='password'
                 type='password'
+                error={state.isError.password.length > 0 ? true : false}
+                name='password'
                 className='input-field'
                 fullWidth
+                helperText={
+                  state.isError.password.length > 0
+                    ? state.isError.password
+                    : ''
+                }
+                onChange={formValChange}
+                variant='outlined'
               />
             </Box>
 
             <Box className='cus-form-control'>
               <label htmlFor='confirmPassword'>Confirm Password</label>
               <TextField
+                error={state.isError.confirmPassword.length > 0 ? true : false}
                 id='confirmPassword'
                 type='password'
+                name='confirmPassword'
                 className='input-field'
                 fullWidth
+                helperText={
+                  state.isError.confirmPassword.length > 0
+                    ? state.isError.confirmPassword
+                    : ''
+                }
+                onChange={formValChange}
+                variant='outlined'
               />
             </Box>
 

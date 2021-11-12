@@ -33,7 +33,7 @@ export default function AccountMenu() {
       <Tooltip title='Account settings'>
         <IconButton onClick={handleClick} size='small' sx={{ ml: 2 }}>
           <Avatar sx={{ width: 32, height: 32 }}>
-            {name.charAt(0).toUpperCase()}
+            {name ? name.charAt(0).toUpperCase() : 'User'}
           </Avatar>
         </IconButton>
       </Tooltip>

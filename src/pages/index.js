@@ -5,9 +5,10 @@ import Register from './Register'
 import Footer from './Footer'
 import Home from './Home'
 import PhoneSignUp from './phoneAuth/Signup'
+import PhoneLogin from './phoneAuth/Login'
 
 import UserHome from './user/Home'
-import CreatorHome from './creator/home'
+import CreatorHome from './creator/Home'
 
 import PostCreate from './post/Create'
 
@@ -19,6 +20,7 @@ export {
   Footer,
   Home,
   PhoneSignUp,
+  PhoneLogin,
   UserHome,
   CreatorHome,
   PostCreate,

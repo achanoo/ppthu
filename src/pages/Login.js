@@ -68,8 +68,7 @@ const Login = () => {
   //   loginByGoogle(data.profileObj)
   // }
   const handlePhoneDivOpen = () => {
-    console.log('he')
-    setShowMobile(true)
+    history.push('/login/phone')
   }
 
   const handleLogin = (e) => {

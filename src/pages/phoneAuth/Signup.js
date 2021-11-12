@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
+import { useHistory } from 'react-router-dom'
 //form input
 import FormControl, { useFormControl } from '@mui/material/FormControl'
 import {
@@ -21,6 +22,12 @@ import DialogContentText from '@mui/material/DialogContentText'
 import DialogTitle from '@mui/material/DialogTitle'
 //custom Button import
 import { CButton } from './../../layout/CCButton'
+import { useAuthContext } from '../../context/AuthContext'
+
+function gettingCode(phonenumber) {
+  return '902336'
+}
+
 function MyFormHelperText() {
   const { focused } = useFormControl() || {}
 
@@ -35,7 +42,13 @@ function MyFormHelperText() {
   return <FormHelperText>{helperText}</FormHelperText>
 }
 
-const CodeVerify = () => {
+const CodeVerify = (props) => {
+  const history = useHistory()
+  const { phone, smscode, nextToPasswordCreate } = props
+
+  const [code, setSMScode] = useState(smscode)
+  const [phonenum, setPhonenum] = useState(phone)
+  console.log(code)
   const [errors, setErrors] = useState({ helperText: '', error: false })
   const [verifyCode, setVerifyCode] = useState('')
   const [openVerification, setOpenVerification] = React.useState(false)
@@ -45,14 +58,30 @@ const CodeVerify = () => {
   }
 
   const handleSubmit = () => {
-    alert('helo world')
-    setOpenVerification(true)
+    if (verifyCode === code) {
+      // console.log('verify is correct')
+      nextToPasswordCreate(true)
+    }
+    //setOpenVerification(true)
   }
 
   const handleCloseVerification = () => setOpenVerification(false)
   const handleCancelVerification = () => setOpenVerification(false)
   const handleVerification = () => {
     console.log('heelo world')
+    //
+  }
+
+  const ResendingCode = (e) => {
+    e.preventDefault()
+    setOpenVerification(true)
+  }
+  const Resending = () => {
+    setSMScode(gettingCode(phone))
+    setOpenVerification(false)
+  }
+  const ChangeLogin = () => {
+    history.push('/login')
   }
   return (
     <>
@@ -62,7 +91,7 @@ const CodeVerify = () => {
           <FormControl variant='standard' error={errors.error} fullWidth>
             <label htmlFor='verifyCode' style={{ textAlign: 'start' }}>
               <Typography variant='subtitle2' gutterBottom>
-                Enter to Verify +95 9 00000000
+                Enter to Verify {phone ? phone : ' +95 9 00000000'}
               </Typography>
             </label>
             <OutlinedInput
@@ -76,8 +105,13 @@ const CodeVerify = () => {
               {errors.helperText}
             </FormHelperText>
             <a
-              href='/'
-              style={{ dispaly: 'inline-flex', alignSelf: 'flex-end' }}
+              onClick={ResendingCode}
+              style={{
+                dispaly: 'inline-flex',
+                alignSelf: 'flex-end',
+                textDecoration: 'underline',
+                color: '#0582dd',
+              }}
             >
               Didn't receive a text?
             </a>
@@ -91,8 +125,15 @@ const CodeVerify = () => {
         <DialogTitle>Didn't receive a text?</DialogTitle>
         <DialogContent>
           <div>
-            <CButton fullWidth>Resend SMS</CButton>
-            <CButton bgcolor='#eeeeee' textcolor='#0f0f0f' fullWidth>
+            <CButton fullWidth onClick={Resending}>
+              Resend SMS
+            </CButton>
+            <CButton
+              bgcolor='#eeeeee'
+              textcolor='#0f0f0f'
+              fullWidth
+              onClick={ChangeLogin}
+            >
               Use email instead
             </CButton>
           </div>
@@ -102,13 +143,53 @@ const CodeVerify = () => {
   )
 }
 
-const CreatePassword = () => {
-  const [errors, setError] = useState({
-    error: false,
-    helperText: '',
+const CreatePassword = (props) => {
+  const { registerByPhone } = useAuthContext()
+  const [state, setState] = React.useState({
+    phone: props.phone,
+    password: '',
+    confirmPassword: '',
+    isError: {
+      password: '',
+      confirmPassword: '',
+    },
   })
-  const [password, setPassword] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')
+
+  const formValueChange = (e) => {
+    const { name, value } = e.target
+    // console.log(name)
+    const { isError, password, confirmPassword } = state
+
+    if (name === 'password') {
+      if (confirmPassword.length > 0) {
+        isError.confirmPassword =
+          value == confirmPassword ? '' : 'ConfirmPassword is not match!'
+      } else {
+        isError.password =
+          value.length < 8 ? '"Atleast 6 characaters required"' : ''
+      }
+    }
+
+    if (name === 'confirmPassword') {
+      isError.confirmPassword =
+        value == password ? '' : 'ConfirmPassword is not match!'
+    }
+
+    setState({
+      ...state,
+      isError,
+      [name]: value,
+    })
+  }
+
+  const RegisterByPhone = () => {
+    const formData = {
+      phone_no: state.phone,
+      password: state.password,
+      role_id: '3',
+    }
+    registerByPhone(formData)
+  }
   return (
     <>
       <Wrapper>
@@ -118,7 +199,11 @@ const CreatePassword = () => {
             Create Your Own Password
           </Typography>
 
-          <FormControl variant='standard' error={errors.error} fullWidth>
+          <FormControl
+            variant='standard'
+            error={state.isError.password.length > 0 ? true : false}
+            fullWidth
+          >
             <label htmlFor='PhoneNumber' style={{ textAlign: 'start' }}>
               <Typography variant='subtitle2' gutterBottom>
                 Password
@@ -126,17 +211,26 @@ const CreatePassword = () => {
             </label>
             <OutlinedInput
               id='standard-adornment-amount'
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              value={state.password}
+              onChange={formValueChange}
               aria-describedby='component-error-text'
-              inputProps={{ maxLength: 10, minLength: 7, type: 'password' }}
+              inputProps={{
+                maxLength: 10,
+                minLength: 7,
+                type: 'password',
+                name: 'password',
+              }}
             />
             <FormHelperText id='component-error-text'>
-              {errors.helperText}
+              {state.isError.password.length > 0 ? state.isError.password : ''}
             </FormHelperText>
           </FormControl>
 
-          <FormControl variant='standard' error={errors.error} fullWidth>
+          <FormControl
+            variant='standard'
+            error={state.isError.confirmPassword.length > 0 ? true : false}
+            fullWidth
+          >
             <label htmlFor='confirmPassword' style={{ textAlign: 'start' }}>
               <Typography variant='subtitle2' gutterBottom>
                 Confirm Password
@@ -145,15 +239,22 @@ const CreatePassword = () => {
 
             <OutlinedInput
               id='confirmPassword'
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
+              value={state.confirmPassword}
+              onChange={formValueChange}
               aria-describedby='component-error-text'
-              inputProps={{ maxLength: 10, minLength: 7, type: 'password' }}
+              inputProps={{
+                maxLength: 10,
+                minLength: 7,
+                type: 'password',
+                name: 'confirmPassword',
+              }}
             />
             <FormHelperText id='component-error-text'>
-              {errors.helperText}
+              {state.isError.confirmPassword.length > 0
+                ? state.isError.confirmPassword
+                : ''}
             </FormHelperText>
-            <CButton>Sign Up</CButton>
+            <CButton onClick={RegisterByPhone}>Sign Up</CButton>
           </FormControl>
           <Box
             style={{ margin: '20px auto', textAlign: 'center', width: '60%' }}
@@ -172,8 +273,14 @@ const Signup = () => {
   const [phone, setPhone] = useState('')
   const [code, setCode] = useState('')
 
+  const [state, setState] = useState({
+    codeMessage: false,
+    verifyDialog: false,
+    passwordDialog: false,
+  })
+
   //message
-  const [dialogopen, setDialogOpen] = React.useState(false)
+  // const [dialogopen, setDialogOpen] = React.useState(false)
 
   const handlePhoneNumber = (e) => {
     const phone = e.target.value
@@ -204,10 +311,6 @@ const Signup = () => {
     }
   }
 
-  function gettingCode(phonenumber) {
-    return '902336'
-  }
-
   const handleClickOpenDialog = () => {
     if (phone === '') {
       return setErrors({
@@ -220,7 +323,10 @@ const Signup = () => {
     setCode(gettingCode(number))
     console.log(code)
 
-    setDialogOpen(true)
+    setState({
+      ...state,
+      codeMessage: true,
+    })
     return setErrors({
       ...errors,
       helperText: '',
@@ -230,18 +336,47 @@ const Signup = () => {
 
   const handleDialogClose = () => {
     console.log(phone)
-    setDialogOpen(false)
+    setState({
+      ...state,
+      codeMessage: false,
+    })
   }
 
-  const handleDialog = () => {
-    setDialogOpen(false)
+  const NextToVerification = () => {
+    setState({
+      ...state,
+      codeMessage: false,
+      verifyDialog: true,
+    })
+  }
+
+  const nextToPasswordCreate = (data) => {
+    if (data) {
+      setState({
+        ...state,
+        verifyDialog: false,
+        passwordDialog: true,
+      })
+    }
+  }
+
+  if (state.verifyDialog) {
+    return (
+      <CodeVerify
+        phone={phone}
+        smscode={code}
+        nextToPasswordCreate={nextToPasswordCreate}
+      />
+    )
+  }
+
+  if (state.passwordDialog) {
+    return <CreatePassword phone={phone} />
   }
 
   return (
     <>
-      <CodeVerify />
-
-      <CreatePassword />
+      {/* <CreatePassword /> */}
 
       <Wrapper>
         <h4>Sign Up</h4>
@@ -276,7 +411,7 @@ const Signup = () => {
 
       {/* dialog start */}
       <Dialog
-        open={dialogopen}
+        open={state.codeMessage}
         onClose={handleDialogClose}
         aria-labelledby='alert-dialog-title'
         aria-describedby='alert-dialog-description'
@@ -290,7 +425,7 @@ const Signup = () => {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleDialogClose}>Edit</Button>
-          <Button onClick={handleDialog} autoFocus>
+          <Button onClick={NextToVerification} autoFocus>
             OK
           </Button>
         </DialogActions>

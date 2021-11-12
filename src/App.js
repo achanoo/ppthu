@@ -7,6 +7,7 @@ import {
   Register,
   Edit,
   PhoneSignUp,
+  PhoneLogin,
   UserHome,
   CreatorHome,
   PostCreate,
@@ -32,10 +33,11 @@ function App() {
       <Switch>
         <Route exact={true} path='/' component={Home} />
 
-        <Route path='/login' component={Login} />
+        <Route exact={true} path='/login' component={Login} />
 
         <Route exact={true} path='/register' component={Register} />
         <Route path='/register/phone' component={PhoneSignUp} />
+        <Route path='/login/phone' component={PhoneLogin} />
         <Route path='/edit' component={Edit} />
 
         <Route path='/home'>
