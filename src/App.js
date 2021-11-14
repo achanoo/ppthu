@@ -22,7 +22,6 @@ import {
   useHistory,
 } from 'react-router-dom'
 
-import { PostProvider } from './context/PostContext'
 import { RouterRounded } from '@mui/icons-material'
 
 function App() {
@@ -38,6 +37,7 @@ function App() {
         <Route exact={true} path='/register' component={Register} />
         <Route path='/register/phone' component={PhoneSignUp} />
         <Route path='/login/phone' component={PhoneLogin} />
+
         <Route path='/edit' component={Edit} />
 
         <Route path='/home'>
@@ -52,9 +52,7 @@ function App() {
           <ImageGrid />
         </Route>
 
-        <PostProvider>
-          <Route path='/post-create' component={PostCreate} />
-        </PostProvider>
+        <Route path='/post-create' component={PostCreate} />
 
         <Route path='*' component={Error} />
       </Switch>

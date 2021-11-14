@@ -151,7 +151,7 @@ export default function BasicTabs(props) {
               accept='audio/*'
             />
             <CButton onClick={() => audio.current.click()}>
-              Upload photo
+              Upload audio
             </CButton>
             <span className={classes.smalltext}>
               Upload Audio(mp3/mpeg) up to 1MB here!

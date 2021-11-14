@@ -7,6 +7,9 @@ import CssBaseline from '@mui/material/CssBaseline'
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles'
 import { AuthProvider } from './context/AuthContext'
 
+import { PostProvider } from './context/PostContext'
+import { SubscriptionProvider } from './context/SubscriptionContext'
+
 const theme1 = createTheme({
   palette: {
     primary: {
@@ -34,9 +37,13 @@ const theme1 = createTheme({
 ReactDOM.render(
   <Router>
     <AuthProvider>
-      <ThemeProvider theme={theme1}>
-        <App />
-      </ThemeProvider>
+      <SubscriptionProvider>
+        <PostProvider>
+          <ThemeProvider theme={theme1}>
+            <App />
+          </ThemeProvider>
+        </PostProvider>
+      </SubscriptionProvider>
     </AuthProvider>
   </Router>,
   document.getElementById('root')

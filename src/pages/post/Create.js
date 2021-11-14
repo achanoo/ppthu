@@ -1,4 +1,7 @@
 import React, { useState } from 'react'
+import Loading from './../../components/Loading'
+import MultipleSelectCheckmarks from './../../components/CheckboxSelect'
+import SelectSubscriptions from './../../components/Subscript'
 import { Grid, Box, Typography, TextField, Divider } from '@mui/material'
 import Radio from '@mui/material/Radio'
 import RadioGroup from '@mui/material/RadioGroup'
@@ -17,6 +20,7 @@ import CloseIcon from '@mui/icons-material/Close'
 import { itemData } from './../../assets/data'
 import OptionTabs from './CreatePostTab'
 import { usePostContext } from './../../context/PostContext'
+import { useSubscriptionContext } from './../../context/SubscriptionContext'
 import { Audio } from '../../components/Audio'
 import Gridview from './../../components/Gridview'
 import { CButton } from '../../layout/CCButton'
@@ -91,7 +95,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 const PostCreate = () => {
+  const { isloading, categories } = useSubscriptionContext()
+
   // for checkbox
+  // console.log(categories)
   const [state, setState] = React.useState({
     gilad: true,
     jason: false,
@@ -134,6 +141,10 @@ const PostCreate = () => {
   const ChangefileHandler = (e) => {
     console.log(e.target.files)
     // setFiles(e.target.files[0]);
+  }
+
+  if (isloading) {
+    return <Loading />
   }
 
   return (
@@ -189,19 +200,27 @@ const PostCreate = () => {
                     ></video>
                   )}
 
-                  <Box style={{ display: 'flex', justifyContent: 'center' }}>
-                    <Audio />
-                  </Box>
-                  {isAudioSelected && <audio src={audio} controls autoPlay />}
+                  <Box
+                    style={{ display: 'flex', justifyContent: 'center' }}
+                  ></Box>
+                  {isAudioSelected && <Audio audio={audio} />}
                 </Box>
                 {/* preview start here */}
                 <OptionTabs />
               </Box>
-              {/* post creating end */}
+              {/*P post creating end */}
             </Grid>
             <Grid item xs={12} sm={12} md={4}>
               <CButton fullWidth>Publish Now</CButton>
               <Box className={`${classes.optionDiv} FaintBox`}>
+                {/* choose categrory */}
+                <h4 variant='h6' className={classes.SubTitle}>
+                  Categories
+                </h4>
+
+                <MultipleSelectCheckmarks categories={categories} />
+
+                <Divider className={classes.divider} />
                 {/* who can see first */}
                 <h4 variant='h6' className={classes.SubTitle}>
                   Who can see first?
@@ -224,6 +243,7 @@ const PostCreate = () => {
                     />
                     <FormControlLabel
                       value='tierChoices'
+                      checked={true}
                       control={<Radio />}
                       label='Select Tier'
                     />
@@ -235,48 +255,7 @@ const PostCreate = () => {
                 <h4 variant='h6' className={classes.SubTitle}>
                   Select which tiers have access
                 </h4>
-                <FormControl
-                  sx={{ m: 3 }}
-                  component='fieldset'
-                  variant='standard'
-                >
-                  {/* <FormLabel component='legend'>
-                    Assign responsibility
-                  </FormLabel> */}
-                  <FormGroup>
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          checked={gilad}
-                          onChange={handleChangecheck}
-                          name='gilad'
-                        />
-                      }
-                      label='Gilad Gray'
-                    />
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          checked={jason}
-                          onChange={handleChangecheck}
-                          name='jason'
-                        />
-                      }
-                      label='Jason Killian'
-                    />
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          checked={antoine}
-                          onChange={handleChangecheck}
-                          name='antoine'
-                        />
-                      }
-                      label='Antoine Llorca'
-                    />
-                  </FormGroup>
-                  <FormHelperText>Be careful of what</FormHelperText>
-                </FormControl>
+                <SelectSubscriptions />
                 <Divider className={classes.divider} />
               </Box>
             </Grid>

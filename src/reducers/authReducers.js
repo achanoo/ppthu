@@ -1,6 +1,6 @@
 const auth_reducers = (state, action) => {
   if (action.type === 'IS_AUTHENTICATED') {
-    if (state.token) {
+    if (state.token.length > 0) {
       return { ...state, isAuthenticated: true }
     } else {
       return { ...state, isAuthenticated: false }
