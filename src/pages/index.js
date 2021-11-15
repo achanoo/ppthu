@@ -9,6 +9,7 @@ import PhoneLogin from './phoneAuth/Login'
 
 import UserHome from './user/Home'
 import CreatorHome from './creator/Home'
+import RSManager from './creator/RSManager'
 
 import PostCreate from './post/Create'
 
@@ -24,4 +25,5 @@ export {
   UserHome,
   CreatorHome,
   PostCreate,
+  RSManager,
 }

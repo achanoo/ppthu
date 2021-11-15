@@ -12,6 +12,8 @@ import {
   CreatorHome,
   PostCreate,
 } from './pages/'
+
+import RSManager from './pages/creator/RSManager'
 import PrivateRoute from './routes/PrivateRoute'
 import './App.css'
 import {
@@ -39,6 +41,7 @@ function App() {
         <Route path='/register/phone' component={PhoneSignUp} />
         <Route path='/login/phone' component={PhoneLogin} />
         <Route path='/edit' component={Edit} />
+        <Route path='/rsmanager' component={RSManager} />
 
         <Route path='/home'>
           <UserHome />
