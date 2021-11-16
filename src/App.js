@@ -14,6 +14,8 @@ import {
 } from './pages/'
 
 import RSManager from './pages/creator/RSManager'
+import EarningsOverview from './pages/creator/EarningsOverview'
+import EarningsOverviewDetail from './pages/creator/EarningsOverviewDetail'
 import PrivateRoute from './routes/PrivateRoute'
 import './App.css'
 import {
@@ -42,6 +44,8 @@ function App() {
         <Route path='/login/phone' component={PhoneLogin} />
         <Route path='/edit' component={Edit} />
         <Route path='/rsmanager' component={RSManager} />
+        <Route path='/earnings-overview' component={EarningsOverview} />
+        <Route path='/earnings-overview-detail' component={EarningsOverviewDetail} />
 
         <Route path='/home'>
           <UserHome />

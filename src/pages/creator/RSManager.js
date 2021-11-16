@@ -14,29 +14,48 @@ import { Link } from 'react-router-dom'
 import send from '../../assets/others/sent-email.svg'
 import download from '../../assets/others/download.svg'
 import filter from '../../assets/others/filter.svg'
+import more from '../../assets/others/more.svg'
 import { visuallyHidden } from '@mui/utils';
 import PropTypes from 'prop-types';
 import gear from '../../assets/menu/gear.svg'
 import Button from '@mui/material/Button';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
+import FormGroup from '@mui/material/FormGroup';
+import TextField from '@mui/material/TextField';
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import DatePicker from '@mui/lab/DatePicker';
 
 const useStyles = makeStyles((theme) => ({
-    [theme.breakpoints.up('md')]: {
+    [theme.breakpoints.up('xl')]: {
       container: {
         margin: '25px',
+      },
+      header: {
+        margin: '10px',
+      },
+      customButtonWhite: {
+          height: '40px', margin: '8px 4px', padding: "0px 16px"
       }
     },
-    [theme.breakpoints.up('md')]: {
-        header: {
-          margin: theme.spacing(1),
-        }
+    [theme.breakpoints.down('xl')]: {
+      
+      container: {
+        margin: '10px',
       },
+      header: {
+        margin: '4px',
+      },
+      customButtonWhite: {
+          height: '36px', margin: '8px 2px', padding: "0px 10px"
+      }
+    },
     linkBtn: {
         fontSize: '12px',color: 'rgb(51,149,255)'
     },
     addition: {
-        background: '#e3e1e1',
+        background: '#f7f7f7',
         height: '90px',
         borderRadius: '4px',
         padding: '20px'
@@ -52,10 +71,7 @@ const useStyles = makeStyles((theme) => ({
         fontWeight: 'bold'
     },
     customButton: {
-        color: '#fff', height: '40px', padding: "0px 20px" 
-    },
-    customButtonWhite: {
-        height: '40px', margin: '8px 4px', padding: "0px 20px"
+        color: '#fff', height: '40px', padding: "0px 16px" 
     },
     buttonImage: {
         width: 20, height: 20, display: 'inline-flex' 
@@ -64,7 +80,9 @@ const useStyles = makeStyles((theme) => ({
         boxShadow: 'none'
     },
     tableCell: {
-        padding: '8px'
+        padding: '8px',
+        fontSize: '14px',
+        fontWeight: 'bold'
     }
   }))
   
@@ -80,9 +98,9 @@ const Search = styled('div')(({ theme }) => ({
     marginLeft: 0,
     width: '100%',
     color: '#000',
-    [theme.breakpoints.up('sm')]: {
-      marginLeft: theme.spacing(1),
-      width: '28ch',
+    [theme.breakpoints.up('md')]: {
+      // marginLeft: theme.spacing(1),
+      width: '25ch',
     },
   }))
   
@@ -105,7 +123,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
       paddingLeft: `calc(1em + ${theme.spacing(4)})`,
       transition: theme.transitions.create('width'),
       width: '100%',
-      [theme.breakpoints.up('sm')]: {
+      [theme.breakpoints.up('md')]: {
         width: '18ch',
         '&:focus': {
           width: 'autoc',
@@ -116,19 +134,19 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 //   Sample Table Start
 
-  function createData(id, date, amt, status) {
+  function createDataSimple(id, date, amt, status) {
     return { id, date, amt, status };
   }
   
-  const rows = [
-    createData(1,'2021-03-01', '$10', "Paid"),
-    createData(2,'2021-03-01', '$10', "Paid"),
-    createData(3,'2021-03-01', '$10', "Paid"),
+  const rowSamples = [
+    createDataSimple(1,'2021-03-01', '$10', "Paid"),
+    createDataSimple(2,'2021-03-01', '$10', "Paid"),
+    createDataSimple(3,'2021-03-01', '$10', "Paid"),
   ];
   //   Sample Table End
 
   // DataTable Start
-  function createDataOne(id, name, email, currentTier, lifeTime, joinDate, cancelDate, accessExpiration) {
+  function createData(id, name, email, currentTier, lifeTime, joinDate, cancelDate, accessExpiration) {
     return {
         id,
         name,
@@ -141,10 +159,10 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     };
   }
   
-  const rowOnes = [
-    createDataOne(1, 'Ma Ma', 'mama@gmail.com', 'Platinum', 'Yes', '2021-05-10', '2021-07-10', '2022-05-10'),
-    createDataOne(2, 'Ma Ma', 'mama@gmail.com', 'Platinum', 'Yes', '2021-05-10', '2021-07-10', '2022-05-10'),
-    createDataOne(3, 'Ma Ma', 'mama@gmail.com', 'Platinum', 'Yes', '2021-05-10', '2021-07-10', '2022-05-10'),
+  const rows = [
+    createData(1, 'Ma', 'mama@gmail.com', 'Platinum', 'Yes', '2021-05-10', '2021-07-10', '2022-05-10'),
+    createData(2, 'Ma Chan', 'mama@gmail.com', 'Platinum', 'Yes', '2021-05-10', '2021-07-10', '2022-05-10'),
+    createData(3, 'Ma Ei', 'mama@gmail.com', 'Platinum', 'Yes', '2021-05-10', '2021-07-10', '2022-05-10')
   ];
   
   function descendingComparator(a, b, orderBy) {
@@ -214,6 +232,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
       label: 'Acess Expiration',
     },
   ];
+
   
   function EnhancedTableHead(props) {
     const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } =
@@ -226,7 +245,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
       <TableHead>
         <TableRow>
           <TableCell padding="checkbox">
-            <CheckBox
+            <Checkbox
               color="primary"
               indeterminate={numSelected > 0 && numSelected < rowCount}
               checked={rowCount > 0 && numSelected === rowCount}
@@ -340,7 +359,7 @@ function TabPanel(props) {
     >
       {value === index && (
         <Box sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
+          {children}
         </Box>
       )}
     </div>
@@ -372,60 +391,61 @@ const RSManager = () => {
     const [page, setPage] = React.useState(0);
     const [dense, setDense] = React.useState(false);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
-
-  const handleRequestSort = (event, property) => {
-    const isAsc = orderBy === property && order === 'asc';
-    setOrder(isAsc ? 'desc' : 'asc');
-    setOrderBy(property);
-  };
-
-  const handleSelectAllClick = (event) => {
-    if (event.target.checked) {
-      const newSelecteds = rows.map((n) => n.name);
-      setSelected(newSelecteds);
-      return;
-    }
-    setSelected([]);
-  };
-
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
-    let newSelected = [];
-
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1),
-      );
-    }
-
-    setSelected(newSelected);
-  };
-
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
-
-  const handleChangeDense = (event) => {
-    setDense(event.target.checked);
-  };
-
-  const isSelected = (name) => selected.indexOf(name) !== -1;
-
-  // Avoid a layout jump when reaching the last page with empty rows.
-  const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+    
+    const handleRequestSort = (event, property) => {
+      const isAsc = orderBy === property && order === 'asc';
+      setOrder(isAsc ? 'desc' : 'asc');
+      setOrderBy(property);
+    };
+    
+    const handleSelectAllClick = (event) => {
+      if (event.target.checked) {
+        const newSelecteds = rows.map((n) => n.id);
+        setSelected(newSelecteds);
+        return;
+      }
+      setSelected([]);
+    };
+    
+    const handleClick = (event, id) => {
+      const selectedIndex = selected.indexOf(id);
+      let newSelected = [];
+    
+      if (selectedIndex === -1) {
+        newSelected = newSelected.concat(selected, id);
+      } else if (selectedIndex === 0) {
+        newSelected = newSelected.concat(selected.slice(1));
+      } else if (selectedIndex === selected.length - 1) {
+        newSelected = newSelected.concat(selected.slice(0, -1));
+      } else if (selectedIndex > 0) {
+        newSelected = newSelected.concat(
+          selected.slice(0, selectedIndex),
+          selected.slice(selectedIndex + 1),
+        );
+      }
+    
+      setSelected(newSelected);
+    };
+    
+    const handleChangePage = (event, newPage) => {
+      setPage(newPage);
+    };
+    
+    const handleChangeRowsPerPage = (event) => {
+      setRowsPerPage(parseInt(event.target.value, 10));
+      setPage(0);
+    };
+    
+    const handleChangeDense = (event) => {
+      setDense(event.target.checked);
+    };
+    
+    const isSelected = (id) => selected.indexOf(id) !== -1;
+    
+    // Avoid a layout jump when reaching the last page with empty rows.
+    const emptyRows =
+      page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+    
 // DataTable End
 
 //Drawer Start
@@ -464,9 +484,9 @@ const [state, setState] = React.useState({
       
       <Box sx={{padding: '20px'}}>
         <Grid container>
-          <Grid xs={10}>
+          <Grid item xs={10}>
           </Grid>
-          <Grid xs={2}>
+          <Grid item xs={2}>
             <Close />
           </Grid>
         </Grid>
@@ -474,41 +494,136 @@ const [state, setState] = React.useState({
       <Box sx={{ width: '100%' }}>
         <Box>
           <Tabs value={value} onChange={handleChange}  textColor="secondary" indicatorColor="secondary" aria-label="secondary tabs example" centered variant="fullWidth">
-            <Tab label="Item One" {...a11yProps(0)} />
-            <Tab label="Item Two" {...a11yProps(1)} />
+            <Tab label="All filters" {...a11yProps(0)} />
+            <Tab label="Saved filters" {...a11yProps(1)} />
           </Tabs>
         </Box>
         <TabPanel value={value} index={0}>
-          Item One
+          <Box>
+            <Grid container>
+              <Grid item xs={12} sm={12} md={12}>
+                <Typography variant='subtitle1' display="inline" className={classes.subTitle}>
+                    Status
+                </Typography>
+              </Grid>
+              <Grid item xs={12} sm={12} md={12}>
+                <FormGroup>
+                  <FormControlLabel control={<Checkbox defaultChecked />} label="Active" className={classes.subTitle}/>
+                    <FormControlLabel control={<Checkbox />} label="New" className={classes.subTitle}/>
+                    <FormControlLabel control={<Checkbox />} label="Cancelled" className={classes.subTitle}/>
+                  </FormGroup>
+              </Grid>
+            </Grid>
+          </Box>
+
+          <Divider />
+          <Box>
+            <Grid container>
+              <Grid item xs={12} sm={12} md={12}>
+                <Typography variant='subtitle1' display="inline" className={classes.subTitle}>
+                    Tiers
+                </Typography>
+              </Grid>
+              <Grid item xs={6} sm={6} md={6}>
+                <FormGroup>
+                  <FormControlLabel control={<Checkbox defaultChecked />} label="All Tiers" className={classes.subTitle}/>
+                    <FormControlLabel control={<Checkbox />} label="Bronze" className={classes.subTitle}/>
+                    <FormControlLabel control={<Checkbox />} label="Silver" className={classes.subTitle}/>
+                  </FormGroup>
+              </Grid>
+              <Grid item xs={6} sm={6} md={6}>
+                <FormGroup>
+                  <FormControlLabel control={<Checkbox defaultChecked />} label="Gold" className={classes.subTitle}/>
+                    <FormControlLabel control={<Checkbox />} label="Diamond" className={classes.subTitle}/>
+                    <FormControlLabel control={<Checkbox />} label="No Tier" className={classes.subTitle}/>
+                  </FormGroup>
+              </Grid>
+            </Grid>
+          </Box>
+          <Box>
+          <Grid container>
+            <Grid item xs={12} sm={12} md={12}>
+              <Typography variant='subtitle1' display="inline" className={classes.subTitle}>
+                  Benefits
+              </Typography>
+            </Grid>
+            <Grid item xs={12} sm={12} md={12}>
+              <Typography variant='subtitle1' display="inline" className={classes.subTitle}>
+                  All benefits to your tiers to acces the filter. <Link to="#" className={classes.linkBtn} sx={{float:'right' }}>Learn more</Link>
+              </Typography>
+            </Grid>
+          </Grid>
+          </Box>
+          <Divider />
+          <Box>
+            <Grid container>
+              <Grid item xs={12} sm={12} md={12}>
+                <Typography variant='subtitle1' display="inline" className={classes.subTitle}>
+                    Join Date
+                </Typography>
+              </Grid>
+              <Grid item xs={6} sm={6} md={6}>
+                <CustomButtonWhite size='small' className={classes.customButtonWhite}>
+                    This week
+                </CustomButtonWhite>
+              </Grid>
+              <Grid item xs={6} sm={6} md={6}>
+                <CustomButtonWhite size='small' className={classes.customButtonWhite}>
+                  Last week
+                </CustomButtonWhite>
+              </Grid>
+              <Grid item xs={6} sm={6} md={6}>
+                <CustomButtonWhite size='small' className={classes.customButtonWhite}>
+                    This month
+                </CustomButtonWhite>
+              </Grid>
+              <Grid item xs={6} sm={6} md={6}>
+                <CustomButtonWhite size='small' className={classes.customButtonWhite}>
+                  Last month
+                </CustomButtonWhite>
+              </Grid>
+              <Grid item xs={12} sm={12} md={12}>
+              <LocalizationProvider dateAdapter={AdapterDateFns}>
+                  <DatePicker
+                    label="Basic example"
+                    value={value}
+                    onChange={(newValue) => {
+                      setValue(newValue);
+                    }}
+                    renderInput={(params) => <TextField {...params} />}
+                  />
+                </LocalizationProvider>
+              </Grid>
+            </Grid>
+          </Box>
+          <Divider />
+          <Box>
+            <Grid container>
+              <Grid item xs={2} sm={2} md={2}>
+                </Grid>
+              <Grid item xs={5} sm={5} md={5}>
+                <CustomButtonWhite size='small' className={classes.customButtonWhite}>
+                  Save filters
+                </CustomButtonWhite>
+              </Grid>
+              <Grid item xs={5} sm={5} md={5}>
+                <CustomButton size='small' className={classes.customButtonWhite}>
+                    Apply filters
+                </CustomButton>
+              </Grid>
+            </Grid>
+          </Box>
         </TabPanel>
         <TabPanel value={value} index={1}>
           Item Two
         </TabPanel>
       </Box>
-      <List>
-          <ListItem button key="Inbox">
-            <ListItemIcon>
-              <MailOutline />
-            </ListItemIcon>
-            <ListItemText primary="Inbox" />
-          </ListItem>
-      </List>
       <Divider />
-      <List>
-        {['All mail', 'Trash', 'Spam'].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>
-              {index % 2 === 0 ? <InboxOutlined /> : <MailOutline />}
-            </ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItem>
-        ))}
-      </List>
     </Box>
   );
 //Drawer End
     return (
-        <Box className={classes.container} style={{margin: '25px'}}>
+        <Box className={classes.container}>
             <Grid container>
                 <Grid item xs={12} sm={12} md={12}>
                     <Box className={classes.header}>
@@ -526,10 +641,10 @@ const [state, setState] = React.useState({
                     </Box>
                 </Grid>
                 
-                <Grid item xs={9} sm={9} md={9}>
+                <Grid item xs={12} sm={12} md={9}>
                     <Box className={classes.header}>
                         <Grid container spacing={2} >
-                            <Grid item xs={6} sm={6} md={6}>
+                            <Grid item xs={12} sm={12} md={4} xl={3}>
                                 <Search>
                                     <SearchIconWrapper>
                                     <SearchIcon />
@@ -539,17 +654,25 @@ const [state, setState] = React.useState({
                                     inputProps={{ 'aria-label': 'search' }}
                                     />
                                 </Search>
-                                <CustomButton size='small' style={{margin: '6px'}}  className={classes.customButton}>
-                                    <Avatar alt='Remy Sharp' src={send} className={classes.buttonImage}/>
-                                        Message
-                                </CustomButton>
-                                <CustomButton size='small' className={classes.customButton}>
-                                    <Avatar alt='Remy Sharp' src={download} className={classes.buttonImage}/>
-                                        CSV
-                                </CustomButton>
+                              </Grid>
+                              <Grid item xs={12} sm={12} md={4} xl={3}>
+                                <Grid container>
+                                  <Grid item xs={6} sm={6} md={6} >
+                                    <CustomButton size='small' style={{margin: '6px', textAlign: 'start', width: '115px'}}  className={classes.customButton}>
+                                      <Avatar alt='Remy Sharp' src={send} className={classes.buttonImage}/>
+                                          Message
+                                    </CustomButton>
+                                  </Grid>
+                                  <Grid item xs={6} sm={6} md={6} style={{textAlign: 'end'}} >
+                                    <CustomButton size='small' style={{margin: '6px', textAlign: 'end'}}  className={classes.customButton}>
+                                      <Avatar alt='Remy Sharp' src={download} className={classes.buttonImage}/>
+                                      CSV
+                                    </CustomButton>
+                                  </Grid>
+                                </Grid>
                             </Grid>
-                            <Grid item xs={6} sm={6} md={6}  sx={{float:'right' }}>
-                                <CustomButton size='small' style={{margin: '8px 4px'}} className={classes.customButton}>
+                            <Grid item xs={12} sm={12} md={4} xl={6} sx={{float:'right' }}>
+                                <CustomButton size='small' style={{margin: '8px 2px'}} className={classes.customButton}>
                                         Acitve
                                 </CustomButton>
                                 <CustomButtonWhite size='small' className={classes.customButtonWhite}>
@@ -569,10 +692,8 @@ const [state, setState] = React.useState({
                     
                     <Box className={classes.header}>
                         <Grid container spacing={2}>
-                              <Grid item xs={11} sm={11} md={11}>
-                              </Grid>
-                            <Grid item xs={1} sm={1} md={1}>
-                                <React.Fragment key={'right'} sx={{float:'right' }}>
+                            <Grid item xs={12} sm={12} md={12} style={{textAlign: 'end'}}>
+                                <React.Fragment>
                                 <Button onClick={toggleDrawer('right', true)}>
                                     <Avatar alt='Remy Sharp' src={gear} sx={{ width: 20, height: 20, float:'right' }}/>
                                 </Button>
@@ -593,32 +714,32 @@ const [state, setState] = React.useState({
                             <Grid item xs={12} sm={12} md={12}>
                             <Box sx={{ width: '100%' }}>
                                 <Paper sx={{ width: '100%', mb: 2 }}>
-                                    <EnhancedTableToolbar numSelected={selected.length} />
-                                    <TableContainer>
+                                  <EnhancedTableToolbar numSelected={selected.length} />
+                                  <TableContainer>
                                     <Table
-                                        sx={{ minWidth: 750 }}
-                                        aria-labelledby="tableTitle"
-                                        size={dense ? 'small' : 'medium'}
+                                      sx={{ minWidth: 750 }}
+                                      aria-labelledby="tableTitle"
+                                      size={dense ? 'small' : 'medium'}
                                     >
-                                        <EnhancedTableHead
+                                      <EnhancedTableHead
                                         numSelected={selected.length}
                                         order={order}
                                         orderBy={orderBy}
                                         onSelectAllClick={handleSelectAllClick}
                                         onRequestSort={handleRequestSort}
-                                        rowCount={rowOnes.length}
-                                        />
-                                        <TableBody>
+                                        rowCount={rows.length}
+                                      />
+                                      <TableBody>
                                         {/* if you don't need to support IE11, you can replace the `stableSort` call with:
-                                            rows.slice().sort(getComparator(order, orderBy)) */}
-                                        {stableSort(rowOnes, getComparator(order, orderBy))
-                                            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                            .map((row, index) => {
+                                           rows.slice().sort(getComparator(order, orderBy)) */}
+                                        {stableSort(rows, getComparator(order, orderBy))
+                                          .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                          .map((row, index) => {
                                             const isItemSelected = isSelected(row.id);
                                             const labelId = `enhanced-table-checkbox-${index}`;
 
                                             return (
-                                                <TableRow
+                                              <TableRow
                                                 hover
                                                 onClick={(event) => handleClick(event, row.id)}
                                                 role="checkbox"
@@ -626,46 +747,47 @@ const [state, setState] = React.useState({
                                                 tabIndex={-1}
                                                 key={row.id}
                                                 selected={isItemSelected}
-                                                >
+                                              >
                                                 <TableCell padding="checkbox">
-                                                    <Checkbox
+                                                  <Checkbox
                                                     color="primary"
                                                     checked={isItemSelected}
                                                     inputProps={{
-                                                        'aria-labelledby': labelId,
+                                                      'aria-labelledby': labelId,
                                                     }}
-                                                    />
+                                                  />
                                                 </TableCell>
                                                 <TableCell
-                                                    component="th"
-                                                    id={labelId}
-                                                    scope="row"
-                                                    padding="none"
+                                                  component="th"
+                                                  id={labelId}
+                                                  scope="row"
+                                                  padding="none"
                                                 >
-                                                    {row.name}
+                                                  {row.name}
                                                 </TableCell>
-                                                <TableCell align="right">{row.email}</TableCell>
-                                                <TableCell align="right">{row.currentTier}</TableCell>
-                                                <TableCell align="right">{row.lifeTime}</TableCell>
-                                                <TableCell align="right">{row.joinDate}</TableCell>
-                                                <TableCell align="right">{row.cancelDate}</TableCell>
-                                                <TableCell align="right">{row.accessExpiration}</TableCell>
-                                                </TableRow>
+                                                <TableCell align="center">{row.email}</TableCell>
+                                                <TableCell align="center">{row.currentTier}</TableCell>
+                                                <TableCell align="center">{row.lifeTime}</TableCell>
+                                                <TableCell align="center">{row.joinDate}</TableCell>
+                                                <TableCell align="center">{row.cancelDate}</TableCell>
+                                                <TableCell align="center">{row.accessExpiration}</TableCell>
+
+                                              </TableRow>
                                             );
-                                            })}
+                                          })}
                                         {emptyRows > 0 && (
-                                            <TableRow
+                                          <TableRow
                                             style={{
-                                                height: (dense ? 33 : 53) * emptyRows,
+                                              height: (dense ? 33 : 53) * emptyRows,
                                             }}
-                                            >
+                                          >
                                             <TableCell colSpan={6} />
-                                            </TableRow>
+                                          </TableRow>
                                         )}
-                                        </TableBody>
+                                      </TableBody>
                                     </Table>
-                                    </TableContainer>
-                                    <TablePagination
+                                  </TableContainer>
+                                  <TablePagination
                                     rowsPerPageOptions={[5, 10, 25]}
                                     component="div"
                                     count={rows.length}
@@ -673,18 +795,18 @@ const [state, setState] = React.useState({
                                     page={page}
                                     onPageChange={handleChangePage}
                                     onRowsPerPageChange={handleChangeRowsPerPage}
-                                    />
+                                  />
                                 </Paper>
                                 <FormControlLabel
-                                    control={<Switch checked={dense} onChange={handleChangeDense} />}
-                                    label="Dense padding"
+                                  control={<Switch checked={dense} onChange={handleChangeDense} />}
+                                  label="Dense padding"
                                 />
-                                </Box>
+                              </Box>
                             </Grid>
                         </Grid>
                     </Box>
                 </Grid>
-                <Grid item xs={3} sm={3} md={3}>
+                <Grid item xs={12} sm={12} md={3}>
                     
                     <Box className={classes.header}>
                         <Card>
@@ -712,8 +834,8 @@ const [state, setState] = React.useState({
                                             Message
                                     </CustomButton>
                                     <CustomButton size='small' style={{ color: '#fff', height: '36px', padding: "0px 20px" }}>
-                                        <Avatar alt='Remy Sharp' src={download} sx={{ width: 20, height: 18, display: 'inline-flex' }}/>
-                                            CSV
+                                        <Avatar alt='Remy Sharp' src={more} sx={{ width: 20, height: 18, display: 'inline-flex' }}/>
+                                            More
                                     </CustomButton>
                                 </Grid>
                             </CardContent>
@@ -751,7 +873,7 @@ const [state, setState] = React.useState({
                                         </Typography>
                                     </Grid>
                                     <Grid item xs={6} sm={6} md={6} justifyContent='center' alignItems='center' textAlign="center">
-                                        <Link to="#" className={classes.linkBtn} className={classes.subTitle}>COPY</Link>
+                                        <Link to="#" className={classes.linkBtn}>COPY</Link>
                                     </Grid>
                                 </Grid>
                                 <Grid container style={{margin: '6px 0px'}}>
@@ -781,24 +903,24 @@ const [state, setState] = React.useState({
                                             <Table aria-label="simple table">
                                                 <TableHead>
                                                     <TableRow>
-                                                        <TableCell className={[classes.subTitle, classes.tableCell]}>CHARGE DATE</TableCell>
-                                                        <TableCell className={[classes.subTitle, classes.tableCell]} align="right">AMT</TableCell>
-                                                        <TableCell className={[classes.subTitle, classes.tableCell]} align="right">STATUS</TableCell>
-                                                        <TableCell className={[classes.subTitle, classes.tableCell]} align="right"></TableCell>
+                                                        <TableCell className={classes.tableCell}>CHARGE DATE</TableCell>
+                                                        <TableCell className={classes.tableCell} align="center">AMT</TableCell>
+                                                        <TableCell className={classes.tableCell} align="center">STATUS</TableCell>
+                                                        <TableCell className={classes.tableCell} align="center"></TableCell>
                                                     </TableRow>
                                                 </TableHead>
                                                 <TableBody>
-                                                {rows.map((row) => (
+                                                {rowSamples.map((row) => (
                                                     <TableRow
                                                     key={row.id}
                                                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                                     >
-                                                    <TableCell className={[classes.subTitle, classes.tableCell]} component="th" scope="row">
+                                                    <TableCell className={classes.tableCell} component="th" scope="row">
                                                         {row.date}
                                                     </TableCell>
-                                                    <TableCell className={[classes.subTitle, classes.tableCell]} align="right">{row.amt}</TableCell>
-                                                    <TableCell className={[classes.subTitle, classes.tableCell]} align="right">{row.status}</TableCell>
-                                                    <TableCell className={[classes.subTitle, classes.tableCell,]} align="right"> <Link to="#" className={classes.linkBtn}>REFUND</Link></TableCell>
+                                                    <TableCell className={classes.tableCell} align="center">{row.amt}</TableCell>
+                                                    <TableCell className={classes.tableCell} align="center">{row.status}</TableCell>
+                                                    <TableCell className={classes.tableCell} align="center"> <Link to="#" className={classes.linkBtn}>REFUND</Link></TableCell>
                                                     </TableRow>
                                                 ))}
                                                 </TableBody>
@@ -806,6 +928,16 @@ const [state, setState] = React.useState({
                                         </TableContainer>
                                     </Grid>
                                 </Grid>
+                                <Divider style={{ margin: '6px 0px' }} />
+                                <Grid container>
+                                  <Grid item xs={12} sm={12} md={12} style={{padding: '16px'}} justifyContent='center' alignItems='center'>
+                                      <Typography variant='subtitle1'>
+                                          Showing more 3 more recent bills.
+                                      </Typography>
+
+                                      <Link to="#" className={classes.linkBtn} sx={{float:'right'}}>See all payment history</Link>
+                                  </Grid>
+                              </Grid>
                             </CardContent>
                         </Card>
                     </Box>

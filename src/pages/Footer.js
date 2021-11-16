@@ -71,20 +71,20 @@ const PC = () => {
   const classes = useStyles()
   return (
     <Box>
-      <Grid container  xs={12}  sm={12} md={12}>
+      <Grid container>
         <Grid item xs={12} sm={12} md={4} lg={4} justifyContent='center' alignItems='center'>
           <Avatar alt='Remy Sharp' src={logo} sx={{width: 70, height: 70}} className={classes.center}/> 
         </Grid>
         <Grid item xs={12} sm={12} md={2} lg={2} justifyContent='center' alignItems='center'>
         </Grid>
         <Grid item xs={12} sm={12} md={6} lg={6} justifyContent='center' alignItems='center'>
-        <Typography variant='h5' className={classes.center}>
-          We succeed when you succeed
-        </Typography>
+          <Typography variant='h5' className={classes.center}>
+            We succeed when you succeed
+          </Typography>
         </Grid>
       </Grid>
       
-      <Grid container  xs={12}  sm={12} md={12}>
+      <Grid container>
         <Grid item xs={12} sm={12} md={5} lg={4} justifyContent='center' alignItems='center'  className={classes.footerBorder}>
           <Typography>
             Language: English (United States)
@@ -93,7 +93,7 @@ const PC = () => {
         <Grid item xs={12} sm={12} md={1} lg={2} justifyContent='center' alignItems='center'>
         </Grid>
         <Grid item xs={12} sm={12} md={6} lg={6} justifyContent='center' alignItems='center'>
-          <Grid container item  xs={12}  sm={12} md={12}>
+          <Grid container item>
             <Grid item sm={1} md={1} lg={1} justifyContent='center' alignItems='center'>
             </Grid>
             <Grid item sm={3} md={3} lg={3} justifyContent='center' alignItems='center'>
@@ -110,7 +110,7 @@ const PC = () => {
         </Grid>
       </Grid>
 
-      <Grid container  xs={12}  sm={12} md={12}>
+      <Grid container>
         <Grid item xs={12} sm={12} md={4} lg={4} justifyContent='center' alignItems='center'  className={classes.footerBorder}>
           <Typography>
             Myanmar (Burma)
@@ -120,7 +120,7 @@ const PC = () => {
         </Grid>
         
       
-      <Grid container sx={{ display: { md: 'none', lg: 'none', xl: 'none'}}}  xs={12}  sm={12} md={12}>
+      <Grid container sx={{ display: { md: 'none', lg: 'none', xl: 'none'}}}>
         <Grid item  sm={1} md={1} lg={1} justifyContent='center' alignItems='center'>
         </Grid>
         <Grid item sm={3} md={3} lg={3} justifyContent='center' alignItems='center'>
@@ -135,7 +135,7 @@ const PC = () => {
         </Grid>
       </Grid>
         <Grid item xs={12} sm={12} md={6} lg={6} justifyContent='center' alignItems='center'>
-          <Grid container  xs={12}  sm={12} md={12}>
+          <Grid container>
             <Grid item xs={1} sm={1} md={1} lg={1} justifyContent='center' alignItems='center'>
             </Grid>
             <Grid item xs={3} sm={3} md={3} lg={3} justifyContent='center' alignItems='center'>
@@ -161,7 +161,7 @@ const PC = () => {
         </Grid>
       </Grid>
 
-      <Grid container  xs={12}  sm={12} md={12}>
+      <Grid container>
         <Grid item xs={4} sm={4} md={4} lg={4} display='inline-flex'>
           <Avatar alt='Remy Sharp' src={twitter} className={classes.social}/> 
           <Avatar alt='Remy Sharp' src={facebook} className={classes.social}/> 
@@ -177,11 +177,11 @@ const Mobile = () => {
   const classes = useStyles()
   return (
     <Box>    
-      <Grid container  xs={12}  sm={12} md={12}>
+      <Grid container>
         <Grid item xs={12} sm={12} md={12} lg={12} justifyContent='center' alignItems='center'>
-          <Typography className={classes.center}>
+          <Box className={classes.center}>
             <Avatar alt='Remy Sharp' src={logo} sx={{width: 70, height: 70}}/> 
-          </Typography>
+          </Box>
         </Grid>
         <Grid item xs={12} sm={12} md={12} lg={12} justifyContent='center' alignItems='center'>
         </Grid>
@@ -192,7 +192,7 @@ const Mobile = () => {
         </Grid>
       </Grid>
 
-      <Grid container  xs={12}  sm={12} md={12} sx={{margin: "4px 0px"}}>
+      <Grid container sx={{margin: "4px 0px"}}>
         <Grid item xs={12} sm={12} md={12} lg={12} className={classes.center}>
         <Typography variant='h5' display='inline-flex'>
           <Avatar alt='Remy Sharp' src={twitter} className={classes.social}/> 
@@ -203,7 +203,7 @@ const Mobile = () => {
         </Grid>
       </Grid>
       
-      <Grid container  xs={12}  sm={12} md={12}>
+      <Grid container>
         <Grid item xs={12} sm={12} md={12} lg={12} justifyContent='center' alignItems='center'  className={classes.footerBorder}>
           <Typography>
             Language: English (United States)
@@ -218,7 +218,7 @@ const Mobile = () => {
         </Grid>
       </Grid>
       
-      <Grid container  xs={12}  sm={12} md={12} sx={{margin: '14px 0px'}}>
+      <Grid container sx={{margin: '14px 0px'}}>
           <Grid item xs={6} sm={6} md={6} lg={6} justifyContent='center' alignItems='center'>
             <Typography>
               Resource
@@ -231,7 +231,7 @@ const Mobile = () => {
           </Grid>
         </Grid>
 
-        <Grid container item  xs={12}  sm={12} md={12}>
+        <Grid container>
           <Grid item xs={6} sm={6} md={6} lg={6} justifyContent='center' alignItems='center'>
             <Typography className={classes.subTitle}>
               Blog
@@ -243,7 +243,7 @@ const Mobile = () => {
             </Typography>
           </Grid>
         </Grid>
-        <Grid container item  xs={12}  sm={12} md={12}>
+        <Grid container>
           <Grid item xs={6} sm={6} md={6} lg={6} justifyContent='center' alignItems='center'>
             <Typography className={classes.subTitle}>
               Help & FAQ
