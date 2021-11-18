@@ -10,7 +10,13 @@ import {
   PhoneLogin,
   UserHome,
   CreatorHome,
+  CreatorProfile,
   PostCreate,
+  PostDetail,
+  StepOne,
+  StepTwo,
+  EditProfile,
+  UserProfile,
 } from './pages/'
 import PrivateRoute from './routes/PrivateRoute'
 import './App.css'
@@ -44,15 +50,38 @@ function App() {
           <UserHome />
         </Route>
 
+        <Route path='/user-profile'>
+          <UserProfile />
+        </Route>
+
         <Route path='/creator-home'>
           <CreatorHome />
         </Route>
 
-        <Route path='/gi'>
-          <ImageGrid />
+        <Route path='/creator-profile'>
+          <CreatorProfile />
         </Route>
 
-        <Route path='/post-create' component={PostCreate} />
+        <Route path='/creator-edit'>
+          <EditProfile />
+        </Route>
+
+        {/* <Route path='/gi'>
+          <ImageGrid />
+        </Route> */}
+
+        <Route exact={true} path='/post-create' component={PostCreate} />
+
+        <Route path='/post-detail/1'>
+          <PostDetail />
+        </Route>
+
+        <Route extact={true} path='/step/1'>
+          <StepOne />
+        </Route>
+        <Route path='/step/2'>
+          <StepTwo />
+        </Route>
 
         <Route path='*' component={Error} />
       </Switch>

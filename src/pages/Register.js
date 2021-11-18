@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useHistory } from 'react-router-dom'
 import styled from 'styled-components'
+
+import { makeStyles } from '@mui/styles'
 import { CButton } from '../layout/CCButton'
 
 import {
@@ -21,8 +23,88 @@ import { useAuthContext } from '../context/AuthContext'
 import axios from 'axios'
 
 import 'react-phone-input-2/lib/style.css'
+const useStyles = makeStyles((theme) => ({
+  wrapper: {
+    minHeight: '100vh',
+    display: 'grid',
+    marginTop: '5vh',
+    placeItems: 'center',
+    padding: '10px',
+    [theme.breakpoints.only('xs')]: {
+      display: 'block',
+      padding: '10px',
+    },
+    '& h2': {
+      textAlign: 'center',
+    },
+  },
+  container: {
+    width: '90vw',
+    maxWidth: '700px',
+    textAlign: 'start',
+    height: 'auto',
+    padding: '20px',
+    [theme.breakpoints.only('xs')]: {
+      padding: '5px',
+    },
+  },
+  line: {
+    alignItems: 'center',
+    boxSizing: 'border-box',
+    display: 'flex',
+    transition: 'all 300ms cubic-bezier(0.19, 1, 0.22, 1) 0s',
+    verticalAlign: 'middle',
+    padding: '0.5rem 0rem 0rem',
+    margin: '0rem',
+  },
+  liner: {
+    boxSizing: 'border-box',
+    webkitBoxFlex: 1,
+    flexGrow: 1,
+    transition: ' all 300ms cubic-bezier(0.19, 1, 0.22, 1) 0s',
+    padding: '0rem',
+    margin: '0rem',
+    borderBottom: '1px solid rgb(229, 227, 221)',
+  },
+
+  linerSec: {
+    boxSizing: 'border-box',
+    transition: 'all 300ms cubic-bezier(0.19, 1, 0.22, 1) 0s',
+    padding: '0rem 0.5rem',
+    margin: '0rem',
+
+    '& p': {
+      color: 'rgb(112, 108, 100)',
+      fontFamily: 'aktiv-grotesk, sans-serif',
+      position: 'relative',
+      transition: 'all 300ms cubic-bezier(0.19, 1, 0.22, 1) 0s',
+      textAlign: 'center',
+      fontWeight: '400 !important',
+      margin: ' 0.5rem 0rem !important',
+      fontSize: '1rem !important',
+      lineHeight: '1.5 !important',
+    },
+  },
+
+  cusFormControl: {
+    textAlign: 'start',
+    padding: ' 10px 0px',
+    '& label': {
+      color: '#333333bd',
+    },
+    '& .input-field': {
+      margin: '0.5rem 0px',
+      background: 'rgb(245, 244, 242)',
+    },
+  },
+
+  // start//////////////////////
+
+  // end//////////////////////
+}))
 
 const Register = () => {
+  const classes = useStyles()
   const { registerByaccount } = useAuthContext()
   const [state, setState] = useState({
     name: '',
@@ -85,115 +167,133 @@ const Register = () => {
     registerByaccount(formdata)
   }
 
+  const gotoHome = () => {
+    history.push('/home')
+  }
+
   const RegisterByPhone = () => {
     history.push('/register/phone')
   }
 
   return (
-    <Wrapper>
-      <div>
-        <h2>Sign Up</h2>
-        <div className='container'>
-          <Google />
+    <div className={classes.wrapper}>
+      <h2>Sign Up</h2>
+      <div className={`${classes.container} FaintBox `}>
+        <Google />
 
-          <FacebookLogin />
+        <FacebookLogin />
 
-          <Button
-            onClick={RegisterByPhone}
-            fullWidth
-            className='btn btn-facebook'
-          >
-            continue with phone number
-          </Button>
+        {/* <Button
+          onClick={RegisterByPhone}
+          fullWidth
+          className='btn btn-facebook'
+        >
+          continue with phone number
+        </Button> */}
 
-          <div className='line'>
-            <div className='liner'></div>
-            <div className='linerSec'>
-              <p>or</p>
-            </div>
-            <div className='liner'></div>
+        <CButton
+          fullWidth
+          bgcolor='#fff'
+          textcolor='#333'
+          border={true}
+          type='submit'
+          className='btn btn-filled'
+          onClick={RegisterByPhone}
+        >
+          continue with phone number
+        </CButton>
+
+        <div className={classes.line}>
+          <div className={classes.liner}></div>
+          <div className={classes.linerSec}>
+            <p>or</p>
           </div>
-
-          <form onSubmit={handleSubmitForm}>
-            <Box className='cus-form-control'>
-              <label htmlFor='name'>Name</label>
-              <TextField
-                id='name'
-                type='text'
-                name='name'
-                className='input-field'
-                fullWidth
-                onChange={formValChange}
-                variant='outlined'
-              />
-            </Box>
-
-            <Box className='cus-form-control'>
-              <label htmlFor='email'>Email</label>
-              <TextField
-                id='email'
-                type='email'
-                error={state.isError.email.length > 0 ? true : false}
-                name='email'
-                className='input-field'
-                fullWidth
-                helperText={
-                  state.isError.email.length > 0 ? state.isError.email : ''
-                }
-                onChange={formValChange}
-                variant='outlined'
-              />
-            </Box>
-
-            <Box className='cus-form-control'>
-              <label htmlFor='password'>Password</label>
-              <TextField
-                id='password'
-                type='password'
-                error={state.isError.password.length > 0 ? true : false}
-                name='password'
-                className='input-field'
-                fullWidth
-                helperText={
-                  state.isError.password.length > 0
-                    ? state.isError.password
-                    : ''
-                }
-                onChange={formValChange}
-                variant='outlined'
-              />
-            </Box>
-
-            <Box className='cus-form-control'>
-              <label htmlFor='confirmPassword'>Confirm Password</label>
-              <TextField
-                error={state.isError.confirmPassword.length > 0 ? true : false}
-                id='confirmPassword'
-                type='password'
-                name='confirmPassword'
-                className='input-field'
-                fullWidth
-                helperText={
-                  state.isError.confirmPassword.length > 0
-                    ? state.isError.confirmPassword
-                    : ''
-                }
-                onChange={formValChange}
-                variant='outlined'
-              />
-            </Box>
-
-            <Button type='submit' className='btn btn-filled'>
-              Sign Up
-            </Button>
-            <p style={{ textAlign: 'center' }}>
-              By signing up, you agree to Patreon's Terms of Use, Privacy Policy
-              and Cookie Policy.
-            </p>
-          </form>
+          <div className={classes.liner}></div>
         </div>
+
+        <form onSubmit={handleSubmitForm}>
+          <Box className={classes.cusFormControl}>
+            <label htmlFor='name'>Name</label>
+            <TextField
+              id='name'
+              type='text'
+              name='name'
+              className='input-field'
+              fullWidth
+              onChange={formValChange}
+              variant='outlined'
+            />
+          </Box>
+
+          <Box className={classes.cusFormControl}>
+            <label htmlFor='email'>Email</label>
+            <TextField
+              id='email'
+              type='email'
+              error={state.isError.email.length > 0 ? true : false}
+              name='email'
+              className='input-field'
+              fullWidth
+              helperText={
+                state.isError.email.length > 0 ? state.isError.email : ''
+              }
+              onChange={formValChange}
+              variant='outlined'
+            />
+          </Box>
+
+          <Box className={classes.cusFormControl}>
+            <label htmlFor='password'>Password</label>
+            <TextField
+              id='password'
+              type='password'
+              error={state.isError.password.length > 0 ? true : false}
+              name='password'
+              className='input-field'
+              fullWidth
+              helperText={
+                state.isError.password.length > 0 ? state.isError.password : ''
+              }
+              onChange={formValChange}
+              variant='outlined'
+            />
+          </Box>
+
+          <Box className={classes.cusFormControl}>
+            <label htmlFor='confirmPassword'>Confirm Password</label>
+            <TextField
+              error={state.isError.confirmPassword.length > 0 ? true : false}
+              id='confirmPassword'
+              type='password'
+              name='confirmPassword'
+              className='input-field'
+              fullWidth
+              helperText={
+                state.isError.confirmPassword.length > 0
+                  ? state.isError.confirmPassword
+                  : ''
+              }
+              onChange={formValChange}
+              variant='outlined'
+            />
+          </Box>
+
+          <CButton
+            fullWidth
+            bgcolor='rgb(195 197 194)'
+            type='submit'
+            className='btn btn-filled'
+            onClick={gotoHome}
+          >
+            Sing Up
+          </CButton>
+          <p style={{ textAlign: 'center' }}>
+            By signing up, you agree to Patreon's Terms of Use, Privacy Policy
+            and Cookie Policy.
+          </p>
+        </form>
       </div>
-    </Wrapper>
+    </div>
   )
 }
 const Wrapper = styled.section`

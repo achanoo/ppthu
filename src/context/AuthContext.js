@@ -155,6 +155,20 @@ const AuthProvider = ({ children }) => {
     }
   }
 
+  const defaultLogged = () => {
+    const data = {
+      id: 1,
+      name: 'Admin',
+      role: 'admin',
+      status: 'Active',
+      access_token:
+        'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9sb2NhbGhvc3Q6ODAwMFwvYXBpXC92MVwvbG9naW4iLCJpYXQiOjE2MzIxNTEyNjIsIm5iZiI6MTYzMjE1MTI2MiwianRpIjoieVlPSUd5bHhHOE15YlJDaCIsInN1YiI6MSwicHJ2IjoiODdlMGFmMWVmOWZkMTU4MTJmZGVjOTcxNTNhMTRlMGIwNDc1NDZhYSJ9.XI7ZZqTuWDmL0bNqh7rw1Z27qWovjVgxmS-2uW_qVm4',
+      token_type: 'Bearer',
+    }
+    dispatch({ type: 'LOGIN_SUCCESS', payload: data })
+    history.push('/home')
+  }
+
   return (
     <AuthContext.Provider
       value={{
@@ -165,6 +179,7 @@ const AuthProvider = ({ children }) => {
         registerByaccount,
         registerByPhone,
         loginbyPhone,
+        defaultLogged,
       }}
     >
       {children}

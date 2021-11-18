@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
+import { makeStyles } from '@mui/styles'
 import { CButton } from '../layout/CCButton'
 import {
   TextField,
@@ -41,8 +42,89 @@ const style = {
   pb: 3,
 }
 
+const useStyles = makeStyles((theme) => ({
+  wrapper: {
+    minHeight: '100vh',
+    display: 'grid',
+    marginTop: '5vh',
+    placeItems: 'center',
+    padding: '10px',
+    [theme.breakpoints.only('xs')]: {
+      display: 'block',
+      padding: '10px',
+    },
+    '& h2': {
+      textAlign: 'center',
+    },
+  },
+  container: {
+    width: '90vw',
+    maxWidth: '700px',
+    textAlign: 'start',
+    height: 'auto',
+    padding: '20px',
+
+    [theme.breakpoints.only('xs')]: {
+      padding: '5px',
+    },
+  },
+  line: {
+    alignItems: 'center',
+    boxSizing: 'border-box',
+    display: 'flex',
+    transition: 'all 300ms cubic-bezier(0.19, 1, 0.22, 1) 0s',
+    verticalAlign: 'middle',
+    padding: '0.5rem 0rem 0rem',
+    margin: '0rem',
+  },
+  liner: {
+    boxSizing: 'border-box',
+    webkitBoxFlex: 1,
+    flexGrow: 1,
+    transition: ' all 300ms cubic-bezier(0.19, 1, 0.22, 1) 0s',
+    padding: '0rem',
+    margin: '0rem',
+    borderBottom: '1px solid rgb(229, 227, 221)',
+  },
+
+  linerSec: {
+    boxSizing: 'border-box',
+    transition: 'all 300ms cubic-bezier(0.19, 1, 0.22, 1) 0s',
+    padding: '0rem 0.5rem',
+    margin: '0rem',
+
+    '& p': {
+      color: 'rgb(112, 108, 100)',
+      fontFamily: 'aktiv-grotesk, sans-serif',
+      position: 'relative',
+      transition: 'all 300ms cubic-bezier(0.19, 1, 0.22, 1) 0s',
+      textAlign: 'center',
+      fontWeight: '400 !important',
+      margin: ' 0.5rem 0rem !important',
+      fontSize: '1rem !important',
+      lineHeight: '1.5 !important',
+    },
+  },
+
+  cusFormControl: {
+    textAlign: 'start',
+    padding: ' 10px 0px',
+    '& label': {
+      color: '#333333bd',
+    },
+    '& .input-field': {
+      margin: '0.5rem 0px',
+      background: 'rgb(245, 244, 242)',
+    },
+  },
+
+  // start//////////////////////
+
+  // end//////////////////////
+}))
 const Login = () => {
-  const { loginbyAccount } = useAuthContext()
+  const classes = useStyles()
+  const { loginbyAccount, defaultLogged } = useAuthContext()
 
   const [showMobile, setShowMobile] = React.useState(false)
   const [showphonePassword, setphonePassword] = React.useState(false)
@@ -72,12 +154,13 @@ const Login = () => {
   }
 
   const handleLogin = (e) => {
-    e.preventDefault()
-    const formData = {
-      email: aemail,
-      password: apassword,
-    }
-    loginbyAccount(formData)
+    // e.preventDefault()
+    // const formData = {
+    //   email: aemail,
+    //   password: apassword,
+    // }
+    // loginbyAccount(formData)
+    defaultLogged()
   }
 
   const handlePhoneSubmit = () => {
@@ -111,166 +194,71 @@ const Login = () => {
     }
   }
   return (
-    <Wrapper>
-      <div>
-        <h2>Log in</h2>
-        <div className={`container ${showMobile && 'hideDiv'}`}>
-          <form onSubmit={handleLogin}>
-            <Box className='cus-form-control'>
-              <label htmlFor='email'>Email</label>
-              <TextField
-                id='email'
-                type='email'
-                name={aemail}
-                className='input-field'
-                fullWidth
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </Box>
-
-            <Box className='cus-form-control'>
-              <label htmlFor='password'>Password</label>
-              <TextField
-                id='password'
-                type='password'
-                className='input-field'
-                name={apassword}
-                fullWidth
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </Box>
-
-            <Box>
-              <a href='/'>Forget password</a>
-            </Box>
-
-            <Button type='submit' className='btn btn-filled'>
-              Log in
-            </Button>
-          </form>
-
-          <div className='line'>
-            <div className='liner'></div>
-            <div className='linerSec'>
-              <p>or</p>
-            </div>
-            <div className='liner'></div>
-          </div>
-
-          <Google />
-
-          <FacebookLogin />
-          <Button
-            onClick={handlePhoneDivOpen}
-            fullWidth
-            className='btn btn-facebook'
-          >
-            continue with phone number
-          </Button>
-        </div>
-
-        <div className={`container ${showMobile || 'hideDiv'}`}>
-          <div
-            className={`phoneTextField ${!showphonePassword ? '' : 'hideDiv'}`}
-          >
-            <div style={{ textAlign: 'center' }}>
-              <label htmlFor='Phone'>Phone Number</label>
-              <Box className='cus-form-control '>
-                <PhoneInput
-                  id='Phone'
-                  disableDropdown='true'
-                  containerStyle={{ marginLeft: '25%' }}
-                  country={'mm'}
-                  name={phone}
-                  placeholder='+95 9000000000'
-                  onChange={(phone) => setPhone(phone)}
-                  component={TextField}
-                />
-              </Box>
-            </div>
-            <div>
-              <CButton fullWidth onClick={handlePhoneSubmit} type='button'>
-                Log in
-              </CButton>
-            </div>
-          </div>
-
-          <div
-            className={`phonePasswordTextField ${
-              showphonePassword ? '' : 'hideDiv'
-            }`}
-          >
-            <div>
-              <label htmlFor='PhonePassword'>Password</label>
-              <Box className='cus-form-control '>
-                <TextField
-                  id='PhonePassword'
-                  type='password'
-                  name={phonePassword}
-                  className='input-field'
-                  fullWidth
-                  onChange={(e) => setPhonePassword(e.target.value)}
-                />
-              </Box>
-            </div>
-            <CButton
+    <div className={classes.wrapper}>
+      <h2>Log in</h2>
+      <div className={`${classes.container} FaintBox `}>
+        <form onSubmit={handleLogin}>
+          <Box className={classes.cusFormControl}>
+            <label htmlFor='email'>Email</label>
+            <TextField
+              id='email'
+              type='email'
+              name={aemail}
+              className='input-field'
               fullWidth
-              onClick={handlePhonePasswordSubmit}
-              type='button'
-            >
-              Log in
-            </CButton>
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </Box>
+
+          <Box className='cus-form-control'>
+            <label htmlFor='password'>Password</label>
+            <TextField
+              id='password'
+              type='password'
+              className='input-field'
+              name={apassword}
+              fullWidth
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </Box>
+
+          <Box>
+            <a href='/'>Forget password</a>
+          </Box>
+
+          <CButton
+            fullWidth
+            bgcolor='rgb(195 197 194)'
+            type='submit'
+            className='btn btn-filled'
+          >
+            Log in
+          </CButton>
+        </form>
+
+        <div className={classes.line}>
+          <div className={classes.liner}></div>
+          <div className={classes.linerSec}>
+            <p>or</p>
           </div>
+          <div className={classes.liner}></div>
         </div>
 
+        <Google />
+
+        <FacebookLogin />
+        <Button
+          onClick={handlePhoneDivOpen}
+          fullWidth
+          className='btn btn-facebook'
+        >
+          continue with phone number
+        </Button>
         <p style={{ textAlign: 'center' }}>
           New to PantPoe? <Link to='/register'>Sign Up</Link>
         </p>
       </div>
-      {/* modal start */}
-      <Modal
-        aria-labelledby='transition-modal-title'
-        aria-describedby='transition-modal-description'
-        open={open}
-        onClose={handleClose}
-        closeAfterTransition
-        BackdropComponent={Backdrop}
-        BackdropProps={{
-          timeout: 500,
-        }}
-      >
-        <Fade in={open}>
-          <Box sx={style}>
-            <Typography
-              id='transition-modal-title'
-              mt={3}
-              mb={3}
-              variant='h5'
-              component='h5'
-            >
-              SMS Verification Code Sent!
-            </Typography>
-
-            <Typography variant='subtitle2' color='primary'>
-              Please enter here!
-            </Typography>
-            <TextField
-              id='Code'
-              type='number'
-              name={confirmCode}
-              className='input-field'
-              fullWidth
-              maxLength='6'
-              onChange={handleCodeConfirm}
-            />
-            <Typography id='transition-modal-description' sx={{ mt: 2 }}>
-              If you don't receive any code from us, sent again!
-            </Typography>
-          </Box>
-        </Fade>
-      </Modal>
-      {/* modal end */}
-    </Wrapper>
+    </div>
   )
 }
 const Wrapper = styled.section`

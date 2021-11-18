@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import { useHistory } from 'react-router-dom'
+import { makeStyles } from '@mui/styles'
 //form input
 import FormControl, { useFormControl } from '@mui/material/FormControl'
 import {
@@ -24,6 +25,34 @@ import DialogTitle from '@mui/material/DialogTitle'
 import { CButton } from './../../layout/CCButton'
 import { useAuthContext } from '../../context/AuthContext'
 
+const useStyles = makeStyles((theme) => ({
+  wrapper: {
+    minHeight: '100vh',
+    display: 'grid',
+    marginTop: '5vh',
+    placeItems: 'center',
+    padding: '10px',
+    [theme.breakpoints.only('xs')]: {
+      display: 'block',
+      padding: '10px',
+    },
+    '& h2': {
+      textAlign: 'center',
+    },
+  },
+  container: {
+    width: '90vw',
+    maxWidth: '700px',
+    textAlign: 'start',
+    height: 'auto',
+    padding: '20px',
+
+    [theme.breakpoints.only('xs')]: {
+      padding: '5px',
+    },
+  },
+}))
+
 function gettingCode(phonenumber) {
   return '902336'
 }
@@ -43,6 +72,7 @@ function MyFormHelperText() {
 }
 
 const CodeVerify = (props) => {
+  const classes = useStyles()
   const history = useHistory()
   const { phone, smscode, nextToPasswordCreate } = props
 
@@ -85,9 +115,9 @@ const CodeVerify = (props) => {
   }
   return (
     <>
-      <Wrapper>
-        <h4>Sign Up</h4>
-        <div className='container'>
+      <div className={classes.wrapper}>
+        <h2>Sing Up</h2>
+        <div className={`${classes.container} FaintBox `}>
           <FormControl variant='standard' error={errors.error} fullWidth>
             <label htmlFor='verifyCode' style={{ textAlign: 'start' }}>
               <Typography variant='subtitle2' gutterBottom>
@@ -118,7 +148,7 @@ const CodeVerify = (props) => {
             <CButton onClick={handleSubmit}>Continue</CButton>
           </FormControl>
         </div>
-      </Wrapper>
+      </div>
 
       {/* dialog for code verification start */}
       <Dialog open={openVerification} onClose={handleCloseVerification}>
@@ -144,6 +174,7 @@ const CodeVerify = (props) => {
 }
 
 const CreatePassword = (props) => {
+  const classes = useStyles()
   const { registerByPhone } = useAuthContext()
   const [state, setState] = React.useState({
     phone: props.phone,
@@ -192,9 +223,9 @@ const CreatePassword = (props) => {
   }
   return (
     <>
-      <Wrapper>
-        <h4>Sign Up</h4>
-        <div className='container'>
+      <div className={classes.wrapper}>
+        <h2>Sing Up</h2>
+        <div className={`${classes.container} FaintBox `}>
           <Typography className='textCenter' variant='subtitle2'>
             Create Your Own Password
           </Typography>
@@ -264,11 +295,12 @@ const CreatePassword = (props) => {
             <a href='/'>Cookie Policy</a>.
           </Box>
         </div>
-      </Wrapper>
+      </div>
     </>
   )
 }
 const Signup = () => {
+  const classes = useStyles()
   const [errors, setErrors] = useState({ helperText: '', error: false })
   const [phone, setPhone] = useState('')
   const [code, setCode] = useState('')
@@ -378,9 +410,9 @@ const Signup = () => {
     <>
       {/* <CreatePassword /> */}
 
-      <Wrapper>
-        <h4>Sign Up</h4>
-        <div className='container'>
+      <div className={classes.wrapper}>
+        <h2>Sing Up</h2>
+        <div className={`${classes.container} FaintBox `}>
           <FormControl variant='standard' error={errors.error} fullWidth>
             <label htmlFor='PhoneNumber' style={{ textAlign: 'start' }}>
               <Typography variant='subtitle2' gutterBottom>
@@ -407,7 +439,7 @@ const Signup = () => {
             <CButton onClick={handleClickOpenDialog}>Continue</CButton>
           </FormControl>
         </div>
-      </Wrapper>
+      </div>
 
       {/* dialog start */}
       <Dialog

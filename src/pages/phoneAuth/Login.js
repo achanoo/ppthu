@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
+
+import { makeStyles } from '@mui/styles'
 import { useHistory } from 'react-router-dom'
 import FormControl, { useFormControl } from '@mui/material/FormControl'
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
@@ -14,9 +16,36 @@ import {
 import { CButton } from './../../layout/CCButton'
 import { useAuthContext } from '../../context/AuthContext'
 
-//
+const useStyles = makeStyles((theme) => ({
+  wrapper: {
+    minHeight: '100vh',
+    display: 'grid',
+    marginTop: '5vh',
+    placeItems: 'center',
+    padding: '10px',
+    [theme.breakpoints.only('xs')]: {
+      display: 'block',
+      padding: '10px',
+    },
+    '& h2': {
+      textAlign: 'center',
+    },
+  },
+  container: {
+    width: '90vw',
+    maxWidth: '700px',
+    textAlign: 'start',
+    height: 'auto',
+    padding: '20px',
+
+    [theme.breakpoints.only('xs')]: {
+      padding: '5px',
+    },
+  },
+}))
 
 const NextToPassword = (props) => {
+  const classes = useStyles()
   const { loginbyPhone } = useAuthContext()
   // console.log(phone)
   const [data, setData] = React.useState({
@@ -34,9 +63,9 @@ const NextToPassword = (props) => {
   }
 
   return (
-    <Wrapper>
-      <h4>Log in</h4>
-      <div className='container'>
+    <div className={classes.wrapper}>
+      <h2>Log In</h2>
+      <div className={`${classes.container} FaintBox `}>
         <FormControl variant='standard' fullWidth>
           <label htmlFor='Password' style={{ textAlign: 'start' }}>
             <Typography variant='subtitle2' gutterBottom>
@@ -67,11 +96,12 @@ const NextToPassword = (props) => {
           <CButton onClick={LoginByPhone}>Continue</CButton>
         </FormControl>
       </div>
-    </Wrapper>
+    </div>
   )
 }
 
 const LoginPhone = () => {
+  const classes = useStyles()
   const [state, setState] = useState({
     showPassword: false,
     phone: '',
@@ -110,9 +140,9 @@ const LoginPhone = () => {
 
   return (
     <>
-      <Wrapper>
-        <h4>Log in</h4>
-        <div className='container'>
+      <div className={classes.wrapper}>
+        <h2>Sing Up</h2>
+        <div className={`${classes.container} FaintBox `}>
           <FormControl variant='standard' error={state.error} fullWidth>
             <label htmlFor='PhoneNumber' style={{ textAlign: 'start' }}>
               <Typography variant='subtitle2' gutterBottom>
@@ -142,7 +172,7 @@ const LoginPhone = () => {
             </CButton>
           </FormControl>
         </div>
-      </Wrapper>
+      </div>
     </>
   )
 }
@@ -159,6 +189,18 @@ const Wrapper = styled.section`
     border-radius: 4px;
     height: auto;
     padding: 30px 20px;
+  }
+  @media (max-width: 990px) {
+    display: block;
+
+    .container {
+      width: 90vw;
+      max-width: 500px;
+      border: 1px solid rgb(229, 227, 221);
+      border-radius: 4px;
+      height: auto;
+      padding: 30px 20px;
+    }
   }
 `
 

@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useHistory } from 'react-router'
 import Loading from './../../components/Loading'
 import MultipleSelectCheckmarks from './../../components/CheckboxSelect'
 import SelectSubscriptions from './../../components/Subscript'
@@ -8,6 +9,7 @@ import RadioGroup from '@mui/material/RadioGroup'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import FormControl from '@mui/material/FormControl'
 import FormLabel from '@mui/material/FormLabel'
+import { FaTimes } from 'react-icons/fa'
 
 import FormGroup from '@mui/material/FormGroup'
 import FormHelperText from '@mui/material/FormHelperText'
@@ -93,9 +95,31 @@ const useStyles = makeStyles((theme) => ({
     border: '1px solid rbg(201,201,200)',
     margin: '16px 0px',
   },
+  previewDiv: {
+    position: 'relative',
+  },
+  removeicon: {
+    position: 'absolute',
+    top: '4px',
+    display: 'flex',
+    right: 4,
+    color: '#333',
+    fontSize: '1.4rem',
+    alignSelf: 'flex-end',
+    border: '1px solid #eee',
+    padding: 0,
+    borderRadius: '50px',
+    backgroundColor: 'orange',
+    '&:hover': {
+      transform: 'scale(1.5)',
+      transition: 'ease-in',
+      color: 'red',
+    },
+  },
 }))
 const PostCreate = () => {
   const { isloading, categories } = useSubscriptionContext()
+  const history = useHistory()
 
   // for checkbox
   // console.log(categories)
@@ -123,6 +147,10 @@ const PostCreate = () => {
     video,
     isAudioSelected,
     audio,
+    removeImage,
+    removeVideo,
+    removeAudio,
+    isPollSelected,
   } = usePostContext()
 
   const classes = useStyles()
@@ -143,15 +171,19 @@ const PostCreate = () => {
     // setFiles(e.target.files[0]);
   }
 
-  if (isloading) {
-    return <Loading />
+  const gotoHome = () => {
+    history.push('/home')
   }
+
+  // if (isloading) {
+  //   return <Loading />
+  // }
 
   return (
     <>
       <Grid container className={classes.container}>
-        <Grid item xs={12} sm={12} md={2}></Grid>
-        <Grid item xs={12} sm={12} md={8}>
+        <Grid item xs={12} sm={12} md={1}></Grid>
+        <Grid item xs={12} sm={12} md={10}>
           <Grid container spacing={{ xs: 0, sm: 0, md: 2 }}>
             <Grid
               item
@@ -190,20 +222,56 @@ const PostCreate = () => {
 
                 {/* preview start here */}
                 <Box>
-                  {isImageSelected && <Gridview images={imageData} />}
+                  {/* {isPollSelected && } */}
 
-                  {isVideoSelected && (
-                    <video
-                      src={video}
-                      style={{ width: '100%', height: 'auto' }}
-                      controls
-                    ></video>
+                  {isImageSelected && (
+                    <div className={classes.previewDiv}>
+                      <Gridview images={imageData} />
+
+                      <button
+                        className={classes.removeicon}
+                        onClick={() => {
+                          removeImage()
+                        }}
+                      >
+                        <FaTimes />
+                      </button>
+                    </div>
                   )}
 
-                  <Box
-                    style={{ display: 'flex', justifyContent: 'center' }}
-                  ></Box>
-                  {isAudioSelected && <Audio audio={audio} />}
+                  {isVideoSelected && (
+                    <div className={classes.previewDiv}>
+                      <video
+                        src={video}
+                        style={{ width: '100%', height: 'auto' }}
+                        controls
+                      ></video>
+
+                      <button
+                        className={classes.removeicon}
+                        onClick={() => {
+                          removeVideo()
+                        }}
+                      >
+                        <FaTimes />
+                      </button>
+                    </div>
+                  )}
+
+                  {isAudioSelected && (
+                    <div className={classes.previewDiv}>
+                      <Audio audio={audio} />
+
+                      <button
+                        className={classes.removeicon}
+                        onClick={() => {
+                          removeAudio()
+                        }}
+                      >
+                        <FaTimes />
+                      </button>
+                    </div>
+                  )}
                 </Box>
                 {/* preview start here */}
                 <OptionTabs />
@@ -211,7 +279,9 @@ const PostCreate = () => {
               {/*P post creating end */}
             </Grid>
             <Grid item xs={12} sm={12} md={4}>
-              <CButton fullWidth>Publish Now</CButton>
+              <CButton fullWidth onClick={gotoHome}>
+                Publish Now
+              </CButton>
               <Box className={`${classes.optionDiv} FaintBox`}>
                 {/* choose categrory */}
                 <h4 variant='h6' className={classes.SubTitle}>
@@ -261,7 +331,7 @@ const PostCreate = () => {
             </Grid>
           </Grid>
         </Grid>
-        <Grid item xs={12} sm={12} md={2}></Grid>
+        <Grid item xs={12} sm={12} md={1}></Grid>
       </Grid>
     </>
   )

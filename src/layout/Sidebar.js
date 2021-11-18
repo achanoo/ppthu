@@ -1,7 +1,9 @@
 import React, { useState } from 'react'
+import { useHistory } from 'react-router-dom'
 import Box from '@mui/material/Box'
 import Drawer from '@mui/material/Drawer'
 import Button from '@mui/material/Button'
+import IconButton from '@mui/material/IconButton'
 import List from '@mui/material/List'
 import Divider from '@mui/material/Divider'
 import ListItem from '@mui/material/ListItem'
@@ -20,10 +22,23 @@ import user from '../assets/menu/user.svg'
 import profit from '../assets/menu/profit.svg'
 import gear from '../assets/menu/gear.svg'
 import information from '../assets/menu/information.svg'
-import { AccountCircleOutlined, PeopleOutline, Settings, HelpOutline, Logout, PriceCheck, Close, Verified, VerifiedOutlined, Payment, Contacts } from '@mui/icons-material'
+import {
+  AccountCircleOutlined,
+  PeopleOutline,
+  Settings,
+  HelpOutline,
+  Logout,
+  PriceCheck,
+  Close,
+  Verified,
+  VerifiedOutlined,
+  Payment,
+  Contacts,
+} from '@mui/icons-material'
 import { makeStyles } from '@mui/styles'
 import { CustomButton } from './CutomerButton'
 import SearchInput from './SearchInput'
+import { useAuthContext } from '../context/AuthContext'
 
 const useStyles = makeStyles((theme) => ({
   blogSearch: {
@@ -31,12 +46,15 @@ const useStyles = makeStyles((theme) => ({
     padding: '0px 10px',
     display: 'flex',
     alignItems: 'center',
-  }
+  },
 }))
 
-export default function TemporaryDrawer() {
+export default function TemporaryDrawer({ props }) {
+  const history = useHistory()
   const classes = useStyles()
   const [toggle, setToggle] = useState(false)
+
+  const closeSidebar = () => setToggle(!toggle)
 
   const list = () => (
     <Box role='presentation'>
@@ -45,11 +63,11 @@ export default function TemporaryDrawer() {
           <Avatar alt='Remy Sharp' src={logo} sx={{ width: 54, height: 54 }} />
         </Box>
         <Box>
-          <Close />
+          <Close onClick={() => setToggle(!toggle)} />
         </Box>
       </Box>
-      
-      <Box sx={{ flexGrow: 1, margin: '0px 10px' }}>
+
+      <Box sx={{ flexGrow: 1, margin: '0px 10px 10px' }}>
         <SearchInput />
       </Box>
       {/* <List>
@@ -100,63 +118,96 @@ export default function TemporaryDrawer() {
       </List> */}
       <Divider />
       <List>
-          <ListItem button key="Personal Information">
-            <ListItemIcon>
-              <Avatar alt='Remy Sharp' src={user} sx={{ width: 25, height: 25 }}/> 
-            </ListItemIcon>
-            <ListItemText primary="Personal Information" />
-            <Avatar alt='Remy Sharp' src={badge} sx={{ width: 20, height: 20 }}  style={{margin: "0px 50px 0px 10px"}}/>   
-            
-            <CustomButton fontSize='small'>Verify</CustomButton>
-          </ListItem>
-          
-          <Divider style={{margin: "0px 18px"}} />
-          <ListItem button key="Manage Memberships">
-            <ListItemIcon>
-              <Avatar alt='Remy Sharp' src={people} sx={{ width: 25, height: 25 }}/> 
-            </ListItemIcon>
-            <ListItemText primary="Manage Memberships" />
-          </ListItem>
-          
-        <Divider style={{margin: "0px 18px"}} />
-          <ListItem button key="Payment History">
-            <ListItemIcon> 
-            <Avatar alt='Remy Sharp' src={creditCard} sx={{ width: 25, height: 25 }}/> 
-            </ListItemIcon>
-            <ListItemText primary="Payment History" />
-          </ListItem>
-          
-        <Divider style={{margin: "0px 18px"}} />
-          <ListItem button key="Become a creator">
-            <ListItemIcon>
-            <Avatar alt='Remy Sharp' src={onlineLearning} sx={{ width: 25, height: 25 }}/> 
-            </ListItemIcon>
-            <ListItemText primary="Become a creator" />
-          </ListItem>
-          
-        <Divider style={{margin: "0px 18px"}} />
-          <ListItem button key="Settings">
-            <ListItemIcon>
-              <Avatar alt='Remy Sharp' src={gear} sx={{ width: 25, height: 25 }}/>
-            </ListItemIcon>
-            <ListItemText primary="Settings" />
-          </ListItem>
-          
-        <Divider style={{margin: "0px 18px"}} />
-          <ListItem button key="Help & FAQ">
-            <ListItemIcon>
-              <Avatar alt='Remy Sharp' src={information} sx={{ width: 25, height: 25 }}/>
-            </ListItemIcon>
-            <ListItemText primary="Help & FAQ" />
-          </ListItem>
-          
-        <Divider style={{margin: "0px 18px"}} />
-          <ListItem button key="Logout">
-            <ListItemIcon>
-              <Logout />
-            </ListItemIcon>
-            <ListItemText primary="Logout" />
-          </ListItem>
+        <ListItem
+          button
+          key='Personal Information'
+          onClick={() => history.push('/creator-profile')}
+        >
+          <ListItemIcon>
+            <Avatar
+              alt='Remy Sharp'
+              src={user}
+              sx={{ width: 25, height: 25 }}
+            />
+          </ListItemIcon>
+          <ListItemText primary='Personal Information' />
+          <Avatar
+            alt='Remy Sharp'
+            src={badge}
+            sx={{ width: 20, height: 20 }}
+            style={{ margin: '0px 50px 0px 10px' }}
+          />
+
+          <CustomButton fontSize='small'>Verify</CustomButton>
+        </ListItem>
+
+        <Divider style={{ margin: '0px 18px' }} />
+        <ListItem button key='Manage Memberships'>
+          <ListItemIcon>
+            <Avatar
+              alt='Remy Sharp'
+              src={people}
+              sx={{ width: 25, height: 25 }}
+            />
+          </ListItemIcon>
+          <ListItemText primary='Manage Memberships' />
+        </ListItem>
+
+        <Divider style={{ margin: '0px 18px' }} />
+        <ListItem button key='Payment History'>
+          <ListItemIcon>
+            <Avatar
+              alt='Remy Sharp'
+              src={creditCard}
+              sx={{ width: 25, height: 25 }}
+            />
+          </ListItemIcon>
+          <ListItemText primary='Payment History' />
+        </ListItem>
+
+        <Divider style={{ margin: '0px 18px' }} />
+        <ListItem button key='Become a creator'>
+          <ListItemIcon>
+            <Avatar
+              alt='Remy Sharp'
+              src={onlineLearning}
+              sx={{ width: 25, height: 25 }}
+            />
+          </ListItemIcon>
+          <ListItemText primary='Become a creator' />
+        </ListItem>
+
+        <Divider style={{ margin: '0px 18px' }} />
+        <ListItem button key='Settings'>
+          <ListItemIcon>
+            <Avatar
+              alt='Remy Sharp'
+              src={gear}
+              sx={{ width: 25, height: 25 }}
+            />
+          </ListItemIcon>
+          <ListItemText primary='Settings' />
+        </ListItem>
+
+        <Divider style={{ margin: '0px 18px' }} />
+        <ListItem button key='Help & FAQ'>
+          <ListItemIcon>
+            <Avatar
+              alt='Remy Sharp'
+              src={information}
+              sx={{ width: 25, height: 25 }}
+            />
+          </ListItemIcon>
+          <ListItemText primary='Help & FAQ' />
+        </ListItem>
+
+        <Divider style={{ margin: '0px 18px' }} />
+        <ListItem button key='Logout' onClick={() => props.logout()}>
+          <ListItemIcon>
+            <Logout />
+          </ListItemIcon>
+          <ListItemText primary='Logout' />
+        </ListItem>
       </List>
     </Box>
   )
@@ -167,8 +218,8 @@ export default function TemporaryDrawer() {
         <MenuIcon />
       </Button>
       <Drawer
-        style={{width : '400px'}}
-        anchor='left'
+        style={{ width: '400px' }}
+        anchor='top'
         open={toggle}
         onClose={() => {
           setToggle(!toggle)

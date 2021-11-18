@@ -7,9 +7,20 @@ import FormControlLabel from '@mui/material/FormControlLabel'
 import FormHelperText from '@mui/material/FormHelperText'
 import Checkbox from '@mui/material/Checkbox'
 import { useSubscriptionContext } from './../context/SubscriptionContext'
-import { preventExtensions } from 'core-js/library/es7/object'
+import { makeStyles } from '@mui/styles'
+
+import { subscriptPlan } from './../assets/data.js'
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    '.MuiFormControl-root': {
+      margin: '12px 0px 0px 0px',
+    },
+  },
+}))
 
 export default function CheckboxesGroup() {
+  const classes = useStyles()
   const { subscriptions, isloading } = useSubscriptionContext()
 
   const fromatSubscriptions = (data) => {
@@ -29,33 +40,26 @@ export default function CheckboxesGroup() {
   }, [subscriptions])
   // console.log(state)
 
-  // const handleChange = (event) => {
-  //   console.log(event)
-
-  //   setState((current) => {
-  //     // const newobj = current.map((item) =>
-  //     //   item.name === event.target.name ? { ...item, ischecked: true } : item
-  //     // )
-
-  //     return current
-  //   })
-  // }
+  const handleChange = (event) => {
+    console.log(state)
+  }
 
   //const { gilad, jason, antoine } = state
   //const error = [gilad, jason, antoine].filter((v) => v).length !== 2
 
   return (
-    <Box sx={{ display: 'flex' }}>
+    <>
       <FormControl
         required
         error={false}
         component='fieldset'
         sx={{ m: 3 }}
         variant='standard'
+        className={classes.root}
       >
         {/* <FormLabel component='legend'>Pick two</FormLabel> */}
         <FormGroup>
-          {state.map((item) => {
+          {subscriptPlan.map((item) => {
             const { name, id, ischecked } = item
             return (
               <FormControlLabel
@@ -72,8 +76,8 @@ export default function CheckboxesGroup() {
             )
           })}
         </FormGroup>
-        <FormHelperText>You can display an error</FormHelperText>
+        {/* <FormHelperText > You can display an error</FormHelperText> */}
       </FormControl>
-    </Box>
+    </>
   )
 }

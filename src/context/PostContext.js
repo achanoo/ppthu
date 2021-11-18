@@ -7,6 +7,8 @@ const initialStates = {
   isImageSelected: false,
   isVideoSelected: false,
   isAudioSelected: false,
+  isPollSelected: false,
+  isLinkSelected: true,
   imageData: [],
   video: '',
   audio: '',
@@ -40,9 +42,22 @@ const PostProvider = ({ children }) => {
     dispatch({ type: 'AUDIO_SELECTED', payload: fileUrl })
   }
 
+  const removeImage = () => dispatch({ type: 'Image_REMOVE' })
+  const removeVideo = () => dispatch({ type: 'Video_REMOVE' })
+  const removeAudio = () => dispatch({ type: 'Audio_REMOVE' })
+  // const RemovePoll = () => dispatch({ type: 'Image_REMOVE' })
+
   return (
     <PostContext.Provider
-      value={{ ...state, handleInputImage, handleInputVideo, handleInputAudio }}
+      value={{
+        ...state,
+        handleInputImage,
+        handleInputVideo,
+        handleInputAudio,
+        removeImage,
+        removeVideo,
+        removeAudio,
+      }}
     >
       {children}
     </PostContext.Provider>

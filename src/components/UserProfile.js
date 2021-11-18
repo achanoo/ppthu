@@ -31,7 +31,7 @@ import TextareaAutosize from '@mui/material/TextareaAutosize'
 import FemaleIcon from '@mui/icons-material/Female'
 import MaleIcon from '@mui/icons-material/Male'
 import SelectOption from './../layout/SelectOption'
-import { useHistory } from 'react-router'
+import VerifiedUserIcon from '@mui/icons-material/VerifiedUser'
 const useStyles = makeStyles((theme) => ({
   wrapper: {
     minHeight: '100vh',
@@ -56,6 +56,7 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'flex-start',
     justifyItems: 'center',
     alignItems: 'baseline',
+    gap: '10px',
     '& .MuiAvatar-root': {
       display: 'flex',
       alignSelf: 'center',
@@ -186,7 +187,6 @@ const useStyles = makeStyles((theme) => ({
 // input formula=> (valu.length + 1)*8
 
 const Basic = () => {
-  const history = useHistory()
   const classes = useStyles()
   const editor = useRef(null)
   const [content, setContent] = useState('')
@@ -213,29 +213,27 @@ const Basic = () => {
     // setState({ ...state, isError })
   }
 
-  const goToHome = () => {
-    history.push('/creator-home')
-  }
-
   return (
     <div className={classes.wrapper}>
       <div className={classes.container}>
         <Typography variant='h4' gutterBottom component='div'>
-          Edit Profile
+          Personal Information
         </Typography>
 
-        <Box className={`${classes.boxer}  `}>
-          <Avatar src='https://cdn-icons-png.flaticon.com/128/1946/1946429.png' />
-          <h4>Username</h4>
-          <FiEdit3 />
-        </Box>
-
-        <Box className={classes.cusFormControl}>
-          <Box className={classes.cusOptions}>
-            <h5 className='input-label'> Cover photo </h5>
-            <Button>Add</Button>
+        <Box
+          display='flex'
+          justifyContent='space-between'
+          className={` FaintBox `}
+        >
+          <Box className={`${classes.boxer} `}>
+            <Avatar src='https://cdn-icons-png.flaticon.com/128/1946/1946429.png' />
+            <h4>Username</h4>
+            <FiEdit3 />
           </Box>
-          <Box className={classes.coverphoto}></Box>
+          <Box className={`${classes.boxer}   `}>
+            <VerifiedUserIcon />
+            <CButton>Verify</CButton>
+          </Box>
         </Box>
 
         <Divider className={classes.hrdiv} />
@@ -244,7 +242,7 @@ const Basic = () => {
         <Box className={classes.cusFormControl}>
           <Box className={classes.cusOptions}>
             <h5 className='input-label'> Cover photo </h5>
-            <Button>Add</Button>
+            {/* <Button>Add</Button> */}
           </Box>
           <Box className={classes.coverphoto}></Box>
         </Box>
@@ -425,7 +423,7 @@ const Basic = () => {
           <CButton bgcolor='#eeeeee' textcolor='#0f0f0f'>
             Cancel
           </CButton>
-          <CButton onClick={goToHome}>Save</CButton>
+          <CButton>Save</CButton>
         </Box>
       </div>
     </div>
