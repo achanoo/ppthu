@@ -10,6 +10,9 @@ import PhoneLogin from './phoneAuth/Login'
 import UserHome from './user/Home'
 
 import CreatorHome from './creator/Home'
+import RSManager from './creator/RSManager'
+import EarningsOverview from './creator/EarningsOverview'
+import EarningsOverviewDetail from './creator/EarningsOverviewDetail'
 import CreatorProfile from './creator/Profile'
 
 import PostCreate from './post/Create'
@@ -34,6 +37,9 @@ export {
   CreatorHome,
   CreatorProfile,
   PostCreate,
+  RSManager,
+  EarningsOverview,
+  EarningsOverviewDetail,
   PostDetail,
   StepOne,
   StepTwo,
