@@ -22,6 +22,28 @@ const postReducer = (state, action) => {
       audio: action.payload,
     }
   }
+
+  if (action.type === 'Image_REMOVE') {
+    return {
+      ...state,
+      isImageSelected: false,
+      image: [],
+    }
+  }
+  if (action.type === 'Video_REMOVE') {
+    return {
+      ...state,
+      isVideoSelected: false,
+      video: '',
+    }
+  }
+  if (action.type === 'Audio_REMOVE') {
+    return {
+      ...state,
+      isAudioSelected: false,
+      audio: '',
+    }
+  }
   // return state
   throw new Error(`No Matching "${action.type}" - action type`)
 }

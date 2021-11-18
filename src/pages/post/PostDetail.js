@@ -1,5 +1,4 @@
 import React from 'react'
-import { useHistory } from 'react-router'
 import { useGlobalContext } from './../../context/AuthContext'
 import styled from 'styled-components'
 import { useTheme } from '@mui/material/styles'
@@ -12,7 +11,7 @@ import CardContent from '@mui/material/CardContent'
 import CardActions from '@mui/material/CardActions'
 import { Avatar, Typography, Divider } from '@mui/material'
 import { CustomButton } from '../../layout/CutomerButton'
-import TabContents from '../../components/TabContent'
+import PostDetail from '../../components/PostDetailView'
 
 const useStyle = makeStyles((theme) => ({
   root: {
@@ -24,53 +23,17 @@ const useStyle = makeStyles((theme) => ({
       display: 'block',
     },
   },
-  wrapper: {
-    minHeight: '100vh',
-    display: 'grid',
-    marginTop: '5vh',
-    placeItems: 'center',
-    [theme.breakpoints.only('xs')]: {
-      display: 'block',
-      padding: '10px',
-    },
-  },
-  container: {
-    width: '90vw',
-    maxWidth: '1200px',
-    textAlign: 'center',
-    height: 'auto',
-    [theme.breakpoints.only('xs')]: {},
-  },
-  card: {
-    marginTop: '10px !important',
-    boxShadow: 'none !important',
-    border: '1px solid rgb(229, 227, 221)',
-    '& h3': {
-      margin: '0px',
-    },
-  },
-
-  cardcontent: {
-    padding: '0px',
-  },
-  cardLast: {
-    marginTop: '8px',
-  },
 }))
 //first user view/ not creator view
 const UserHome = () => {
-  const history = useHistory()
   const classes = useStyle()
   const theme = useTheme()
   const islaptop = useMediaQuery(theme.breakpoints.down('md'))
-  const goToEdit = () => {
-    history.push('/Edit')
-  }
 
   return (
-    <div className={classes.wrapper}>
-      <section className={classes.container}>
-        <Grid container spacing={1}>
+    <Wrapper>
+      <section className='container'>
+        <Grid container spacing={3}>
           <Grid
             item
             xs={12}
@@ -79,7 +42,7 @@ const UserHome = () => {
             display={{ xs: 'block', sm: 'block' }}
             order={{ xs: 1, sm: 2 }}
           >
-            <TabContents />
+            <PostDetail />
           </Grid>
           <Grid
             item
@@ -91,8 +54,8 @@ const UserHome = () => {
           >
             {/* supporting */}
 
-            <Card className={classes.card}>
-              <CardContent className={classes.cardcontent}>
+            <Card className='card'>
+              <CardContent className='cardcontent'>
                 <Grid
                   p={2}
                   container
@@ -131,9 +94,7 @@ const UserHome = () => {
                     <p m={0} mb={2}>
                       You're almost there! Complete your page and take it live.
                     </p>
-                    <CustomButton onClick={goToEdit}>
-                      Finish my page
-                    </CustomButton>
+                    <CustomButton>Finish my page</CustomButton>
                   </Grid>
                 </CardContent>
               </Card>
@@ -161,13 +122,12 @@ const UserHome = () => {
             xs={12}
             md={3}
             order={{ xs: 2, sm: 3 }}
-            display={{ xs: 'flex', sm: 'none', md: 'flex' }}
-            flexDirection='column'
+            display={{ xs: 'block', sm: 'none', md: 'block' }}
           >
             {/* find creator */}
 
-            <Card className={classes.card}>
-              <CardContent className={classes.cardcontent}>
+            <Card className='card'>
+              <CardContent className='cardcontent'>
                 <Grid p={2}>
                   <h3 m={0}>Supporting</h3>
                 </Grid>
@@ -176,13 +136,13 @@ const UserHome = () => {
                   <p m={0} mb={2}>
                     You're almost there! Complete your page and take it live.
                   </p>
-                  <CustomButton onClick={goToEdit}>Finish my page</CustomButton>
+                  <CustomButton>Finish my page</CustomButton>
                 </Grid>
               </CardContent>
             </Card>
 
-            <Card className={`${classes.card} ${classes.cardLast}`}>
-              <CardContent className={classes.cardcontent}>
+            <Card className='card card-last'>
+              <CardContent className='cardcontent'>
                 <Grid p={2}>
                   <h3 m={0}>FIND CREATORS YOU LOVE</h3>
                 </Grid>
@@ -199,7 +159,7 @@ const UserHome = () => {
           </Grid>
         </Grid>
       </section>
-    </div>
+    </Wrapper>
   )
 }
 

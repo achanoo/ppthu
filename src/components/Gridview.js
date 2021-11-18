@@ -5,7 +5,12 @@ import styles from './../assets/ImageGrid.module.css'
 import Lightbox from 'react-image-lightbox'
 import Modal from './lightModal'
 
+import { useTheme } from '@mui/material/styles'
+import useMediaQuery from '@mui/material/useMediaQuery'
+
 const Gridview = (props) => {
+  const theme = useTheme()
+  const ismatch = useMediaQuery(theme.breakpoints.up('md'))
   const { images } = props
   const showImags = [...images]
   const [modal, setModal] = React.useState(false)
@@ -24,21 +29,26 @@ const Gridview = (props) => {
   }
   if (len == 1) {
     return (
-      <div className={styles.imgGrid} style={{ '--num-cols': 1 }}>
-        <div
-          onClick={() => openModal(0)}
-          style={{ backgroundImage: `url(${images[0]})` }}
-        ></div>
-        {modal && (
-          <Modal onClose={() => onClose()} index={index} images={images} />
-        )}
-      </div>
+      <>
+        <div>
+          <div className={styles.imgGrid} style={{ '--num-cols': 1 }}>
+            <div
+              onClick={() => openModal(0)}
+              style={{ backgroundImage: `url(${images[0]})` }}
+            ></div>
+
+            {modal && (
+              <Modal onClose={() => onClose()} index={index} images={images} />
+            )}
+          </div>
+        </div>
+      </>
     )
   }
 
   if (len == 2) {
     return (
-      <div className={styles.imgGrid} style={{ '--num-cols': 2 }}>
+      <div className={styles.imgGrid} style={{ '--num-cols': ismatch ? 2 : 1 }}>
         <div
           onClick={() => openModal(0)}
           className={`${styles.imgGridcol2} ${styles.imgGridrow2}`}

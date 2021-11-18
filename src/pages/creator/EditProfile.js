@@ -21,24 +21,25 @@ import FormControlLabel from '@mui/material/FormControlLabel'
 import JoditEditor from 'jodit-react'
 import Link from '@mui/material/Link'
 import { CheckCircle, RadioButtonUnchecked } from '@mui/icons-material'
-import '../assets/style.css'
+import '../../assets/style.css'
 import Avatar from '@mui/material/Avatar'
 import { FiEdit3 } from 'react-icons/fi'
 import { makeStyles } from '@mui/styles'
-import { CButton } from '../layout/CCButton'
-import { coverphoto } from '../assets/data'
+import { CButton } from '../../layout/CCButton'
+import { coverphoto } from '../../assets/data'
 import TextareaAutosize from '@mui/material/TextareaAutosize'
 import FemaleIcon from '@mui/icons-material/Female'
 import MaleIcon from '@mui/icons-material/Male'
-import SelectOption from './../layout/SelectOption'
-import { useHistory } from 'react-router'
+import SelectOption from './../../layout/SelectOption'
 const useStyles = makeStyles((theme) => ({
   wrapper: {
     minHeight: '100vh',
     display: 'grid',
+    marginTop: '5vh',
     placeItems: 'center',
     [theme.breakpoints.only('xs')]: {
       display: 'block',
+      padding: '10px',
     },
   },
   container: {
@@ -181,12 +182,17 @@ const useStyles = makeStyles((theme) => ({
     },
     gap: '15px',
   },
+  logodiv: {
+    marginLeft: '-66px',
+    [theme.breakpoints.only('xs')]: {
+      marginLeft: '-66px',
+    },
+  },
 }))
 
 // input formula=> (valu.length + 1)*8
 
-const Basic = () => {
-  const history = useHistory()
+const EditProfile = () => {
   const classes = useStyles()
   const editor = useRef(null)
   const [content, setContent] = useState('')
@@ -213,29 +219,30 @@ const Basic = () => {
     // setState({ ...state, isError })
   }
 
-  const goToHome = () => {
-    history.push('/creator-home')
-  }
-
   return (
     <div className={classes.wrapper}>
       <div className={classes.container}>
         <Typography variant='h4' gutterBottom component='div'>
-          Edit Profile
+          Create Profile
         </Typography>
 
-        <Box className={`${classes.boxer}  `}>
+        {/* <Box className={`${classes.boxer}  `}>
           <Avatar src='https://cdn-icons-png.flaticon.com/128/1946/1946429.png' />
           <h4>Username</h4>
           <FiEdit3 />
-        </Box>
+        </Box> */}
 
         <Box className={classes.cusFormControl}>
           <Box className={classes.cusOptions}>
-            <h5 className='input-label'> Cover photo </h5>
-            <Button>Add</Button>
+            <h5 className='input-label'> profile photo </h5>
+            <Button>Edit</Button>
           </Box>
-          <Box className={classes.coverphoto}></Box>
+          <Box className={classes.profilephoto} style={{ alignSelf: 'center' }}>
+            <Avatar
+              sx={{ width: '80px', height: '80px' }}
+              src='https://cdn-icons-png.flaticon.com/128/1946/1946429.png'
+            />
+          </Box>
         </Box>
 
         <Divider className={classes.hrdiv} />
@@ -244,7 +251,7 @@ const Basic = () => {
         <Box className={classes.cusFormControl}>
           <Box className={classes.cusOptions}>
             <h5 className='input-label'> Cover photo </h5>
-            <Button>Add</Button>
+            <Button>Edit</Button>
           </Box>
           <Box className={classes.coverphoto}></Box>
         </Box>
@@ -254,13 +261,13 @@ const Basic = () => {
         <Box className={classes.cusFormControl}>
           <Box className={classes.cusOptions}>
             <h5 className='input-label'> Bio </h5>
-            {/* <Button>Add</Button> */}
+            <Button>Edit</Button>
           </Box>
 
           <TextField
             id='filled-multiline-flexible'
             label='Multiline'
-            displayempty
+            displayempty={true}
             inputProps={{ 'aria-label': 'Without label' }}
             multiline
             fullWidth
@@ -274,7 +281,7 @@ const Basic = () => {
         <Box className={classes.cusFormControl}>
           <Box className={classes.cusOptions}>
             <h5 className='input-label'> General Info </h5>
-            {/* <Button>Add</Button> */}
+            <Button>Edit</Button>
           </Box>
           <Box className={classes.general}>
             <Box className={classes.cusFormControl}>
@@ -340,7 +347,7 @@ const Basic = () => {
         <Box className={classes.cusFormControl}>
           <Box className={classes.cusOptions}>
             <h5 className='input-label'> Links </h5>
-            {/* <Button>Add</Button> */}
+            <Button>Edit</Button>
           </Box>
           <SelectOption fullWidth={true} data={socialArray} />
           <TextField
@@ -353,11 +360,12 @@ const Basic = () => {
         </Box>
 
         <Divider className={classes.hrdiv} />
-        {/* email start */}
+
+        {/* email start 
         <Box className={classes.cusFormControl}>
           <Box className={classes.cusOptions}>
             <h5 className='input-label'> Email </h5>
-            {/* <Button>Add</Button> */}
+            <Button>Add</Button>
           </Box>
 
           <TextField
@@ -369,11 +377,11 @@ const Basic = () => {
           />
         </Box>
         <Divider className={classes.hrdiv} />
-        {/* phone start */}
+         phone start 
         <Box className={classes.cusFormControl}>
           <Box className={classes.cusOptions}>
             <h5 className='input-label'> Phone </h5>
-            {/* <Button>Add</Button> */}
+            <Button>Add</Button> 
           </Box>
 
           <OutlinedInput
@@ -392,21 +400,22 @@ const Basic = () => {
             placeholder='000000000'
           />
         </Box>
-        <Divider className={classes.hrdiv} />
+        <Divider className={classes.hrdiv} /> */}
+
         {/* region start */}
-        <Box className={classes.cusFormControl}>
+        {/* <Box className={classes.cusFormControl}>
           <Box className={classes.cusOptions}>
             <h5 className='input-label'> Regions </h5>
-            {/* <Button>Add</Button> */}
+            <Button>Edit</Button>
           </Box>
           <SelectOption fullWidth={false} data={places} />
         </Box>
-        <Divider className={classes.hrdiv} />
+        <Divider className={classes.hrdiv} /> */}
         {/* region start */}
-        <Box className={classes.cusFormControl}>
+        {/* <Box className={classes.cusFormControl}>
           <Box className={classes.cusOptions}>
             <h5 className='input-label'> Address </h5>
-            {/* <Button>Add</Button> */}
+            <Button>Edit</Button>
           </Box>
           <TextField
             id='filled-multiline-flexible'
@@ -419,17 +428,116 @@ const Basic = () => {
             onChange={() => console.log('helow')}
             variant='standard'
           />
-        </Box>
+        </Box> */}
         {/* button start */}
-        <Box className={classes.buttonGroup} sx={{ mt: 3 }}>
+        {/* <Box className={classes.buttonGroup} sx={{ mt: 3 }}>
           <CButton bgcolor='#eeeeee' textcolor='#0f0f0f'>
             Cancel
           </CButton>
-          <CButton onClick={goToHome}>Save</CButton>
+          <CButton>Save</CButton>
+        </Box> */}
+
+        {/* starting tier */}
+
+        <Box className={classes.cusFormControl}>
+          <Box className={classes.cusOptions}>
+            <h5 className='input-label'> Tiers </h5>
+            <Button>Edit</Button>
+          </Box>
+          {/* name  */}
+          <Grid container>
+            <Grid item xs={4}>
+              <Typography variant='subtitle2' gutterBottom component='div'>
+                Tier Name
+              </Typography>
+            </Grid>
+            <Grid item xs={8}>
+              <TextField
+                id='outlined-basic'
+                variant='outlined'
+                inputProps={{ 'aria-label': 'Without label' }}
+                placeholder='sample'
+              />
+            </Grid>
+          </Grid>
+          {/* logo  */}
+          <Grid container>
+            <Grid item xs={4}>
+              <Typography variant='subtitle2' gutterBottom component='div'>
+                Tier Logo
+              </Typography>
+            </Grid>
+            <Grid item xs={8} className={classes.logodiv}>
+              <img
+                src={`${coverphoto}`}
+                alt='name'
+                loading='lazy'
+                style={{
+                  width: '80px',
+                  height: '80px',
+                  objectFit: 'cover',
+                  marginLeft: '20px',
+                }}
+              />
+            </Grid>
+          </Grid>
+          {/* price */}
+          <Grid container>
+            <Grid item xs={4}>
+              <Typography variant='subtitle2' gutterBottom component='div'>
+                Tier price
+              </Typography>
+            </Grid>
+            <Grid item xs={8}>
+              <TextField
+                id='outlined-basic'
+                variant='outlined'
+                inputProps={{ 'aria-label': 'Without label' }}
+                placeholder='0,000,000'
+              />
+            </Grid>
+          </Grid>
+
+          {/* desc  */}
+          <Grid container>
+            <Grid item xs={4}>
+              <Typography variant='subtitle2' gutterBottom component='div'>
+                Description
+              </Typography>
+            </Grid>
+            <Grid item xs={8}>
+              <TextField
+                id='outlined-basic'
+                variant='outlined'
+                inputProps={{ 'aria-label': 'Without label' }}
+                placeholder='text'
+                multiline={true}
+              />
+            </Grid>
+          </Grid>
+
+          {/* benefit  */}
+          <Grid container>
+            <Grid item xs={4}>
+              <Typography variant='subtitle2' gutterBottom component='div'>
+                Benefit
+              </Typography>
+            </Grid>
+            <Grid item xs={8}>
+              <TextField
+                id='outlined-basic'
+                variant='outlined'
+                inputProps={{ 'aria-label': 'Without label' }}
+                placeholder='text'
+              />
+            </Grid>
+          </Grid>
         </Box>
+
+        <Divider className={classes.hrdiv} />
       </div>
     </div>
   )
 }
 
-export default Basic
+export default EditProfile

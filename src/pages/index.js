@@ -8,12 +8,21 @@ import PhoneSignUp from './phoneAuth/Signup'
 import PhoneLogin from './phoneAuth/Login'
 
 import UserHome from './user/Home'
+
 import CreatorHome from './creator/Home'
 import RSManager from './creator/RSManager'
 import EarningsOverview from './creator/EarningsOverview'
 import EarningsOverviewDetail from './creator/EarningsOverviewDetail'
+import CreatorProfile from './creator/Profile'
 
 import PostCreate from './post/Create'
+import PostDetail from './post/PostDetail'
+
+import StepOne from './creator/steps/StepOne'
+import StepTwo from './creator/steps/StepTwo'
+
+import EditProfile from './creator/EditProfile'
+import UserProfile from './../components/UserProfile'
 
 export {
   Edit,
@@ -26,8 +35,14 @@ export {
   PhoneLogin,
   UserHome,
   CreatorHome,
+  CreatorProfile,
   PostCreate,
   RSManager,
   EarningsOverview,
-  EarningsOverviewDetail
+  EarningsOverviewDetail,
+  PostDetail,
+  StepOne,
+  StepTwo,
+  EditProfile,
+  UserProfile,
 }

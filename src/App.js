@@ -10,7 +10,13 @@ import {
   PhoneLogin,
   UserHome,
   CreatorHome,
+  CreatorProfile,
   PostCreate,
+  PostDetail,
+  StepOne,
+  StepTwo,
+  EditProfile,
+  UserProfile,
 } from './pages/'
 
 import RSManager from './pages/creator/RSManager'
@@ -26,7 +32,6 @@ import {
   useHistory,
 } from 'react-router-dom'
 
-import { PostProvider } from './context/PostContext'
 import { RouterRounded } from '@mui/icons-material'
 
 function App() {
@@ -42,6 +47,7 @@ function App() {
         <Route exact={true} path='/register' component={Register} />
         <Route path='/register/phone' component={PhoneSignUp} />
         <Route path='/login/phone' component={PhoneLogin} />
+
         <Route path='/edit' component={Edit} />
         <Route path='/rsmanager' component={RSManager} />
         <Route path='/earnings-overview' component={EarningsOverview} />
@@ -51,17 +57,38 @@ function App() {
           <UserHome />
         </Route>
 
+        <Route path='/user-profile'>
+          <UserProfile />
+        </Route>
+
         <Route path='/creator-home'>
           <CreatorHome />
         </Route>
 
-        <Route path='/gi'>
-          <ImageGrid />
+        <Route path='/creator-profile'>
+          <CreatorProfile />
         </Route>
 
-        <PostProvider>
-          <Route path='/post-create' component={PostCreate} />
-        </PostProvider>
+        <Route path='/creator-edit'>
+          <EditProfile />
+        </Route>
+
+        {/* <Route path='/gi'>
+          <ImageGrid />
+        </Route> */}
+
+        <Route exact={true} path='/post-create' component={PostCreate} />
+
+        <Route path='/post-detail/1'>
+          <PostDetail />
+        </Route>
+
+        <Route extact={true} path='/step/1'>
+          <StepOne />
+        </Route>
+        <Route path='/step/2'>
+          <StepTwo />
+        </Route>
 
         <Route path='*' component={Error} />
       </Switch>

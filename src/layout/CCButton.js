@@ -10,11 +10,11 @@ export const CButton = withStyles((theme) => ({
         ? props.bgcolor
         : 'linear-gradient(0deg, rgba(51,149,255,1) 0%, rgba(3,224,255,1) 100%)',
     borderRadius: '50px',
-    border: 0,
+    border: (props) => (props.border ? '1px solid rgb(229,227,221)' : 0),
     color: (props) => (props.textcolor ? props.textcolor : 'white'),
     fontWeight: 'bold',
     height: 48,
-    marginTop: '18px',
+    marginTop: (props) => (props.ct ? props.ct : '18px'),
     padding: '20px 30px',
     [theme.breakpoints.down('md')]: {
       height: 28,

@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import { styled, alpha } from '@mui/material/styles'
 import AppBar from '@mui/material/AppBar'
 import Avatar from '@mui/material/Avatar'
@@ -27,6 +27,7 @@ import { useAuthContext } from '../context/AuthContext'
 
 //profile menu
 import ProfileMenu from './../layout/profileMenu'
+import IconBar from './../components/IconBar'
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -83,6 +84,11 @@ const CreatePantpoe = styled('div')(({ theme }) => ({
     marginLeft: theme.spacing(1),
     width: 'auto',
   },
+  '& a': {
+    [theme.breakpoints.only('xs')]: {
+      fontSize: '0.725rem',
+    },
+  },
 }))
 
 export default function SearchAppBar() {
@@ -90,17 +96,31 @@ export default function SearchAppBar() {
   const ismatch = useMediaQuery(theme.breakpoints.up('md'))
 
   const { isAuthenticated, logout } = useAuthContext()
+  const history = useHistory()
+  const goToLogin = () => {
+    history.push('/login')
+  }
+  const goToRegister = () => {
+    history.push('/register')
+  }
 
   return (
     <Box sx={{ flexGrow: 1 }} style={{ padding: 0 }}>
       <AppBar position='static' style={{ backgroundColor: '#fff' }}>
         <Toolbar>
           <Avatar alt='Remy Sharp' src={logo} sx={{ width: 54, height: 54 }} />
-
           {ismatch || <Grid flexGrow='1'></Grid>}
-          {isAuthenticated && <Grid flexGrow='1'></Grid>}
+          {isAuthenticated && ismatch && (
+            <>
+              <Grid flexGrow='1'></Grid>
+              <Grid>
+                <IconBar />
+              </Grid>
+              <Grid flexGrow='1'></Grid>
+            </>
+          )}
           {isAuthenticated || (ismatch && <PcNavbar />)}
-
+          helo worl
           <Search style={{ display: ismatch ? '' : 'none' }}>
             <SearchIconWrapper>
               <SearchIcon />
@@ -110,24 +130,51 @@ export default function SearchAppBar() {
               inputProps={{ 'aria-label': 'search' }}
             />
           </Search>
-
           {isAuthenticated ? (
             <ProfileMenu />
           ) : (
             <>
-              <Button style={{ color: '#000' }}>Log In</Button>
+              <Button style={{ color: '#000' }} onClick={goToLogin}>
+                Log In
+              </Button>
 
-              <CustomButton size='small' style={{ color: '#fff' }}>
-                <Link to='/login' className='linkBtn'>
-                  Create a Pant Poe
-                </Link>
+              <CustomButton
+                size='small'
+                style={{ color: '#fff' }}
+                onClick={goToRegister}
+              >
+                <span
+                  style={{
+                    fontSize: '0.52rem',
+                    display: 'flex',
+                    alignSelf: 'center',
+                  }}
+                >
+                  Create a Pantpoe
+                </span>
               </CustomButton>
             </>
           )}
-
-          {ismatch || <Sidebar />}
+          {isAuthenticated && (ismatch || <Sidebar logout={logout} />)}
         </Toolbar>
       </AppBar>
+      {isAuthenticated &&
+        (ismatch || (
+          <AppBar
+            position='fixed'
+            sx={{ top: 'auto', bottom: 0, backgroundColor: '#fff' }}
+          >
+            <Toolbar
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                padding: '3px',
+              }}
+            >
+              <IconBar />
+            </Toolbar>
+          </AppBar>
+        ))}
     </Box>
   )
 }

@@ -3,7 +3,7 @@ import axios from 'axios'
 import { useHistory } from 'react-router'
 import reducer from '../reducers/authReducers'
 
-const BaseUrl = ' http://localhost:8000/api/v1'
+import { BaseUrl } from './../helpers/Constant'
 
 const AuthContext = React.createContext()
 
@@ -13,17 +13,24 @@ const initialStates = {
   loading: false,
   erors: false,
   user: JSON.parse(localStorage.getItem('user')) || {},
+  subscriptions: [],
 }
 
 const adminToken =
   'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9sb2NhbGhvc3Q6ODAwMFwvYXBpXC92MVwvbG9naW4iLCJpYXQiOjE2MzQ1NDQzMTAsIm5iZiI6MTYzNDU0NDMxMCwianRpIjoicmdpMjFiYXF6eVJZZHlQdCIsInN1YiI6MSwicHJ2IjoiODdlMGFmMWVmOWZkMTU4MTJmZGVjOTcxNTNhMTRlMGIwNDc1NDZhYSJ9.BDK4k4MmNb6fy_S3AabTughzzkvldQrAudt60XH88sA'
 
 const AuthProvider = ({ children }) => {
+  let cancelToken
   const history = useHistory()
   const [state, dispatch] = useReducer(reducer, initialStates)
 
-  useEffect(() => {
+  const checkLogin = () => {
     dispatch({ type: 'IS_AUTHENTICATED' })
+  }
+
+  useEffect(() => {
+    checkLogin()
+    console.log('now i am working')
   }, [])
 
   const loginbyAccount = async (formdata) => {
@@ -56,14 +63,21 @@ const AuthProvider = ({ children }) => {
   }
 
   const loginByPovider = async (data) => {
+    if (typeof cancelToken != typeof underfined) {
+      cancelToken.cancel('cancel the previous req')
+    }
+    cancelToken = axios.CancelToken.source()
     const formData = data
 
     try {
-      const response = await axios({
-        method: 'post',
-        url: `${BaseUrl}/auth/google`,
-        data: formData,
-      })
+      const response = await axios(
+        {
+          method: 'post',
+          url: `${BaseUrl}/auth/google`,
+          data: formData,
+        },
+        { cancelToken: cancelToken.token }
+      )
       const data = response.data.data
       //console.log(data)
       if (data.status === 'Active') {
@@ -141,6 +155,20 @@ const AuthProvider = ({ children }) => {
     }
   }
 
+  const defaultLogged = () => {
+    const data = {
+      id: 1,
+      name: 'Admin',
+      role: 'admin',
+      status: 'Active',
+      access_token:
+        'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9sb2NhbGhvc3Q6ODAwMFwvYXBpXC92MVwvbG9naW4iLCJpYXQiOjE2MzIxNTEyNjIsIm5iZiI6MTYzMjE1MTI2MiwianRpIjoieVlPSUd5bHhHOE15YlJDaCIsInN1YiI6MSwicHJ2IjoiODdlMGFmMWVmOWZkMTU4MTJmZGVjOTcxNTNhMTRlMGIwNDc1NDZhYSJ9.XI7ZZqTuWDmL0bNqh7rw1Z27qWovjVgxmS-2uW_qVm4',
+      token_type: 'Bearer',
+    }
+    dispatch({ type: 'LOGIN_SUCCESS', payload: data })
+    history.push('/home')
+  }
+
   return (
     <AuthContext.Provider
       value={{
@@ -151,6 +179,7 @@ const AuthProvider = ({ children }) => {
         registerByaccount,
         registerByPhone,
         loginbyPhone,
+        defaultLogged,
       }}
     >
       {children}

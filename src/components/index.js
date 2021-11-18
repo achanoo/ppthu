@@ -6,7 +6,6 @@ import EditNav from './EditNav'
 import GettingPaid from './GettingPaid'
 import NavBar from './NavBar'
 import PageSetting from './PageSetting'
-import Sidebar from './Sidebar'
 import TabContent from './TabContent'
 import Tabs from './Tabs'
 import Tiers from './Tiers'
@@ -21,7 +20,6 @@ export {
   GettingPaid,
   NavBar,
   PageSetting,
-  Sidebar,
   TabContent,
   Tabs,
   Tiers,

@@ -103,7 +103,11 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const CreatorHome = () => {
+  const history = useHistory()
   const classes = useStyles()
+  const gotoPostCreate = () => {
+    history.push('/post-create')
+  }
   return (
     <>
       <Grid container className={classes.container}>
@@ -167,7 +171,9 @@ const CreatorHome = () => {
                   <Typography variant='subtitle1' color='gray'>
                     You haven't posted anything yet
                   </Typography>
-                  <CustomButton>Make a post</CustomButton>
+                  <CustomButton onClick={gotoPostCreate}>
+                    Make a post
+                  </CustomButton>
                 </div>
               </Box>
             </Grid>
