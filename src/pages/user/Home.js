@@ -64,7 +64,7 @@ const UserHome = () => {
   const theme = useTheme()
   const islaptop = useMediaQuery(theme.breakpoints.down('md'))
   const goToEdit = () => {
-    history.push('/Edit')
+    history.push('/step/1')
   }
 
   return (
