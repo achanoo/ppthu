@@ -223,7 +223,7 @@ const EditProfile = () => {
     <div className={classes.wrapper}>
       <div className={classes.container}>
         <Typography variant='h4' gutterBottom component='div'>
-          Create Profile
+          Edit Profile
         </Typography>
 
         {/* <Box className={`${classes.boxer}  `}>
