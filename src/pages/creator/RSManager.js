@@ -28,7 +28,7 @@ import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import DatePicker from '@mui/lab/DatePicker';
 
 const useStyles = makeStyles((theme) => ({
-    [theme.breakpoints.up('xl')]: {
+    [theme.breakpoints.up('md')]: {
       container: {
         margin: '25px',
       },
@@ -37,10 +37,15 @@ const useStyles = makeStyles((theme) => ({
       },
       customButtonWhite: {
           height: '40px', margin: '8px 4px', padding: "0px 16px"
-      }
+      },
+      alignStart: {
+          textAlign: 'start'
+      },
+      alignEnd: {
+          textAlign: 'end'
+      },
     },
-    [theme.breakpoints.down('xl')]: {
-      
+    [theme.breakpoints.down('md')]: {
       container: {
         margin: '10px',
       },
@@ -48,8 +53,14 @@ const useStyles = makeStyles((theme) => ({
         margin: '4px',
       },
       customButtonWhite: {
-          height: '36px', margin: '8px 2px', padding: "0px 10px"
-      }
+          height: '40px', margin: '8px 2px', padding: "0px 15px"
+      },
+      alignStart: {
+          textAlign: 'justify'
+      },
+      alignEnd: {
+          textAlign: 'justify'
+      },
     },
     linkBtn: {
         fontSize: '12px',color: 'rgb(51,149,255)'
@@ -643,8 +654,10 @@ const [state, setState] = React.useState({
                 
                 <Grid item xs={12} sm={12} md={9}>
                     <Box className={classes.header}>
-                        <Grid container spacing={2} >
-                            <Grid item xs={12} sm={12} md={4} xl={3}>
+                        <Grid container spacing={2} 
+                            justifyContent="center"
+                            alignItems="center">
+                            <Grid item xs={12} sm={12} md={3} xl={3}>
                                 <Search>
                                     <SearchIconWrapper>
                                     <SearchIcon />
@@ -655,7 +668,7 @@ const [state, setState] = React.useState({
                                     />
                                 </Search>
                               </Grid>
-                              <Grid item xs={12} sm={12} md={4} xl={3}>
+                            <Grid item xs={12} sm={12} md={3} xl={3}>
                                 <Grid container>
                                   <Grid item xs={6} sm={6} md={6} >
                                     <CustomButton size='small' style={{margin: '6px', textAlign: 'start', width: '115px'}}  className={classes.customButton}>
@@ -671,7 +684,7 @@ const [state, setState] = React.useState({
                                   </Grid>
                                 </Grid>
                             </Grid>
-                            <Grid item xs={12} sm={12} md={4} xl={6} sx={{float:'right' }}>
+                            <Grid item xs={12} sm={12} md={6} xl={6} className={classes.alignEnd}>
                                 <CustomButton size='small' style={{margin: '8px 2px'}} className={classes.customButton}>
                                         Acitve
                                 </CustomButton>
