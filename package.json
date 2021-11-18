@@ -6,7 +6,6 @@
     "@devexpress/dx-react-chart": "^2.7.6",
     "@devexpress/dx-react-chart-material-ui": "^2.7.6",
     "@devexpress/dx-react-core": "^2.7.6",
-    "@devexpress/dx-react-core @devexpress/dx-react-chart": "2.7.6",
     "@emotion/react": "^11.6.0",
     "@emotion/styled": "^11.6.0",
     "@material-ui/lab": "^4.0.0-alpha.60",

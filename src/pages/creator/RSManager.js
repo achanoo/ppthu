@@ -45,7 +45,7 @@ const useStyles = makeStyles((theme) => ({
           textAlign: 'end'
       },
     },
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('lg')]: {
       container: {
         margin: '10px',
       },
@@ -671,13 +671,13 @@ const [state, setState] = React.useState({
                             <Grid item xs={12} sm={12} md={3} xl={3}>
                                 <Grid container>
                                   <Grid item xs={6} sm={6} md={6} >
-                                    <CustomButton size='small' style={{margin: '6px', textAlign: 'start', width: '115px'}}  className={classes.customButton}>
+                                    <CustomButton size='small' style={{margin: '6px', textAlign: 'start', width: '115px', display: 'flex', alignItems: 'center'}}  className={classes.customButton}>
                                       <Avatar alt='Remy Sharp' src={send} className={classes.buttonImage}/>
-                                          Message
+                                          <span>Message</span>
                                     </CustomButton>
                                   </Grid>
                                   <Grid item xs={6} sm={6} md={6} style={{textAlign: 'end'}} >
-                                    <CustomButton size='small' style={{margin: '6px', textAlign: 'end'}}  className={classes.customButton}>
+                                    <CustomButton size='small' style={{margin: '6px 15px', textAlign: 'end', display: 'flex', alignItems: 'center'}}  className={classes.customButton}>
                                       <Avatar alt='Remy Sharp' src={download} className={classes.buttonImage}/>
                                       CSV
                                     </CustomButton>
@@ -695,7 +695,7 @@ const [state, setState] = React.useState({
                                         Cancelled
                                 </CustomButtonWhite>
                                 <CustomButtonWhite size='small' style={{ height: '40px', margin: '0px 4px', padding: "0px 20px" }}>
-                                    <Avatar alt='Remy Sharp' src={filter} sx={{ width: 20, height: 16, display: 'inline-flex' }}/>
+                                    <Avatar alt='Remy Sharp' src={filter} sx={{ width: 20, height: 16, display: 'inline-flex', alignItems: 'center'}}/>
                                         Filters - 1
                                 </CustomButtonWhite>
                                 <Link to="#" className={classes.linkBtn} sx={{float:'right' }}>Clear all</Link>
@@ -841,15 +841,23 @@ const [state, setState] = React.useState({
                                     </Grid>
                                 </Grid>
                                 <Divider style={{margin: '6px 0px'}}/>
-                                <Grid item xs={12} sm={12} md={12} justifyContent='center' alignItems='center' textAlign="center">
-                                    <CustomButton size='small' style={{ color: '#fff', height: '36px', margin: '6px', padding: "0px 20px" }}>
-                                        <Avatar alt='Remy Sharp' src={send} sx={{ width: 20, height: 18, display: 'inline-flex' }}/>
-                                            Message
-                                    </CustomButton>
-                                    <CustomButton size='small' style={{ color: '#fff', height: '36px', padding: "0px 20px" }}>
-                                        <Avatar alt='Remy Sharp' src={more} sx={{ width: 20, height: 18, display: 'inline-flex' }}/>
-                                            More
-                                    </CustomButton>
+                                <Grid item xs={12} sm={12} md={12}>
+                                  <Box>
+                                    <Grid container justifyContent="space-between" alignItems="center">
+                                      <Grid item xs={6} sm={6} md={6} style={{textAlign: 'start'}}>
+                                        <CustomButton size='small' style={{ color: '#fff', height: '36px', margin: '6px', display: 'flex', alignItems: 'center' }}>
+                                            <Avatar alt='Remy Sharp' src={send} sx={{ width: 20, height: 18, display: 'inline-flex' }}/>
+                                                Message
+                                        </CustomButton>
+                                      </Grid>
+                                      <Grid item xs={6} sm={6} md={6} style={{textAlign: 'end'}}>
+                                        <CustomButton size='small' style={{ color: '#fff', height: '36px', margin: '6px',  display: 'flex', alignItems: 'center' }}>
+                                            <Avatar alt='Remy Sharp' src={more} sx={{ width: 20, height: 18, display: 'inline-flex' }}/>
+                                                More
+                                        </CustomButton>
+                                      </Grid>
+                                    </Grid>
+                                  </Box>
                                 </Grid>
                             </CardContent>
                         </Card>
