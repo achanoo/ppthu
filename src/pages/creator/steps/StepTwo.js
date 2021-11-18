@@ -107,7 +107,29 @@ const StepTwo = () => {
               </CButton>
             </Box>
           </Grid>
-          <Grid item sm={12} md={4}></Grid>
+          <Grid item sm={12} md={4} style={{ position: 'relative' }}>
+            <Box
+              style={{
+                position: 'relative',
+                width: '100%',
+                height: '100%',
+                backgroundImage:
+                  'url("https://thumbs.dreamstime.com/z/plus-red-movie-icon-trendy-grunge-style-isolated-white-background-adult-content-under-eighteen-years-sign-plus-red-movie-170206198.jpg")',
+                backgroundSize: 'cover',
+                backgroundRepeat: 'none',
+                backgroundPosition: 'center center',
+              }}
+            ></Box>
+            <Box
+              style={{
+                height: '100px',
+                backgroundColor: '#fff',
+                width: '100%',
+                position: 'absolute',
+                bottom: '-53px',
+              }}
+            ></Box>
+          </Grid>
         </Grid>
       </div>
     </div>

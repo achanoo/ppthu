@@ -21,7 +21,10 @@ export default function IconButtons() {
   const history = useHistory()
   return (
     <Stack direction='row' spacing={3}>
-      <IconButton aria-label='home' onClick={() => history.push('/home')}>
+      <IconButton
+        aria-label='home'
+        onClick={() => history.push('/creator-profile')}
+      >
         <HomeIcon />
       </IconButton>
       <IconButton aria-label='mail'>
@@ -38,7 +41,7 @@ export default function IconButtons() {
       </IconButton>
       <IconButton
         aria-label='personal incormaton'
-        onClick={() => history.push('/creator-profile')}
+        onClick={() => history.push('/creator-edit')}
       >
         <AccountCircleIcon />
       </IconButton>

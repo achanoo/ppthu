@@ -125,7 +125,7 @@ const CreatorHome = () => {
                   <Box className={classes.overview}>
                     <h4>0</h4>
                     <p>active pantpoes</p>
-                    <Link>View Relationship manager</Link>
+                    <Link to='/rsmanager'>View Relationship manager</Link>
                   </Box>
                 </Box>
                 {/* inconme start */}
@@ -137,7 +137,7 @@ const CreatorHome = () => {
                   <Box className={classes.overview}>
                     <h4>0</h4>
                     <p>per month</p>
-                    <Link>View earnings dashboard</Link>
+                    <Link to='/earnings-overview'>View Earning Overview</Link>
                   </Box>
                 </Box>
               </Box>
@@ -150,9 +150,9 @@ const CreatorHome = () => {
               <Box className={`${classes.messageBox} ${classes.boxBorder}`}>
                 <h6 className={classes.smallTitle}>Need an idea for post?</h6>
                 <ul>
-                  <li>Category1</li>
-                  <li>Category2</li>
-                  <li>Category3</li>
+                  <li>Music</li>
+                  <li>Photography</li>
+                  <li>Animation & illustrations</li>
                 </ul>
               </Box>
             </Grid>

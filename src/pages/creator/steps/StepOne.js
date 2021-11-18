@@ -6,6 +6,7 @@ import {
   FormControlLabel,
   Checkbox,
   Typography,
+  Box,
 } from '@mui/material'
 import { CButton } from './../../../layout/CCButton'
 import { Link } from 'react-router-dom'
@@ -100,7 +101,20 @@ const StepOne = () => {
             </Grid>
             <CButton onClick={() => history.push('/step/2')}>Continue</CButton>
           </Grid>
-          <Grid item sm={12} md={4}></Grid>
+          <Grid item sm={12} md={4} style={{ position: 'relative' }}>
+            <Box
+              style={{
+                position: 'relative',
+                width: '100%',
+                height: '100%',
+                backgroundImage:
+                  'url("https://st2.depositphotos.com/4960035/7335/v/380/depositphotos_73351963-stock-illustration-creative-writing-concept.jpg")',
+                backgroundSize: 'cover',
+                backgroundRepeat: 'none',
+                backgroundPosition: 'center center',
+              }}
+            ></Box>
+          </Grid>
         </Grid>
       </div>
     </div>
