@@ -5,7 +5,7 @@ import { Box } from '@mui/system';
 import { makeStyles } from '@mui/styles'
 import { styled, alpha } from '@mui/material/styles'
 import MenuButton from '../../layout/MenuItem'
-import { CheckBox, Close, DeleteOutline, FilterListOutlined, InboxOutlined, KeyboardArrowDown, MailOutline, Send } from '@mui/icons-material';
+import { CheckBox, Close, DeleteOutline, DownloadOutlined, FilterListOutlined, InboxOutlined, KeyboardArrowDown, MailOutline, Send, SendOutlined } from '@mui/icons-material';
 import SearchIcon from '@mui/icons-material/Search'
 import InputBase from '@mui/material/InputBase'
 import { CustomButton } from '../../layout/CutomerButton'
@@ -26,6 +26,7 @@ import TextField from '@mui/material/TextField';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import DatePicker from '@mui/lab/DatePicker';
+import MoreHoriz from '@mui/icons-material/MoreHoriz';
 
 const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.up('md')]: {
@@ -36,7 +37,10 @@ const useStyles = makeStyles((theme) => ({
         margin: '10px',
       },
       customButtonWhite: {
-          height: '40px', margin: '8px 4px', padding: "0px 16px"
+          height: '45px', padding: "0px 16px", width: '100%'
+      },
+      customButton: {
+          color: '#fff', height: '45px', padding: "0px 16px", width: '100%'
       },
       alignStart: {
           textAlign: 'start'
@@ -44,8 +48,11 @@ const useStyles = makeStyles((theme) => ({
       alignEnd: {
           textAlign: 'end'
       },
+      sideBarPadding: {
+      padding: '16px 16px 5px 16px'
+      }
     },
-    [theme.breakpoints.down('lg')]: {
+    [theme.breakpoints.down('md')]: {
       container: {
         margin: '10px',
       },
@@ -53,7 +60,10 @@ const useStyles = makeStyles((theme) => ({
         margin: '4px',
       },
       customButtonWhite: {
-          height: '40px', margin: '8px 2px', padding: "0px 15px"
+          height: '40px', padding: "0px 15px", width: '100%'
+      },
+      customButton: {
+          color: '#fff', height: '40px', padding: "0px 16px", width: '100%'
       },
       alignStart: {
           textAlign: 'justify'
@@ -61,6 +71,9 @@ const useStyles = makeStyles((theme) => ({
       alignEnd: {
           textAlign: 'justify'
       },
+      sideBarPadding: {
+      padding: '10px 10px 2px 10px'
+      }
     },
     linkBtn: {
         fontSize: '12px',color: 'rgb(51,149,255)'
@@ -80,9 +93,6 @@ const useStyles = makeStyles((theme) => ({
     subTitle: {
         fontSize: '14px',
         fontWeight: 'bold'
-    },
-    customButton: {
-        color: '#fff', height: '40px', padding: "0px 16px" 
     },
     buttonImage: {
         width: 20, height: 20, display: 'inline-flex' 
@@ -111,7 +121,7 @@ const Search = styled('div')(({ theme }) => ({
     color: '#000',
     [theme.breakpoints.up('md')]: {
       // marginLeft: theme.spacing(1),
-      width: '25ch',
+      // width: '25ch',
     },
   }))
   
@@ -494,11 +504,13 @@ const [state, setState] = React.useState({
     >
       
       <Box sx={{padding: '20px'}}>
-        <Grid container>
-          <Grid item xs={10}>
+        <Grid container spacing={2} >
+          <Grid item xs={9}>
           </Grid>
-          <Grid item xs={2}>
+          <Grid item xs={3}>
+            <Button onClick={toggleDrawer(anchor, false)}>
             <Close />
+            </Button>
           </Grid>
         </Grid>
       </Box>
@@ -508,10 +520,11 @@ const [state, setState] = React.useState({
             <Tab label="All filters" {...a11yProps(0)} />
             <Tab label="Saved filters" {...a11yProps(1)} />
           </Tabs>
+          <Divider/>
         </Box>
         <TabPanel value={value} index={0}>
           <Box>
-            <Grid container>
+            <Grid container spacing={2} >
               <Grid item xs={12} sm={12} md={12}>
                 <Typography variant='subtitle1' display="inline" className={classes.subTitle}>
                     Status
@@ -527,9 +540,9 @@ const [state, setState] = React.useState({
             </Grid>
           </Box>
 
-          <Divider />
+          <Divider style={{margin: '20px 0px'}}/>
           <Box>
-            <Grid container>
+            <Grid container spacing={2} >
               <Grid item xs={12} sm={12} md={12}>
                 <Typography variant='subtitle1' display="inline" className={classes.subTitle}>
                     Tiers
@@ -552,7 +565,7 @@ const [state, setState] = React.useState({
             </Grid>
           </Box>
           <Box>
-          <Grid container>
+          <Grid container spacing={2} >
             <Grid item xs={12} sm={12} md={12}>
               <Typography variant='subtitle1' display="inline" className={classes.subTitle}>
                   Benefits
@@ -565,60 +578,58 @@ const [state, setState] = React.useState({
             </Grid>
           </Grid>
           </Box>
-          <Divider />
+          <Divider style={{margin: '20px 0px'}}/>
           <Box>
-            <Grid container>
+            <Grid container spacing={2} >
               <Grid item xs={12} sm={12} md={12}>
                 <Typography variant='subtitle1' display="inline" className={classes.subTitle}>
                     Join Date
                 </Typography>
               </Grid>
               <Grid item xs={6} sm={6} md={6}>
-                <CustomButtonWhite size='small' className={classes.customButtonWhite}>
+                <CustomButtonWhite size='small' className={classes.customButtonWhite} style={{margin: '0px'}}>
                     This week
                 </CustomButtonWhite>
               </Grid>
               <Grid item xs={6} sm={6} md={6}>
-                <CustomButtonWhite size='small' className={classes.customButtonWhite}>
+                <CustomButtonWhite size='small' className={classes.customButtonWhite} style={{margin: '0px'}}>
                   Last week
                 </CustomButtonWhite>
               </Grid>
               <Grid item xs={6} sm={6} md={6}>
-                <CustomButtonWhite size='small' className={classes.customButtonWhite}>
+                <CustomButtonWhite size='small' className={classes.customButtonWhite} style={{margin: '0px'}}>
                     This month
                 </CustomButtonWhite>
               </Grid>
               <Grid item xs={6} sm={6} md={6}>
-                <CustomButtonWhite size='small' className={classes.customButtonWhite}>
+                <CustomButtonWhite size='small' className={classes.customButtonWhite} style={{margin: '0px'}}>
                   Last month
                 </CustomButtonWhite>
               </Grid>
               <Grid item xs={12} sm={12} md={12}>
               <LocalizationProvider dateAdapter={AdapterDateFns}>
                   <DatePicker
-                    label="Basic example"
+                    label="Custom Range"
                     value={value}
                     onChange={(newValue) => {
                       setValue(newValue);
                     }}
-                    renderInput={(params) => <TextField {...params} />}
+                    renderInput={(params) => <TextField {...params} fullWidth/>}
                   />
                 </LocalizationProvider>
               </Grid>
             </Grid>
           </Box>
-          <Divider />
+          <Divider style={{margin: '20px 0px'}}/>
           <Box>
-            <Grid container>
-              <Grid item xs={2} sm={2} md={2}>
-                </Grid>
-              <Grid item xs={5} sm={5} md={5}>
-                <CustomButtonWhite size='small' className={classes.customButtonWhite}>
+            <Grid container spacing={2} >
+              <Grid item xs={6} sm={6} md={6}>
+                <CustomButtonWhite size='small' className={classes.customButtonWhite} style={{margin: '0px'}}>
                   Save filters
                 </CustomButtonWhite>
               </Grid>
-              <Grid item xs={5} sm={5} md={5}>
-                <CustomButton size='small' className={classes.customButtonWhite}>
+              <Grid item xs={6} sm={6} md={6}>
+                <CustomButton size='small' className={classes.customButtonWhite} style={{margin: '0px'}}>
                     Apply filters
                 </CustomButton>
               </Grid>
@@ -635,10 +646,10 @@ const [state, setState] = React.useState({
 //Drawer End
     return (
         <Box className={classes.container}>
-            <Grid container>
+            <Grid container spacing={2} >
                 <Grid item xs={12} sm={12} md={12}>
                     <Box className={classes.header}>
-                        <Grid container spacing={2}>
+                        <Grid container spacing={2}  spacing={2}>
                             <Grid item xs={12} sm={12} md={12}>
                                 <Typography gutterBottom variant='h6' display="inline">
                                     Relationship Manager
@@ -654,10 +665,10 @@ const [state, setState] = React.useState({
                 
                 <Grid item xs={12} sm={12} md={9}>
                     <Box className={classes.header}>
-                        <Grid container spacing={2} 
+                        <Grid container spacing={2}  spacing={2} 
                             justifyContent="center"
                             alignItems="center">
-                            <Grid item xs={12} sm={12} md={3} xl={3}>
+                            <Grid item xs={12} sm={12} md={6} xl={3}>
                                 <Search>
                                     <SearchIconWrapper>
                                     <SearchIcon />
@@ -667,44 +678,62 @@ const [state, setState] = React.useState({
                                     inputProps={{ 'aria-label': 'search' }}
                                     />
                                 </Search>
-                              </Grid>
-                            <Grid item xs={12} sm={12} md={3} xl={3}>
-                                <Grid container>
+                            </Grid>
+                            <Grid item xs={12} sm={12} md={6} xl={3}>
+                                <Grid container spacing={2} >
                                   <Grid item xs={6} sm={6} md={6} >
-                                    <CustomButton size='small' style={{margin: '6px', textAlign: 'start', width: '115px', display: 'flex', alignItems: 'center'}}  className={classes.customButton}>
-                                      <Avatar alt='Remy Sharp' src={send} className={classes.buttonImage}/>
-                                          <span>Message</span>
+                                    <CustomButton size='small' style={{ color: '#fff', display: 'flex', alignItems: 'center' }} className={classes.customButton}>
+                                      <Box style={{ color: '#fff', display: 'flex', alignItems: 'center' }}>
+                                        {/* <Avatar alt='Remy Sharp' src={send} className={classes.buttonImage} /> */}
+                                        <SendOutlined />
+                                        <span>Message</span>
+                                     </Box>
                                     </CustomButton>
                                   </Grid>
                                   <Grid item xs={6} sm={6} md={6} style={{textAlign: 'end'}} >
-                                    <CustomButton size='small' style={{margin: '6px 15px', textAlign: 'end', display: 'flex', alignItems: 'center'}}  className={classes.customButton}>
-                                      <Avatar alt='Remy Sharp' src={download} className={classes.buttonImage}/>
+                                    <CustomButton size='small' style={{ color: '#fff', display: 'flex', alignItems: 'center' }}  className={classes.customButton}>
+                                    {/* <Avatar alt='Remy Sharp' src={download} className={classes.buttonImage} /> */}
+                                    <DownloadOutlined />
                                       CSV
                                     </CustomButton>
                                   </Grid>
                                 </Grid>
                             </Grid>
-                            <Grid item xs={12} sm={12} md={6} xl={6} className={classes.alignEnd}>
-                                <CustomButton size='small' style={{margin: '8px 2px'}} className={classes.customButton}>
-                                        Acitve
-                                </CustomButton>
-                                <CustomButtonWhite size='small' className={classes.customButtonWhite}>
-                                        New
-                                </CustomButtonWhite>
-                                <CustomButtonWhite size='small' className={classes.customButtonWhite}>
-                                        Cancelled
-                                </CustomButtonWhite>
-                                <CustomButtonWhite size='small' style={{ height: '40px', margin: '0px 4px', padding: "0px 20px" }}>
-                                    <Avatar alt='Remy Sharp' src={filter} sx={{ width: 20, height: 16, display: 'inline-flex', alignItems: 'center'}}/>
-                                        Filters - 1
-                                </CustomButtonWhite>
-                                <Link to="#" className={classes.linkBtn} sx={{float:'right' }}>Clear all</Link>
+                            <Grid item xs={12} sm={12} md={12} xl={6} className={classes.alignEnd}>
+                                <Grid container spacing={2} >
+                                  <Grid item xs={4} sm={2} md={2} >
+                                    <CustomButton size='small' style={{ color: '#fff', alignItems: 'center' }} className={classes.customButton}>
+                                            Acitve
+                                    </CustomButton>
+                                  </Grid>
+                                  <Grid item xs={3} sm={2} md={2} >
+                                    <CustomButtonWhite size='small' className={classes.customButtonWhite}>
+                                            New
+                                    </CustomButtonWhite>
+                                  </Grid>
+                                  <Grid item xs={5} sm={2} md={2} >
+                                    <CustomButtonWhite size='small' className={classes.customButtonWhite}>
+                                            Cancelled
+                                    </CustomButtonWhite>
+                                  </Grid>
+                                  <Grid item xs={6} sm={4} md={4} >
+                                    <CustomButtonWhite size='small' className={classes.customButtonWhite}>
+                                        <Avatar alt='Remy Sharp' src={filter} sx={{ width: 20, height: 16, display: 'inline-flex', alignItems: 'center'}}/>
+                                            Filters - 1
+                                    </CustomButtonWhite>
+                                  </Grid>
+                                    <Grid item xs={6} sm={2} md={2} style={{textAlign: 'end'}}>
+                                      <Box style={{paddingTop: '10px'}}>
+                                        <Link to="#" className={classes.linkBtn}>Clear all</Link>
+                                      </Box>
+                                  </Grid>
+                              </Grid>
                             </Grid>
                         </Grid>
                     </Box>
                     
                     <Box className={classes.header}>
-                        <Grid container spacing={2}>
+                        <Grid container spacing={2}  spacing={2}>
                             <Grid item xs={12} sm={12} md={12} style={{textAlign: 'end'}}>
                                 <React.Fragment>
                                 <Button onClick={toggleDrawer('right', true)}>
@@ -723,7 +752,7 @@ const [state, setState] = React.useState({
                     </Box>
                     
                     <Box className={classes.header}>
-                        <Grid container spacing={2}>
+                        <Grid container spacing={2}  spacing={2}>
                             <Grid item xs={12} sm={12} md={12}>
                             <Box sx={{ width: '100%' }}>
                                 <Paper sx={{ width: '100%', mb: 2 }}>
@@ -824,15 +853,15 @@ const [state, setState] = React.useState({
                     <Box className={classes.header}>
                         <Card>
                             <CardContent  className={classes.cardContent}>
-                                <Grid container>
-                                    <Grid item xs={2} sm={2} md={2} style={{padding: '16px 0px 0px 16px'}} justifyContent='center' alignItems='center'>
+                                <Grid container spacing={2} className={classes.sideBarPadding}>
+                                    <Grid item xs={2} sm={2} md={2} justifyContent='center' alignItems='center'>
                                         <Avatar
                                             alt='Remy Sharp'
                                             src='/static/images/avatar/1.jpg'
                                             sx={{ width: 30, height: 30 }} display="inline"
                                         />
                                     </Grid>
-                                    <Grid item xs={10} sm={10} md={10} style={{padding: '16px 0px 0px 6px'}}  justifyContent='center' alignItems='center'>
+                                    <Grid item xs={10} sm={10} md={10} justifyContent='center' alignItems='center'>
                                         <Typography variant='subtitle1' display="inline">
                                             Creator
                                         </Typography>
@@ -842,18 +871,20 @@ const [state, setState] = React.useState({
                                 </Grid>
                                 <Divider style={{margin: '6px 0px'}}/>
                                 <Grid item xs={12} sm={12} md={12}>
-                                  <Box>
-                                    <Grid container justifyContent="space-between" alignItems="center">
+                                  <Box style={{margin: '10px'}}>
+                                    <Grid container spacing={2}  justifyContent="space-between" alignItems="center" space>
                                       <Grid item xs={6} sm={6} md={6} style={{textAlign: 'start'}}>
-                                        <CustomButton size='small' style={{ color: '#fff', height: '36px', margin: '6px', display: 'flex', alignItems: 'center' }}>
-                                            <Avatar alt='Remy Sharp' src={send} sx={{ width: 20, height: 18, display: 'inline-flex' }}/>
-                                                Message
+                                        <CustomButton size='small' style={{ color: '#fff', display: 'flex', alignItems: 'center' }} className={classes.customButton}>
+                                            {/* <Avatar alt='Remy Sharp' src={send} sx={{ width: 20, height: 18, display: 'inline-flex' }}/> */}
+                                            <SendOutlined />    
+                                            Message
                                         </CustomButton>
                                       </Grid>
                                       <Grid item xs={6} sm={6} md={6} style={{textAlign: 'end'}}>
-                                        <CustomButton size='small' style={{ color: '#fff', height: '36px', margin: '6px',  display: 'flex', alignItems: 'center' }}>
-                                            <Avatar alt='Remy Sharp' src={more} sx={{ width: 20, height: 18, display: 'inline-flex' }}/>
-                                                More
+                                        <CustomButton size='small' style={{ color: '#fff', display: 'flex', alignItems: 'center' }} className={classes.customButton}>
+                                            {/* <Avatar alt='Remy Sharp' src={more} sx={{ width: 20, height: 18, display: 'inline-flex' }}/> */}
+                                            <MoreHoriz />  
+                                            More
                                         </CustomButton>
                                       </Grid>
                                     </Grid>
@@ -864,13 +895,13 @@ const [state, setState] = React.useState({
                     </Box>
                     <Box className={classes.header}>
                         <Card className='card'>
-                            <CardContent className='cardcontent'>
-                                <Grid container>
+                            <CardContent className={classes.cardContent}>
+                                <Grid container spacing={2}  className={classes.sideBarPadding}>
                                     <Grid item xs={12} sm={12} md={12}  justifyContent='center' alignItems='center'>
                                         <Typography variant='subtitle1' display="inline" style={{fontWeight: "bold"}}>
                                             ADDITIONAL DETAILS
                                         </Typography>
-                                        <Box style={{padding: '4px', fontWeight: "bold"}} className={classes.addition}>:D</Box>
+                                        <Box style={{fontWeight: "bold"}} className={classes.addition}>:D</Box>
                                     </Grid>
                                 </Grid>
                             </CardContent>
@@ -879,25 +910,25 @@ const [state, setState] = React.useState({
                     <Box className={classes.header}>
                         <Card>
                             <CardContent  className={classes.cardContent}>
-                                <Grid container>
-                                    <Grid item xs={12} sm={12} md={12} style={{padding: '16px 0px 0px 16px'}} justifyContent='center' alignItems='center'>
+                                <Grid container spacing={2}  className={classes.sideBarPadding}>
+                                    <Grid item xs={12} sm={12} md={12} justifyContent='center' alignItems='center'>
                                         <Typography variant='subtitle1' display="inline" style={{fontWeight: "bold"}}>
                                             CONTACT INFORMATION
                                         </Typography>
                                     </Grid>
                                 </Grid>
                                 <Divider style={{margin: '6px 0px'}}/>
-                                <Grid container style={{margin: '6px 0px'}}>
-                                    <Grid item xs={6} sm={6} md={6} justifyContent='center' alignItems='center' textAlign="center">
+                                <Grid container spacing={2}  className={classes.sideBarPadding}>
+                                    <Grid item xs={6} sm={6} md={6} justifyContent='center' alignItems='center' textAlign="start">
                                         <Typography variant='subtitle1' display="inline" className={classes.subTitle}>
                                             Email Address
                                         </Typography>
                                     </Grid>
-                                    <Grid item xs={6} sm={6} md={6} justifyContent='center' alignItems='center' textAlign="center">
+                                    <Grid item xs={6} sm={6} md={6} justifyContent='center' alignItems='center' textAlign="end">
                                         <Link to="#" className={classes.linkBtn}>COPY</Link>
                                     </Grid>
                                 </Grid>
-                                <Grid container style={{margin: '6px 0px'}}>
+                                <Grid container spacing={2}  style={{margin: '6px 0px'}}>
                                     <Grid item xs={12} sm={12} md={12} justifyContent='center' alignItems='center' textAlign="center">
                                         <Typography variant='subtitle1' display="inline" className={classes.subTitle}>
                                             sample@gmail.com
@@ -910,15 +941,15 @@ const [state, setState] = React.useState({
                     <Box className={classes.header}>
                         <Card>
                             <CardContent  className={classes.cardContent}>
-                                <Grid container>
-                                    <Grid item xs={12} sm={12} md={12} style={{padding: '16px 0px 0px 16px'}} justifyContent='center' alignItems='center'>
+                                <Grid container spacing={2}  className={classes.sideBarPadding}>
+                                    <Grid item xs={12} sm={12} md={12} justifyContent='center' alignItems='center'>
                                         <Typography variant='subtitle1' display="inline" style={{fontWeight: "bold"}}>
                                             PAYMENT HISTORY
                                         </Typography>
                                     </Grid>
                                 </Grid>
                                 <Divider style={{margin: '6px 0px'}}/>
-                                <Grid container style={{margin: '6px 0px'}}>
+                                <Grid container spacing={2}>
                                     <Grid item xs={12} sm={12} md={12} justifyContent='center' alignItems='center' textAlign="center">
                                         <TableContainer component={Paper} className={classes.tableContainer}>
                                             <Table aria-label="simple table">
@@ -950,8 +981,8 @@ const [state, setState] = React.useState({
                                     </Grid>
                                 </Grid>
                                 <Divider style={{ margin: '6px 0px' }} />
-                                <Grid container>
-                                  <Grid item xs={12} sm={12} md={12} style={{padding: '16px'}} justifyContent='center' alignItems='center'>
+                                <Grid container spacing={2} style={{padding: '0px 0px 16px 16px'}}>
+                                  <Grid item xs={12} sm={12} md={12}>
                                       <Typography variant='subtitle1'>
                                           Showing more 3 more recent bills.
                                       </Typography>
