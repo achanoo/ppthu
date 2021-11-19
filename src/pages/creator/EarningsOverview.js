@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
             textAlign: 'end'
         },
         customButtonWhite: {
-            width: '125px'
+            width: '160px'
         },
         customButton: {
             width: '160px'
@@ -48,14 +48,11 @@ const useStyles = makeStyles((theme) => ({
             textAlign: 'center'
         },
         customButtonWhite: {
-            width: '170px'
-        },
-        customButton: {
-            width: '170px'
+            width: '150px'
         }
     },
     customButton: {
-        color: '#fff', height: '40px', padding: "0px 20px" 
+        color: '#fff', padding: "0px 20px" 
     },
     boxMargin: {
         margin: '10px'
@@ -99,7 +96,7 @@ const EarningsOverview = () => {
     };
 
     return (
-        <Box className={classes.container} style={{margin: '25px'}}>
+        <Box className={classes.container} style={{margin: '10px'}}>
             <Grid container>
                 <Grid item xs={12} sm={12} md={8}>
                     <Box className={classes.boxMargin}>
@@ -111,7 +108,7 @@ const EarningsOverview = () => {
                             </Grid>
 
                             <Grid item xs={6} sm={6} md={3} style={{textAlign: 'end'}}>
-                                <CustomButtonNormal size='small' className={classes.customButtonWhite} style={{height: '40px'}}>
+                                <CustomButtonNormal size='small' className={classes.customButtonWhite}>
                                     <Link to="/earnings-overview-detail" style={{textDecoration: 'none', color: 'white'}}>Detail</Link>
                                 </CustomButtonNormal>
                             </Grid>
@@ -154,13 +151,13 @@ const EarningsOverview = () => {
                             </Grid>
 
                             <Grid item xs={12} sm={12} md={4} className={classes.alignEnd}>
-                                <CustomButtonNormal size='small' className={classes.customButton} style={{height: '40px'}}>
+                                <CustomButtonNormal size='small' className={classes.customButton}>
                                     Edit Your Bank Information
                                 </CustomButtonNormal>
                             </Grid>
 
                             <Grid item xs={12} sm={12} md={12}>
-                                <Typography gutterBottom variant='h6' className={classes.subTitle} style={{color: 'red'}}>
+                                <Typography gutterBottom variant='h6' className={classes.subTitle} className={classes.alignStart} style={{color: 'red',fontSize: '14px',fontWeight: 'bold'}}>
                                     * Your earnings will delivered to your Bank account at the end of each month.*
                                 </Typography>
                             </Grid>
@@ -173,22 +170,22 @@ const EarningsOverview = () => {
                         <Card className='card'>
                             <CardContent className='cardcontent'>
                                 <Grid container>
-                                    <Grid item xs={2} sm={2} md={2}  justifyContent='center' alignItems='center'>
-                                        <Typography variant='subtitle1' display="inline" style={{fontWeight: "bold"}}>
-                                            Bank
-                                        </Typography>
-                                    </Grid>
-                                    <Grid item xs={10} sm={10} md={10}  justifyContent='center' alignItems='center'>
+                                    <Grid item xs={12} sm={12} md={12}  justifyContent='center' alignItems='center'>
                                         <div>
-                                        <FormControl sx={{ m: 1, minWidth: 120 }}>
+                                        <label className='input-label' htmlFor='bankAccount'>
+                                          Bank
+                                        </label>
+                                        <FormControl sx={{ minWidth: '100%' }}>
                                             <InputLabel id="demo-simple-select-helper-label">Bank</InputLabel>
                                             <Select
-                                            labelId="demo-simple-select-helper-label"
-                                            id="demo-simple-select-helper"
-                                            value={age}
-                                            label="Age"
-                                            onChange={handleChange}
-                                            className={classes.inputField}
+                                                fullWidth
+                                                labelId="demo-simple-select-helper-label"
+                                                id="demo-simple-select-helper"
+                                                value={age}
+                                                label="Age"
+                                                onChange={handleChange}
+                                                className={classes.inputField}
+                                            
                                             >
                                             <MenuItem value={10}>KBZ</MenuItem>
                                             <MenuItem value={20}>AYA</MenuItem>
@@ -236,7 +233,7 @@ const EarningsOverview = () => {
                                     </Grid>
                                     <Grid item xs={12} sm={12} md={12} justifyContent='center' alignItems='center' className={classes.cusFormInput}>
                                         <Box>
-                                            <Grid container>
+                                            <Grid container spacing={1}>
                                                 <Grid item xs={6} sm={6} md={6} justifyContent='center' alignItems='center' style={{textAlign: 'start'}}>
                                                     <CutomButtonWhiteOutline size='small' className={classes.customButtonWhite}>
                                                         Request OTP

@@ -19,18 +19,15 @@ import Select from '@mui/material/Select';
 import { CutomButtonWhiteOutline } from '../../layout/CutomButtonWhiteOutline';
 
 const useStyles = makeStyles((theme) => ({
-    [theme.breakpoints.up('md')]: {
+    [theme.breakpoints.up('lg')]: {
         container: {
             margin: '25px',
         },
         alignStart: {
-            textAlign: 'start'
-        },
-        alignEnd: {
             textAlign: 'end'
         },
         customButtonWhite: {
-            width: '202px'
+            width: '185px'
         }
     },
     [theme.breakpoints.down('md')]: {
@@ -38,13 +35,15 @@ const useStyles = makeStyles((theme) => ({
             margin: '4px',
         },
         alignStart: {
-            textAlign: 'center'
-        },
-        alignEnd: {
-            textAlign: 'center'
+            textAlign: 'end'
         },
         customButtonWhite: {
-            width: '202px'
+            width: '140px'
+        }
+    },
+    [theme.breakpoints.down('sm')]: {
+        alignStart: {
+            textAlign: 'start'
         }
     },
     customButton: {
@@ -96,20 +95,20 @@ const EarningsOverviewDetail = () => {
             <Grid container>
                 <Grid item xs={12} sm={12} md={12}>
                     <Box className={classes.boxMargin}>
-                        <Grid container spacing={2}>
-                            <Grid item xs={12} sm={12} md={6} xl={8} style={{textAlign: 'start'}} >
+                        <Grid container spacing={2} >
+                            <Grid item xs={12} sm={6} md={8} xl={10} style={{textAlign: 'start'}} >
                                 <Typography gutterBottom variant='h6' display="inline">
                                     Earnings Overview (Detail)
                                 </Typography>
                             </Grid>
 
-                            <Grid item xs={6} sm={6} md={3} xl={2} style={{textAlign: 'start'}} >
-                                <CustomButtonNormal size='small' className={classes.customButtonWhite} style={{height: '40px'}}>
+                            <Grid item xs={6} sm={3} md={2} xl={1} className={classes.alignStart}>
+                                <CustomButtonNormal size='small' className={classes.customButtonWhite}>
                                     Download Monthly CSV
                                 </CustomButtonNormal>
                             </Grid>
-                            <Grid item xs={6} sm={6} md={3} xl={2} style={{textAlign: 'end'}}>
-                                <CustomButtonNormal size='small' className={classes.customButtonWhite} style={{height: '40px'}}>
+                            <Grid item xs={6} sm={3} md={2} xl={1} style={{textAlign: 'end'}}>
+                                <CustomButtonNormal size='small' className={classes.customButtonWhite}>
                                     Download Detail CSV
                                 </CustomButtonNormal>
                             </Grid>
