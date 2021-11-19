@@ -37,3 +37,27 @@ export const coverphoto =
 
 export const profilephoto =
   'https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1064&q=80'
+
+export const plans = [
+  {
+    id: 1,
+    level: 'Platinums',
+    price: 10000,
+    image: 'creators/1/plan_images/2021-09-19 20-09Rm2.png',
+    description: null,
+  },
+  {
+    id: 2,
+    level: 'Gold',
+    price: 5000,
+    image: 'creators/1/plan_images/2021-09-19 20-09Rm.png',
+    description: 'Desc',
+  },
+  {
+    id: 2,
+    level: 'Silver',
+    price: 6000,
+    image: 'creators/1/plan_images/2021-09-19 20-09Rm.png',
+    description: 'Desc',
+  },
+]

@@ -163,7 +163,7 @@ const Tiers = () => {
   }
 
   React.useEffect(() => {
-    getSubscriptions()
+    // getSubscriptions()
   }, [])
 
   const createHandleSubmit = () => {

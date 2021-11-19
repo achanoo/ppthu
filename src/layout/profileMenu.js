@@ -31,7 +31,7 @@ export default function AccountMenu() {
   return (
     <React.Fragment>
       <Tooltip title='Account settings'>
-        <IconButton onClick={handleClick} size='small' sx={{ ml: 2 }}>
+        <IconButton size='small' sx={{ ml: 2 }}>
           <Avatar sx={{ width: 32, height: 32 }}>
             {name ? name.charAt(0).toUpperCase() : 'User'}
           </Avatar>

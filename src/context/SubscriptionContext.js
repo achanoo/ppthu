@@ -4,6 +4,7 @@ import { useHistory } from 'react-router'
 import { BaseUrl } from '../helpers/Constant'
 import reducer from '../reducers/subscriptionReducers'
 import { useAuthContext } from './AuthContext'
+import { plans } from './../assets/data'
 
 let cancelToken
 
@@ -24,8 +25,11 @@ const SubscriptionProvider = ({ children }) => {
   const [description, setDescription] = React.useState('')
   // console.log(children)
   React.useEffect(() => {
-    getCategories()
-    getSubscriptions()
+    dispatch({ type: 'SET_LOADING' })
+    dispatch({ type: 'DATA_LOADED', payload: plans })
+    dispatch({ type: 'UNSET_LOADING' })
+    // getCategories()
+    // getSubscriptions()
   }, [])
 
   const getSubscriptions = async () => {
