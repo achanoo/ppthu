@@ -29,7 +29,7 @@ import DatePicker from '@mui/lab/DatePicker';
 import MoreHoriz from '@mui/icons-material/MoreHoriz';
 
 const useStyles = makeStyles((theme) => ({
-    [theme.breakpoints.up('md')]: {
+    [theme.breakpoints.up('lg')]: {
       container: {
         margin: '25px',
       },
@@ -42,6 +42,9 @@ const useStyles = makeStyles((theme) => ({
       customButton: {
           color: '#fff', height: '45px', padding: "0px 16px", width: '100%'
       },
+      customButtonTwo: {
+          color: '#fff', height: '45px', padding: "0px 16px", width: '100%'
+      },
       alignStart: {
           textAlign: 'start'
       },
@@ -52,7 +55,7 @@ const useStyles = makeStyles((theme) => ({
       padding: '16px 16px 5px 16px'
       }
     },
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('lg')]: {
       container: {
         margin: '10px',
       },
@@ -65,6 +68,9 @@ const useStyles = makeStyles((theme) => ({
       customButton: {
           color: '#fff', height: '40px', padding: "0px 16px", width: '100%'
       },
+      customButtonTwo: {
+        color: '#fff', height: '40px', padding: "0px 6px", width: '100%', fontSize: '12px'
+    },
       alignStart: {
           textAlign: 'justify'
       },
@@ -72,7 +78,10 @@ const useStyles = makeStyles((theme) => ({
           textAlign: 'justify'
       },
       sideBarPadding: {
-      padding: '10px 10px 2px 10px'
+        padding: '10px 10px 2px 10px'
+      },
+      muiGridItem: {
+        paddingLeft: '4px'
       }
     },
     linkBtn: {
@@ -646,7 +655,7 @@ const [state, setState] = React.useState({
 //Drawer End
     return (
         <Box className={classes.container}>
-            <Grid container spacing={2} >
+            <Grid container spacing={1} >
                 <Grid item xs={12} sm={12} md={12}>
                     <Box className={classes.header}>
                         <Grid container spacing={2}  spacing={2}>
@@ -848,11 +857,11 @@ const [state, setState] = React.useState({
                         </Grid>
                     </Box>
                 </Grid>
-                <Grid item xs={12} sm={12} md={3}>
+                <Grid item xs={12} sm={12} md={3} className={classes.muiGridItem}>
                     
                     <Box className={classes.header}>
                         <Card>
-                            <CardContent  className={classes.cardContent}>
+                            <CardContent className={classes.cardContent}>
                                 <Grid container spacing={2} className={classes.sideBarPadding}>
                                     <Grid item xs={2} sm={2} md={2} justifyContent='center' alignItems='center'>
                                         <Avatar
@@ -874,14 +883,14 @@ const [state, setState] = React.useState({
                                   <Box style={{margin: '10px'}}>
                                     <Grid container spacing={2}  justifyContent="space-between" alignItems="center" space>
                                       <Grid item xs={6} sm={6} md={6} style={{textAlign: 'start'}}>
-                                        <CustomButton size='small' style={{ color: '#fff', display: 'flex', alignItems: 'center' }} className={classes.customButton}>
+                                        <CustomButton size='small' style={{ color: '#fff', display: 'flex', alignItems: 'center' }} className={classes.customButtonTwo}>
                                             {/* <Avatar alt='Remy Sharp' src={send} sx={{ width: 20, height: 18, display: 'inline-flex' }}/> */}
                                             <SendOutlined />    
                                             Message
                                         </CustomButton>
                                       </Grid>
                                       <Grid item xs={6} sm={6} md={6} style={{textAlign: 'end'}}>
-                                        <CustomButton size='small' style={{ color: '#fff', display: 'flex', alignItems: 'center' }} className={classes.customButton}>
+                                        <CustomButton size='small' style={{ color: '#fff', display: 'flex', alignItems: 'center' }} className={classes.customButtonTwo}>
                                             {/* <Avatar alt='Remy Sharp' src={more} sx={{ width: 20, height: 18, display: 'inline-flex' }}/> */}
                                             <MoreHoriz />  
                                             More

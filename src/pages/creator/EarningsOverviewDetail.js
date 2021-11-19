@@ -21,7 +21,7 @@ import { CutomButtonWhiteOutline } from '../../layout/CutomButtonWhiteOutline';
 const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.up('lg')]: {
         container: {
-            margin: '25px',
+            margin: '20px',
         },
         alignStart: {
             textAlign: 'end'
@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
             width: '185px'
         }
     },
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('lg')]: {
         container: {
             margin: '4px',
         },
@@ -41,11 +41,7 @@ const useStyles = makeStyles((theme) => ({
             width: '140px'
         }
     },
-    [theme.breakpoints.down('sm')]: {
-        alignStart: {
-            textAlign: 'start'
-        }
-    },
+    
     customButton: {
         color: '#fff', height: '40px', padding: "0px 20px" 
     },
