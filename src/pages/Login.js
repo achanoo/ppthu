@@ -232,7 +232,7 @@ const Login = () => {
             type='submit'
             className='btn btn-filled'
           >
-            Log ins
+            Log in
           </CButton>
         </form>
 
