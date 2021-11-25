@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import { styled, alpha } from '@mui/material/styles'
 import { makeStyles } from '@mui/styles'
 import styles from './../assets/post.module.css'
+import Popover from '@mui/material/Popover';
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import Tabs from '@mui/material/Tabs'
@@ -161,6 +162,21 @@ const PostDetailModel = () => {
     e.preventDefault()
     setMore(!more)
   }
+
+  // for link pop up
+  const [popanchorEl, setPopAnchorEl] = React.useState(null);
+
+  const handelPopLinkshare = (event) => {
+    // console.log('helo');
+    setPopAnchorEl(popanchorEl ? null : event.currentTarget);
+  };
+
+  const handlePopClose = () => {
+    setPopAnchorEl(null);
+  }
+
+  const openLinkShare = Boolean(popanchorEl);
+  const id = openLinkShare ? 'simple-popper' : undefined;
   return (
     <Box index={0} className={classes.root}>
       {/*  posts starting from  one post start*/}
@@ -245,9 +261,17 @@ const PostDetailModel = () => {
               <IconButton aria-label='Example'>
                 <FavoriteBorderIcon fontSize='large' />
               </IconButton>
-              <IconButton aria-label='Example'>
-                <IosShareIcon fontSize='large' />
-              </IconButton>
+              <IconButton aria-label='Example' onClick={handelPopLinkshare} >
+                  <IosShareIcon fontSize='large' />
+                </IconButton>
+                <Popover id={id} open={openLinkShare} anchorEl={popanchorEl} onClose={handlePopClose} anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}>
+                  <Box sx={{ border: '1px solid rgb(229,227,221)', p: 1, bgcolor: 'background.paper',borderRadius:'4px' }}>
+                    https://localhost:3000/post-detail/1
+                  </Box>
+                </Popover>
               <IconButton aria-label='Example'>
                 <MoreHorizIcon fontSize='large' />
               </IconButton>

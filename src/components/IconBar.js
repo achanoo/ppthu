@@ -23,7 +23,7 @@ export default function IconButtons() {
     <Stack direction='row' spacing={3}>
       <IconButton
         aria-label='home'
-        onClick={() => history.push('/creator-profile')}
+        onClick={() => history.push('/home')}
       >
         <HomeIcon />
       </IconButton>

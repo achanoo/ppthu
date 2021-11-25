@@ -165,6 +165,8 @@ const AuthProvider = ({ children }) => {
         'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9sb2NhbGhvc3Q6ODAwMFwvYXBpXC92MVwvbG9naW4iLCJpYXQiOjE2MzIxNTEyNjIsIm5iZiI6MTYzMjE1MTI2MiwianRpIjoieVlPSUd5bHhHOE15YlJDaCIsInN1YiI6MSwicHJ2IjoiODdlMGFmMWVmOWZkMTU4MTJmZGVjOTcxNTNhMTRlMGIwNDc1NDZhYSJ9.XI7ZZqTuWDmL0bNqh7rw1Z27qWovjVgxmS-2uW_qVm4',
       token_type: 'Bearer',
     }
+     localStorage.setItem('token', JSON.stringify(data.access_token))
+        localStorage.setItem('user', JSON.stringify(data))
     dispatch({ type: 'LOGIN_SUCCESS', payload: data })
     history.push('/home')
   }

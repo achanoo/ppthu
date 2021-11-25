@@ -231,6 +231,7 @@ const Login = () => {
             bgcolor='rgb(195 197 194)'
             type='submit'
             className='btn btn-filled'
+            
           >
             Log in
           </CButton>

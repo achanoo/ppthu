@@ -1,4 +1,5 @@
 import React from 'react'
+import { useHistory } from 'react-router-dom'
 import { makeStyles } from '@mui/styles'
 import { coverphoto, profilephoto } from './../../assets/data.js'
 import {
@@ -10,6 +11,8 @@ import {
   Button,
 } from '@mui/material'
 import { grid } from '@mui/system'
+
+import Tooltip from '@mui/material/Tooltip';
 import { CButton } from './../../layout/CCButton'
 import { Repeat } from '@mui/icons-material'
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz'
@@ -127,10 +130,17 @@ const useStyles = makeStyles((theme) => ({
   },
   btnoptions: {
     display: 'flex',
-    gap: '10px',
+    
     [theme.breakpoints.only('xs')]: {
-      //padding: '0px 25px',
+      marginTop: '8px'
     },
+
+    '& .MuiButton-root': {
+      marginRight:'3px'
+    }
+
+
+    
   },
   popularCommunity: {
     display: 'flex',
@@ -227,7 +237,7 @@ const useStyles = makeStyles((theme) => ({
   iconText: {
     color: '#333',
     fontSize: '1rem',
-    textTransform: 'capitalize',
+   
     paddingTop: theme.spacing(1),
     display: 'flex',
     alignSelf: 'center',
@@ -238,13 +248,36 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
+const MyComponent = React.forwardRef(function MyComponent(props, ref) {
+  //  Spread the props to the underlying DOM element.
+  return <div { ...props } ref = { ref } >
+    {props.children}
+  </div>
+});
+
 const Profile = () => {
+  const history = useHistory();
   const classes = useStyles()
   const [more, setMore] = React.useState(true)
   const showMore = (e) => {
     e.preventDefault()
     setMore(!more)
   }
+
+  //start for share tooltip
+  const [open, setOpen] = React.useState(false);
+
+  const handleTooltipClose = () => {
+    setOpen(false);
+  };
+
+  const handleTooltipOpen = () => {
+    setOpen(true);
+  };
+
+
+  //end for share tooltip
+
   return (
     <Grid className={classes.container}>
       <div className={classes.info}>
@@ -270,7 +303,29 @@ const Profile = () => {
               <span>pantpoethu</span>
             </Box>
             <Box className={classes.btnoptions}>
-              <CButton>Share</CButton>
+              <Tooltip
+                
+                
+                onClose={handleTooltipClose}
+                open={open}
+                disableFocusListener
+                disableHoverListener
+                disableTouchListener
+  title = "copied"
+                  placement="top"
+              >
+ 
+  
+              <MyComponent>
+              <CButton onClick={() => {
+    navigator.clipboard.writeText('https://localhost:3000/creator-profile'); 
+    handleTooltipOpen();
+    setTimeout(()=>{handleTooltipClose();},'1000')
+  
+                } }> Share < /CButton>
+                              </MyComponent>
+              </Tooltip>
+              
               <CButton>Follow</CButton>
               <CButton>
                 <MoreHorizIcon />
@@ -296,7 +351,7 @@ const Profile = () => {
             {/* starting choices here */}
             <Box className={classes.BtnContainer}>
               <Box className={classes.BtnTools}>
-                <Button onClick={() => console.log('hello world')}>
+                <Button onClick={() => history.push('/rsmanager')}>
                   <span className={`${classes.toolIcon}`}>
                     <span style={{ fontSize: '3rem', color: '#3498db' }}>
                       345
@@ -308,26 +363,44 @@ const Profile = () => {
                 </Button>
               </Box>
               <Box className={classes.BtnTools}>
-                <span className={`${classes.toolIcon}`}>
-                  <RiHeartsLine />
-                </span>
-                <span className={classes.iconText}>be a part of community</span>
+                <Button onClick={() =>  document.querySelector('[id="membership"]').scrollIntoView()}>
+                  <span className={`${classes.toolIcon}`}>
+                    <span style={{ fontSize: '3rem', color: '#3498db' }}>
+                       <RiHeartsLine />
+                    </span>
+                  </span>
+                  <span className={classes.iconText}>
+                    Be a part of community
+                  </span>
+                </Button>
               </Box>
+
               <Box className={classes.BtnTools}>
-                <span className={`${classes.toolIcon}`}>
-                  <FaWifi />
-                </span>
-                <span className={classes.iconText}>be a part of anywhere</span>
+                <Button onClick={() => history.push('/home')}>
+                  <span className={`${classes.toolIcon}`}>
+                    <span style={{ fontSize: '3rem', color: '#3498db' }}>
+                       <FaWifi />
+                    </span>
+                  </span>
+                  <span className={classes.iconText}>
+                    Be a part of anywhere
+                  </span>
+                </Button>
               </Box>
-              <Box className={classes.BtnTools}>
-                <span className={`${classes.toolIcon}`}>
-                  <BiChat />
-                </span>
-                <span className={classes.iconText}>
-                  {' '}
-                  Connect via private message
-                </span>
+
+               <Box className={classes.BtnTools}>
+                <Button onClick={() => console.log('hello world')}>
+                  <span className={`${classes.toolIcon}`}>
+                    <span style={{ fontSize: '3rem', color: '#3498db' }}>
+                       <BiChat />
+                    </span>
+                  </span>
+                  <span className={classes.iconText}>
+                    Connect via private message
+                  </span>
+                </Button>
               </Box>
+              
               <CircleIcon className={classes.spot} />
             </Box>
 
@@ -335,7 +408,7 @@ const Profile = () => {
           </Box>
 
           {/* membership section */}
-          <Box className={classes.membershipSec}>
+          <Box className={classes.membershipSec} id="membership">
             <Typography variant='h4' className={classes.blogtitle}>
               Select a membership level
             </Typography>

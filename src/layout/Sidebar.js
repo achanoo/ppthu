@@ -22,6 +22,7 @@ import user from '../assets/menu/user.svg'
 import profit from '../assets/menu/profit.svg'
 import gear from '../assets/menu/gear.svg'
 import information from '../assets/menu/information.svg'
+import {useAuthContext} from './../context/AuthContext'
 import {
   AccountCircleOutlined,
   PeopleOutline,
@@ -38,7 +39,6 @@ import {
 import { makeStyles } from '@mui/styles'
 import { CustomButton } from './CutomerButton'
 import SearchInput from './SearchInput'
-import { useAuthContext } from '../context/AuthContext'
 
 const useStyles = makeStyles((theme) => ({
   blogSearch: {
@@ -53,6 +53,8 @@ export default function TemporaryDrawer({ props }) {
   const history = useHistory()
   const classes = useStyles()
   const [toggle, setToggle] = useState(false)
+
+  const { logout } = useAuthContext();
 
   const closeSidebar = () => setToggle(!toggle)
 
@@ -121,7 +123,7 @@ export default function TemporaryDrawer({ props }) {
         <ListItem
           button
           key='Personal Information'
-          onClick={() => history.push('/creator-profile')}
+          onClick={() => { history.push('/creator-profile'); closeSidebar();}}
         >
           <ListItemIcon>
             <Avatar
@@ -142,7 +144,7 @@ export default function TemporaryDrawer({ props }) {
         </ListItem>
 
         <Divider style={{ margin: '0px 18px' }} />
-        <ListItem button key='Manage Memberships'>
+        <ListItem button key='Manage Memberships' onClick={() => { history.push('/rsmanager');closeSidebar();}}>
           <ListItemIcon>
             <Avatar
               alt='Remy Sharp'
@@ -166,7 +168,7 @@ export default function TemporaryDrawer({ props }) {
         </ListItem>
 
         <Divider style={{ margin: '0px 18px' }} />
-        <ListItem button key='Become a creator'>
+        <ListItem button key='Become a creator' onClick={() => { history.push('/edit');closeSidebar();}}>
           <ListItemIcon>
             <Avatar
               alt='Remy Sharp'
@@ -178,7 +180,7 @@ export default function TemporaryDrawer({ props }) {
         </ListItem>
 
         <Divider style={{ margin: '0px 18px' }} />
-        <ListItem button key='Settings'>
+        <ListItem button key='Settings' onClick={() => { history.push('/user-profile');closeSidebar();}}>
           <ListItemIcon>
             <Avatar
               alt='Remy Sharp'
@@ -202,7 +204,13 @@ export default function TemporaryDrawer({ props }) {
         </ListItem>
 
         <Divider style={{ margin: '0px 18px' }} />
-        <ListItem button key='Logout' onClick={() => props.logout()}>
+        {/* <ListItem button key='Logout' onClick={() => props.logout()}>
+          <ListItemIcon>
+            <Logout />
+          </ListItemIcon>
+          <ListItemText primary='Logout' />
+        </ListItem> */}
+        <ListItem button key='Logout' onClick={() => logout()}>
           <ListItemIcon>
             <Logout />
           </ListItemIcon>

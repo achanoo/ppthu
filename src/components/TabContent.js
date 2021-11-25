@@ -5,6 +5,7 @@ import { styled, alpha } from '@mui/material/styles'
 import { makeStyles } from '@mui/styles'
 import styles from './../assets/post.module.css'
 import Menu from '@mui/material/Menu'
+import Popover from '@mui/material/Popover';
 import MenuItem from '@mui/material/MenuItem'
 import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
@@ -280,7 +281,24 @@ export default function BasicTabs() {
     setAnchorEl(null)
   }
 
-  const gotoDetail = () => [history.push('/post-detail/1')]
+  
+
+  // for link pop up
+  const [popanchorEl, setPopAnchorEl] = React.useState(null);
+
+  const handelPopLinkshare = (event) => {
+    // console.log('helo');
+    setPopAnchorEl(popanchorEl ? null : event.currentTarget);
+  };
+
+  const handlePopClose = () => {
+    setPopAnchorEl(null);
+  }
+
+  const openLinkShare = Boolean(popanchorEl);
+  const id = openLinkShare ? 'simple-popper' : undefined;
+
+  const gotoDetail = () => history.push('/post-detail/1');
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -318,9 +336,7 @@ export default function BasicTabs() {
         {/*  posts starting from  one post start*/}
         <div
           className={`${classes.allposts} `}
-          onClick={() => {
-            gotoDetail()
-          }}
+          
         >
           {/* account info and to like btn */}
           <div className={classes.postCard}>
@@ -382,7 +398,9 @@ export default function BasicTabs() {
                   </p>
                 </div>
               </div>
-              <span className={classes.readmore} onClick={() => setMore(!more)}>
+              
+              {/* <span className={classes.readmore} onClick={() => setMore(!more)}> */}
+              <span className={classes.readmore} onClick={() =>  gotoDetail()}>
                 {more ? 'continue reading' : 'less reading'}
               </span>
               <Button
@@ -403,9 +421,18 @@ export default function BasicTabs() {
                 <IconButton aria-label='Example'>
                   <FavoriteBorderIcon fontSize='large' />
                 </IconButton>
-                <IconButton aria-label='Example'>
+                <IconButton aria-label='Example' onClick={handelPopLinkshare} >
                   <IosShareIcon fontSize='large' />
                 </IconButton>
+                <Popover id={id} open={openLinkShare} anchorEl={popanchorEl} onClose={handlePopClose} anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}>
+                  <Box sx={{ border: '1px solid rgb(229,227,221)', p: 1, bgcolor: 'background.paper',borderRadius:'4px' }}>
+                    https://localhost:3000/post-detail/1
+                  </Box>
+                </Popover>
+ 
                 <IconButton aria-label='Example'>
                   <MoreHorizIcon fontSize='large' />
                 </IconButton>
@@ -800,3 +827,6 @@ export default function BasicTabs() {
     </Box>
   )
 }
+
+
+

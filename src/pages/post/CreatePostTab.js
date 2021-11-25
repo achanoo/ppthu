@@ -60,6 +60,7 @@ const useStyles = makeStyles((theme) => ({
     padding: '20px',
   },
   pollFormControl: {
+    marginBottom: '2vh',
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'flex-start',
@@ -262,7 +263,17 @@ export default function BasicTabs(props) {
             <Checkbox {...label} defaultChecked />
             <TextField
               id='outlined-basic'
-              label='Outlined'
+              label='Enter poll Option'
+              variant='outlined'
+              fullWidth
+            />
+          </Box>
+
+          <Box className={classes.pollFormControl}>
+            <Checkbox {...label} defaultChecked />
+            <TextField
+              id='outlined-basic'
+              label='Enter poll Option'
               variant='outlined'
               fullWidth
             />

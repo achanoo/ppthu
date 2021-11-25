@@ -8,6 +8,7 @@ import Radio from '@mui/material/Radio'
 import RadioGroup from '@mui/material/RadioGroup'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import FormControl from '@mui/material/FormControl'
+import TextareaAutosize from '@mui/material/TextareaAutosize'
 import FormLabel from '@mui/material/FormLabel'
 import { FaTimes } from 'react-icons/fa'
 
@@ -26,6 +27,7 @@ import { useSubscriptionContext } from './../../context/SubscriptionContext'
 import { Audio } from '../../components/Audio'
 import Gridview from './../../components/Gridview'
 import { CButton } from '../../layout/CCButton'
+import { display, fontWeight } from '@mui/system'
 const useStyles = makeStyles((theme) => ({
   container: {
     marginTop: '10vh',
@@ -87,6 +89,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'grid',
   },
   SubTitle: {
+    marginTop:'8px',
     fontWeight: '800px',
     textTransform: 'uppercase',
     marginBottom: 0,
@@ -116,6 +119,12 @@ const useStyles = makeStyles((theme) => ({
       color: 'red',
     },
   },
+  textCounting: {
+    fontSize: '0.825rem',
+    display: 'flex',
+    justifyContent: 'flex-end',
+    fontWeight:'600 !important'
+  }
 }))
 const PostCreate = () => {
   const { isloading, categories } = useSubscriptionContext()
@@ -156,6 +165,7 @@ const PostCreate = () => {
   const classes = useStyles()
   const [title, setTitle] = useState('')
   const [post, setPost] = useState('')
+  const [textCounting,setTextCounting]=useState(540)
 
   const handlePost = (data) => {
     //console.log(post)
@@ -175,6 +185,12 @@ const PostCreate = () => {
     history.push('/home')
   }
 
+  const checkingTextCount = (e) => {
+    let textLenght = e.target.value.length;
+    console.log(textLenght);
+    setTextCounting(textCounting - textLenght);
+  }
+
   // if (isloading) {
   //   return <Loading />
   // }
@@ -184,7 +200,7 @@ const PostCreate = () => {
       <Grid container className={classes.container}>
         <Grid item xs={12} sm={12} md={1}></Grid>
         <Grid item xs={12} sm={12} md={10}>
-          <Grid container spacing={{ xs: 0, sm: 0, md: 2 }}>
+          <Grid container spacing={{ xs: 1, sm: 0, md: 2 }}>
             <Grid
               item
               xs={12}
@@ -327,7 +343,28 @@ const PostCreate = () => {
                 </h4>
                 <SelectSubscriptions />
                 <Divider className={classes.divider} />
+                
+                {/* text teaser start */}
+                <Box>
+                  <h4  className={classes.SubTitle}>
+                    TEASTER TEXT
+                  </h4>
+                  <h5 style={{marginTop:'5px'}}>
+                    The First 540 characters of your post will display publicly as teasers to fans and pantpoethu who do not have access to this post.
+                  </h5>
+                  <TextareaAutosize
+                    onChange={checkingTextCount}
+                    maxRows={4}
+                    aria-label="maximum height"
+                    placeholder="Add public taster text ..."
+                    
+                    style={{ width: '100%', height: 80, border: '1px solid rgb(229,227,221);', borderRadius: '4px', backgroundColor: 'rgb(208,221,229);' }}
+                  />
+                  <span className={classes.textCounting}> <span >{ textCounting}</span> characters left</span>
               </Box>
+
+              </Box>
+              
             </Grid>
           </Grid>
         </Grid>

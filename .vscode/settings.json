@@ -1,0 +1,8 @@
+{
+    "typescript.tsdk": "node_modules/typescript/lib",
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": true,
+    "prettier.endOfLine": "auto",
+    "prettier.jsxBracketSameLine": true,
+    "prettier.insertPragma": true
+}

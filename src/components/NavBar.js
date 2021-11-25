@@ -120,7 +120,7 @@ export default function SearchAppBar() {
             </>
           )}
           {isAuthenticated || (ismatch && <PcNavbar />)}
-          helo worl
+          
           <Search style={{ display: ismatch ? '' : 'none' }}>
             <SearchIconWrapper>
               <SearchIcon />
@@ -130,9 +130,13 @@ export default function SearchAppBar() {
               inputProps={{ 'aria-label': 'search' }}
             />
           </Search>
-          {isAuthenticated ? (
+
+
+          {isAuthenticated && ismatch && 
             <ProfileMenu />
-          ) : (
+         }
+
+          {isAuthenticated ||(
             <>
               <Button style={{ color: '#000' }} onClick={goToLogin}>
                 Log In
