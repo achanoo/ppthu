@@ -7,10 +7,13 @@ import {
   FormHelperText,
   InputAdornment,
 } from '@mui/material'
+import { makeStyles } from '@mui/styles'
 import Card from '@mui/material/Card'
+import Avatar from '@mui/material/Avatar'
 import CardContent from '@mui/material/CardContent'
 import Button from '@mui/material/Button'
 import Grid from '@mui/material/Grid'
+import Box from '@mui/material/Box'
 import TextField from '@mui/material/TextField'
 import Editor from './../components/Editor'
 import Link from '@mui/material/Link'
@@ -19,22 +22,27 @@ import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
 import '../assets/style.css'
+import { ClassNames } from '@emotion/react'
+
+const useStyles=makeStyles(theme=>({
+  'tierImage':{
+    display:'inline-flex',
+    justifyContent:'space-around',
+    alignItems:'center',
+    '& .MuiAvatar-root':{
+      width:'80px',
+      height:'80px'
+    }
+  }
+}))
 let initialdata = {
   subcriptPlans: [],
   newDialog: false,
   editDialog: false,
-  newData: {
-    title: '',
+    level: '',
     price: '',
     image: '',
     desc: '',
-  },
-  editData: {
-    title: '',
-    price: '',
-    image: '',
-    desc: '',
-  },
   isError: {
     title: '',
     price: '',
@@ -43,6 +51,7 @@ let initialdata = {
 }
 
 const Tiers = () => {
+  const classes=useStyles();
   const {
     setLevel,
     setPrice,
@@ -63,6 +72,7 @@ const Tiers = () => {
   const [content, setContent] = useState('')
   const [fullWidth, setFullWidth] = React.useState(true)
   const [maxWidth, setMaxWidth] = React.useState('sm')
+  const [preview,setPreview]=React.useState('');
 
   const config = {
     readonly: false, // all options from https://xdsoft.net/jodit/doc/
@@ -77,6 +87,7 @@ const Tiers = () => {
     //   return { ...state, newData: { ...state.newData, desc: value } }
     // })
   }
+  
   const newhandleOpen = (e) => {
     setState({
       ...state,
@@ -100,37 +111,64 @@ const Tiers = () => {
   const NewformInputValue = (e) => {
     const { name, value, files } = e.target
 
-    const { isError, newData } = state
+    //console.log(name,value);
 
-    switch (name) {
-      case 'title':
-        isError.title = value.length < 0 ? 'data is required' : ''
-        break
-      case 'price':
-        isError.price = value.length < 0 ? 'data is required' : ''
-        break
-      case 'image':
-        isError.image = value.length < 0 ? 'data is required' : ''
-        break
+    // const { isError } = state;
+
+
+    // switch (name) {
+    //   case 'title':
+    //     isError.title = value.length < 0 ? 'data is required' : ''
+    //     break
+    //   case 'price':
+    //     isError.price = value.length < 0 ? 'data is required' : ''
+    //     break
+    //   case 'image':
+    //     isError.image = files[0].size < 0 ? 'data is required' : ''
+    //     break
+    // }
+
+    if(name!=='image'){
+    
+      setState(prevState=>({
+        ...prevState,
+       
+        [name]:value
+
+
+     }))
+    }else{
+      setPreview(URL.createObjectURL(files[0]));
+      setState(prevState=>({
+        ...prevState,
+       
+        image:files[0]
+
+
+     }))
     }
 
-    if (name === 'title') {
-      isError.title = value.length < 0 ? 'data is required' : ''
-      setLevel(value)
-      setState({ ...state, isError })
-    }
+     
 
-    if (name === 'price') {
-      isError.price = value.length < 0 ? 'data is required' : ''
-      setPrice(value)
-      setState({ ...state, isError })
-    }
 
-    if (name === 'image') {
-      isError.price = files[0].size < 0 ? 'data is required' : ''
-      setImage(files[0])
-      setState({ ...state, isError })
-    }
+
+    // if (name === 'title') {
+    //   isError.title = value.length < 0 ? 'data is required' : ''
+    //   setLevel(value)
+    //   setState({ ...state, isError })
+    // }
+
+    // if (name === 'price') {
+    //   isError.price = value.length < 0 ? 'data is required' : ''
+    //   setPrice(value)
+    //   setState({ ...state, isError })
+    // }
+
+    // if (name === 'image') {
+    //   isError.price = files[0].size < 0 ? 'data is required' : ''
+    //   setImage(files[0])
+    //   setState({ ...state, isError })
+    // }
 
     // setState({
     //   ...state,
@@ -152,7 +190,11 @@ const Tiers = () => {
   }
 
   const NewgetValue = (value) => {
-    setDescription(value)
+    setState(prev=>({
+      ...prev,
+      desc:value
+    }))
+    // setDescription(value)
     // setState({ ...state, isError })
   }
   const editGetValue = (value) => {
@@ -163,28 +205,32 @@ const Tiers = () => {
   }
 
   React.useEffect(() => {
-    // getSubscriptions()
+     getSubscriptions()
   }, [])
 
   const createHandleSubmit = () => {
-    const newformData = {
-      level: state.newData.title,
-      price: state.newData.price,
-      image: state.newData.image,
-      desc: state.newData.desc,
-    }
+     const formData = new FormData()
+    formData.append('level', state.level)
+    formData.append('price', state.price)
+    formData.append('image', state.image)
+    formData.append('description', state.desc)
+    // const newformData = {
+    //   level: state.title,
+    //   price: state.price,
+    //   image: state.image,
+    //   desc: state.desc,
+    // }
     // console.log(newformData)
-    createSubscriptions(newformData)
-    setState({
-      ...state,
-      newDialog: false,
-    })
+    createSubscriptions(formData)
+    setState(prevState=>({
+      initialdata
+    }))
   }
 
   if (isloading) {
     return <Loading />
   }
-  console.log(subscriptions)
+  //console.log(subscriptions)
   return (
     <>
       <Grid container spacing={2}>
@@ -276,7 +322,7 @@ const Tiers = () => {
 
                   {subscriptions.map((plan, index) => {
                     const { id, level, price, description } = plan
-                    console.log(level)
+                    
                     return (
                       <Grid key={index} item xs={12} sm={6} md={4} lg={4}>
                         <Card style={{ borderRadius: '0' }}>
@@ -317,8 +363,10 @@ const Tiers = () => {
                                     padding: '6px',
                                     margin: '16px 0px',
                                   }}
+
+                                   dangerouslySetInnerHTML={{__html: `${description}`}} 
                                 >
-                                  {description}
+                                
                                 </div>
                                 {/* <div
                                   style={{
@@ -393,7 +441,7 @@ const Tiers = () => {
                 defaultValue='Official Patron'
                 placeholder='Official Patron'
                 color='info'
-                name='title'
+                name='level'
                 onChange={NewformInputValue}
               />
             </Grid>
@@ -421,16 +469,19 @@ const Tiers = () => {
               <p className='input-label'> Tier Image </p>
             </Grid>
             <Grid item xs={12} sm={12} md={8} style={{ alignSelf: 'center' }}>
+              <Box className={classes.tierImage} >
               <input
-                accept='image/*'
-                className=''
-                id='contained-button-file'
-                multiple
-                type='file'
-                name='image'
-                onChange={NewformInputValue}
-              />
+                  accept='image/*'
+                  className=''
+                  id='contained-button-file'
+                  multiple
+                  type='file'
+                  name='image'
+                  onChange={NewformInputValue}
+                />
 
+                <Avatar  alt="Remy Sharp" src={preview} />
+              </Box>
               <label htmlFor='contained-button-file'></label>
             </Grid>
           </Grid>
@@ -476,7 +527,7 @@ const Tiers = () => {
                 defaultValue='Official Patron'
                 placeholder='Official Patron'
                 color='info'
-                name='title'
+                name='level'
                 onChange={EditformInputValue}
               />
             </Grid>

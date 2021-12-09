@@ -178,6 +178,16 @@ export default function BasicTabs(props) {
     hideInputType('audioSelected')
   }
 
+  const changeLink =(e)=>{
+  props.inputChange(e);
+  setTimeout(()=>{
+     hideInputType('linkSelected')
+  },1000)
+ 
+  }
+
+
+
   const label = { inputProps: { 'aria-label': 'Checkbox demo' } }
 
   const showInputType = (type) => {
@@ -275,6 +285,7 @@ export default function BasicTabs(props) {
               id='outlined-basic'
               label='Enter poll Option'
               variant='outlined'
+              
               fullWidth
             />
           </Box>
@@ -292,9 +303,10 @@ export default function BasicTabs(props) {
           <TextField
             id='outlined-basic'
             inputProps={{ 'aria-label': 'Without label' }}
-            placeholder='Enter poll Option'
-            label='Outlined'
+            placeholder='Enter URl Link'
             variant='outlined'
+            name="link"
+             onChange={changeLink}
           />
 
           <span className={classes.smalltext}>Enter Embedded Link here!</span>

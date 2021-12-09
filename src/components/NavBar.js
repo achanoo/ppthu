@@ -108,8 +108,9 @@ export default function SearchAppBar() {
     <Box sx={{ flexGrow: 1 }} style={{ padding: 0 }}>
       <AppBar position='static' style={{ backgroundColor: '#fff' }}>
         <Toolbar>
+        <>
           <Avatar alt='Remy Sharp' src={logo} sx={{ width: 54, height: 54 }} />
-          {ismatch || <Grid flexGrow='1'></Grid>}
+          {ismatch || <><Grid flexGrow='1'></Grid></>}
           {isAuthenticated && ismatch && (
             <>
               <Grid flexGrow='1'></Grid>
@@ -120,7 +121,8 @@ export default function SearchAppBar() {
             </>
           )}
           {isAuthenticated || (ismatch && <PcNavbar />)}
-          
+
+          <>
           <Search style={{ display: ismatch ? '' : 'none' }}>
             <SearchIconWrapper>
               <SearchIcon />
@@ -130,7 +132,7 @@ export default function SearchAppBar() {
               inputProps={{ 'aria-label': 'search' }}
             />
           </Search>
-
+          </>
 
           {isAuthenticated && ismatch && 
             <ProfileMenu />
@@ -160,6 +162,7 @@ export default function SearchAppBar() {
             </>
           )}
           {isAuthenticated && (ismatch || <Sidebar logout={logout} />)}
+          </>
         </Toolbar>
       </AppBar>
       {isAuthenticated &&

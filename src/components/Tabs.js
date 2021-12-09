@@ -71,7 +71,7 @@ export default function BasicTabs() {
         </Box>
 
         <TabPanel value={value} index={0}>
-          <Basic />
+          <Basic handleChange={handleChange} />
         </TabPanel>
         <TabPanel value={value} index={1}>
           <Tiers />

@@ -1,9 +1,22 @@
 const postReducer = (state, action) => {
+  if(action.type === 'SET_LOADING'){
+    return {
+      ...state,
+      loading:true
+    }
+  }
+  if(action.type === 'UNSET_LOADING'){
+    return {
+      ...state,
+      loading:false
+    }
+  }
   if (action.type === 'IMAGE_SELECTED') {
     return {
       ...state,
       isImageSelected: true,
       imageData: action.payload,
+      formImageData:action.images
     }
   }
 
@@ -12,6 +25,7 @@ const postReducer = (state, action) => {
       ...state,
       isVideoSelected: true,
       video: action.payload,
+      formVideo:action.video
     }
   }
 
@@ -20,6 +34,7 @@ const postReducer = (state, action) => {
       ...state,
       isAudioSelected: true,
       audio: action.payload,
+      formAudio: action.audio,
     }
   }
 
@@ -27,7 +42,8 @@ const postReducer = (state, action) => {
     return {
       ...state,
       isImageSelected: false,
-      image: [],
+      imageData: [],
+      formImageData:[]
     }
   }
   if (action.type === 'Video_REMOVE') {
@@ -35,6 +51,7 @@ const postReducer = (state, action) => {
       ...state,
       isVideoSelected: false,
       video: '',
+      formVideo:''
     }
   }
   if (action.type === 'Audio_REMOVE') {
@@ -42,8 +59,29 @@ const postReducer = (state, action) => {
       ...state,
       isAudioSelected: false,
       audio: '',
+      formAudio:''
     }
   }
+
+  //data loading
+
+  if(action.type === 'LOAD_DATA'){
+    return {
+      ...state,
+      posts:action.payload
+    }
+  }
+
+  if(action.type==='LOAD_DATA_BY_ID'){
+    return {
+      ...state,
+      post:action.payload
+    }
+  }
+
+
+
+
   // return state
   throw new Error(`No Matching "${action.type}" - action type`)
 }

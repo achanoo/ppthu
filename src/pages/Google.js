@@ -7,8 +7,11 @@ import { useAuthContext } from '../context/AuthContext'
 export default function Google(props) {
   const { loginByPovider } = useAuthContext()
   const onResponse = (googleResponse) => {
+    console.log('helo');
+    console.log(googleResponse);
     if (googleResponse) {
-      const res = googleResponse.profileObj
+      const res = googleResponse.profileObj;
+      console.log(res);
     const formData = {
       email: res.email,
       token: res.googleId,
@@ -25,8 +28,9 @@ export default function Google(props) {
   }
   return (
     <GoogleLogin
-      clientId='37192225670-f4gb7ohcfij72kvu5mfn5qtbque098q8.apps.googleusercontent.com'
+      clientId='263320373300-l7bkr5puk00c726kpoukb9hl0mrh62nv.apps.googleusercontent.com'
       autoLoad={false}
+      isSignedIn={false}
       render={(renderProps) => (
         <button
           onClick={renderProps.onClick}

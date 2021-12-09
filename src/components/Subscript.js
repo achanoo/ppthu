@@ -10,6 +10,7 @@ import { useSubscriptionContext } from './../context/SubscriptionContext'
 import { makeStyles } from '@mui/styles'
 
 import { subscriptPlan } from './../assets/data.js'
+import { usePostContext } from '../context/PostContext'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -19,9 +20,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-export default function CheckboxesGroup() {
+export default function CheckboxesGroup(props) {
   const classes = useStyles()
   const { subscriptions, isloading } = useSubscriptionContext()
+  const {}=usePostContext();
 
   const fromatSubscriptions = (data) => {
     return subscriptions.map((sub) => {
@@ -30,18 +32,45 @@ export default function CheckboxesGroup() {
     })
   }
 
-  const [state, setState] = React.useState(fromatSubscriptions(subscriptions))
+  const [state, setState] = React.useState({
+    list:fromatSubscriptions(subscriptions),
+    selected:[]
+  })
 
   React.useEffect(() => {
     let data = fromatSubscriptions(subscriptions)
     setState((state) => {
-      return data
+      return {...state,list:data}
     })
   }, [subscriptions])
   // console.log(state)
 
-  const handleChange = (event) => {
-    console.log(state)
+  const handleChange = (id) => {
+    
+    const {list,selected}=state;
+    let newlist=list.map((item)=>{
+      if(item.id == id)
+       item.ischecked =!item.ischecked;
+       
+       return item;
+
+    })
+
+    let find = selected.indexOf(id)
+
+      if(find > -1) {
+        selected.splice(find, 1)
+      } else {
+        selected.push(id)
+      }
+
+    setState((prev)=>({
+      selected,
+      list:newlist
+    })) 
+    
+    props.getTiers(state.selected);
+    
   }
 
   //const { gilad, jason, antoine } = state
@@ -59,7 +88,7 @@ export default function CheckboxesGroup() {
       >
         {/* <FormLabel component='legend'>Pick two</FormLabel> */}
         <FormGroup>
-          {subscriptPlan.map((item) => {
+          {state.list.map((item) => {
             const { name, id, ischecked } = item
             return (
               <FormControlLabel
@@ -67,7 +96,7 @@ export default function CheckboxesGroup() {
                 control={
                   <Checkbox
                     checked={ischecked}
-                    onChange={handleChange}
+                    onChange={(e)=>handleChange(id)}
                     name={name}
                   />
                 }

@@ -7,6 +7,14 @@ import { BaseUrl } from './../helpers/Constant'
 
 const AuthContext = React.createContext()
 
+const updateUser={
+  name:'',
+  role_id:'',
+  cover_photo:'',
+  profile_image:''
+
+};
+
 const initialStates = {
   isAuthenticated: false,
   token: JSON.parse(localStorage.getItem('token')) || '',
@@ -14,6 +22,7 @@ const initialStates = {
   erors: false,
   user: JSON.parse(localStorage.getItem('user')) || {},
   subscriptions: [],
+  regions:[],
 }
 
 const adminToken =
@@ -30,7 +39,6 @@ const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     checkLogin()
-    console.log('now i am working')
   }, [])
 
   const loginbyAccount = async (formdata) => {
@@ -95,12 +103,12 @@ const AuthProvider = ({ children }) => {
   //for register by account
 
   const registerByaccount = async (formdata) => {
+    // console.log(formdata);
     try {
       const response = await axios({
         method: 'post',
         url: `${BaseUrl}/auth/register`,
-        data: formdata,
-        headers: { Authorization: `Bearer ${adminToken}` },
+        data: formdata, 
       })
       const data = response.data.data
       if (data.status === 'Active') {
@@ -171,6 +179,84 @@ const AuthProvider = ({ children }) => {
     history.push('/home')
   }
 
+  const getRegions=async()=>{
+    try{
+      const response=await axios({
+        method: 'get',
+        url: `${BaseUrl}/region`,
+        headers: {
+          'Accept': 'application/json',
+          Authorization: `Bearer ${state.token}`,
+        },
+      });
+      if(response.status ===200){
+        dispatch({type:'REGION_LOAD',payload:response.data.data})
+      }
+    }catch(error){
+      console.log(error.response);
+    }
+      
+    
+  }
+
+  const updatetoCreator=async(data)=>{
+     dispatch({ type: 'SET_LOADING' })
+    try {
+     const response=await axios({
+        method: 'post',
+        url: `${BaseUrl}/user/update`,
+        data: data,
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${state.token}`,
+        },
+      })
+        if(response.data.status){
+          let data=getUserData();
+          console.log('it is working');
+          data.then(data=>{
+            console.log(data.data.user_info);
+              let user_var=localStorage.getItem('user');
+              if(user_var){
+                let userobj=JSON.parse(user_var);
+
+                userobj.name=data.data.user_info.user.name;
+                userobj.role=data.data.user_info.user.role.name;
+
+                localStorage.setItem('user', JSON.stringify(userobj));
+                
+                dispatch({type:'UPDATE_USER',payload:data.data.user_info.user.role.name})
+
+              }
+          })
+
+          dispatch({type:'UNSET_LOADING'});
+        }
+     
+        // const payload = response.data.data
+        // dispatch({ type: 'NEWDATA_LOADED', payload: payload })
+        // dispatch({ type: 'UNSET_LOADING' })
+      
+       } catch (error) {
+       console.log('there is error!')
+     }
+  }
+
+  const getUserData=async()=>{
+     const response=await axios(
+        {
+          method: 'get',
+          url: `${BaseUrl}/user`,
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'multipart/form-data',
+            Authorization: `Bearer ${state.token}`,
+          },
+        });
+       return response.data;
+  }
+
   return (
     <AuthContext.Provider
       value={{
@@ -182,6 +268,9 @@ const AuthProvider = ({ children }) => {
         registerByPhone,
         loginbyPhone,
         defaultLogged,
+        getRegions,
+        updatetoCreator,
+        getUserData
       }}
     >
       {children}

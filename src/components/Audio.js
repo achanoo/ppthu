@@ -8,6 +8,8 @@ import { FaPlay } from 'react-icons/fa'
 import { FaPause } from 'react-icons/fa'
 
 const Audio = ({ audio }) => {
+  // console.log(ImgUrl+audio);
+  // console.log(audio);
   // state
   const [isPlaying, setIsPlaying] = useState(false)
   const [duration, setDuration] = useState(0)
@@ -85,7 +87,7 @@ const Audio = ({ audio }) => {
       <div className={styles.audioDiv}>
         <div className={styles.audioPlayer}>
           <audio
-            ref={audioPlayer}
+             ref={audioPlayer}
             src={audio}
             onLoadedMetadata={readyHandle}
           ></audio>

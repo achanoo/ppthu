@@ -4,5 +4,6 @@
     "editor.formatOnPaste": true,
     "prettier.endOfLine": "auto",
     "prettier.jsxBracketSameLine": true,
-    "prettier.insertPragma": true
+    "prettier.insertPragma": true,
+    "editor.formatOnType": true
 }

@@ -137,6 +137,7 @@ export default function TemporaryDrawer({ props }) {
             alt='Remy Sharp'
             src={badge}
             sx={{ width: 20, height: 20 }}
+            color="primary"
             style={{ margin: '0px 50px 0px 10px' }}
           />
 

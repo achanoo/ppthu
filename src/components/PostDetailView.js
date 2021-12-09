@@ -1,12 +1,14 @@
 import * as React from 'react'
 import PropTypes from 'prop-types'
-import { Link } from 'react-router-dom'
+import { Link,useParams} from 'react-router-dom'
 import { styled, alpha } from '@mui/material/styles'
 import { makeStyles } from '@mui/styles'
 import styles from './../assets/post.module.css'
 import Popover from '@mui/material/Popover';
 import Menu from '@mui/material/Menu'
+import Badge from '@mui/material/Badge'
 import MenuItem from '@mui/material/MenuItem'
+import TextareaAutosize from '@mui/material/TextareaAutosize'
 import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
 import Typography from '@mui/material/Typography'
@@ -18,9 +20,22 @@ import imgurl from '../assets/images/subscriptions.png'
 import { Avatar, Button, Divider, IconButton } from '@mui/material'
 import IosShareIcon from '@mui/icons-material/IosShare'
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder'
+import FavoriteOutlinedIcon from '@mui/icons-material/FavoriteOutlined'
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz'
 import ImageGrid from './../components/Gridview'
 import { postPhoto } from './../assets/data'
+import { ImgUrl } from '../helpers/Constant'
+import { usePostContext } from '../context/PostContext'
+import CommentBox from './CommentBox'
+import { useAuthContext } from '../context/AuthContext'
+import { getFullUrl } from '../helpers/Constant'
+import { Audio } from './Audio'
+import LinkPreview from './LinkPreview'
+import axios from 'axios'
+import moment from 'moment'
+import TimeAgo from 'javascript-time-ago'
 const useStyles = makeStyles((theme) => ({
   root: {
     '& .MuiBox-root': {
@@ -29,20 +44,21 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   allposts: {
-    backgroundPosition: 'center 120px',
-    backgroundRepeat: 'no-repeat',
-    backgroundSize: 'contain',
-    minHeight: '500px',
-    border: '1px solid rgb(229, 227, 221)',
-    borderRadius: '4px',
-    textAlign: 'center',
-    padding: '0px !important',
-    [theme.breakpoints.down('sm')]: {
-      minHeight: '300px',
+    backgroundPosition: "center 120px",
+    backgroundRepeat: "no-repeat",
+    backgroundSize: "contain",
+    minHeight: "500px",
+    border: "1px solid rgb(229, 227, 221)",
+    borderRadius: "4px",
+    textAlign: "center",
+    padding: "0px !important",
+    marginBottom: "16px",
+    [theme.breakpoints.down("sm")]: {
+      minHeight: "300px",
     },
   },
   postCard: {
-    padding: '20px',
+    padding: "20px",
   },
   accInfo: {
     display: 'flex',
@@ -99,10 +115,11 @@ const useStyles = makeStyles((theme) => ({
   },
   // comment start
   commentSection: {
-    padding: '20px',
+    padding: '20px !important',
   },
   commentInfo: {
     display: 'flex',
+    marginBottom:theme.spacing(2),
     justifyContent: 'space-between',
     '& a': {
       color: '#333',
@@ -116,18 +133,30 @@ const useStyles = makeStyles((theme) => ({
   },
   content: {
     display: 'flex',
-    justifyContent: 'space-between',
+    justifyContent: 'start',
     gap: '16px',
+    flexGrow:1
   },
   commentDetail: {
     textAlign: 'start',
 
     '& h4': {
       marginBottom: '10px',
+      marginTop:'0px'
     },
     '& p': {
       fontSize: '0.978rem',
     },
+  },
+  commentSection: {
+    padding:'10px',
+    textAlign: 'start',
+    flexGrow:'1',
+    '& h4': {
+      marginBottom: '10px',
+      marginTop:'0px'
+    },
+    
   },
   reply: {
     marginLeft: '3.75rem',
@@ -136,26 +165,61 @@ const useStyles = makeStyles((theme) => ({
   },
   replyInfo: {
     display: 'flex',
+     flexGrow:1,
     justifyContent: 'space-between',
     gap: '10px',
   },
   replyDetail: {
+    flexGrow:1,
     textAlign: 'start',
     '& h4': {
       marginBottom: '10px',
     },
-    '& p': {
-      fontSize: '0.978rem',
-    },
   },
   count: {
-    display: 'flex',
-    alignSelf: 'flex-end',
-    fontSize: '1rem',
-    color: '#000',
+    display: "flex",
+    alignSelf: "flex-end",
+    fontSize: "1rem",
+    color: "#000",
   },
+  hideReply: {
+    display:'none'
+  }
 }))
-const PostDetailModel = () => {
+
+
+const StyledBadge = styled(Badge)(({ theme }) => ({
+  '& .MuiBadge-badge': {
+    right: -3,
+    top: 13,
+    border: `2px solid ${theme.palette.background.paper}`,
+    padding: '0 4px',
+  },
+}));
+const PostDetailModel = (props) => {
+ const { id } = useParams();
+  const { user: authUser, token } = useAuthContext();
+  const { getPostByid,LikeHandle, RemoveLike, CommentCreate, ReplyCreate
+    , CommentDelete,ReplyDelete,CommentUpdate,ReplyUpdate,CommentLikeHandle,RemoveCommentLikeHandle } = usePostContext();
+  
+//  new add state 
+  const [showReply, setShowReply] = React.useState(0);
+  const [editComment, setEditComment] = React.useState(0);
+   const [comment, setComment] = React.useState('');
+  const [reply, setReply] = React.useState('');
+  const [limit, setLimit] = React.useState({
+    comment: 2,
+    reply:2
+  })
+  const [editReply, setEditReply] = React.useState({
+    commentId: '',
+    replyId: '',
+    reply:'',
+  })
+  // new add end 
+
+  // console.log(newimgs);
+ 
   const classes = useStyles()
   const [more, setMore] = React.useState(true)
   const showMore = (e) => {
@@ -165,6 +229,8 @@ const PostDetailModel = () => {
 
   // for link pop up
   const [popanchorEl, setPopAnchorEl] = React.useState(null);
+
+
 
   const handelPopLinkshare = (event) => {
     // console.log('helo');
@@ -176,272 +242,625 @@ const PostDetailModel = () => {
   }
 
   const openLinkShare = Boolean(popanchorEl);
-  const id = openLinkShare ? 'simple-popper' : undefined;
-  return (
-    <Box index={0} className={classes.root}>
-      {/*  posts starting from  one post start*/}
-      <div className={`${classes.allposts} `}>
-        {/* account info and to like btn */}
-        <div className={classes.postCard}>
-          <Box className={classes.accInfo}>
-            <Avatar
-              className={classes.avatar}
-              alt='Remy Sharp'
-              src='https://upload.wikimedia.org/wikipedia/commons/4/43/Globe_Amaranth_Flower_Gomphrena_Globosa_%E5%8D%83%E6%97%A5%E7%B4%85_%E3%82%BB%E3%83%B3%E3%83%8B%E3%83%81%E3%82%B3%E3%82%A6_%28223201679%29.jpeg'
-            />
-            <h3>Shirtaloon(Travis Deve)</h3>
-          </Box>
+  const shareid = openLinkShare ? 'simple-popper' : undefined;
 
-          {/* post info */}
-          <Box className={classes.postInfo}>
-            <Box className={classes.uploadFile}>
-              {/* file upload are include */}
-              <ImageGrid images={postPhoto} />
-              {/* file upload are include end */}
-            </Box>
-            <span>Oct 23,2020 at 5:34 AM</span>
-            <h2>Buring Out</h2>
-            <div className={classes.postDetail}>
-              <div
-                className={classes.shade}
-                style={{
-                  opacity: more ? '1' : '0',
-                }}
-              ></div>
-              <div
-                className={classes.postContent}
-                style={{
-                  overflow: more ? 'hidden' : 'scroll',
-                  height: more ? '80px' : '100%',
-                  transition: 'ease-in',
-                }}
-              >
-                <p>
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                  Voluptate, maiores! Repellendus atque ipsam dolores quidem,
-                  voluptates aut unde, fugit, Lorem ipsum dolor sit amet
-                  consectetur adipisicing elit. Perspiciatis reprehenderit
-                  voluptatibus corporis natus harum architecto perferendis odio
-                  error eius in! Rem excepturi harum officiis necessitatibus
-                  totam vel nobis, quidem dolores. Lorem ipsum dolor sit amet
-                  consectetur adipisicing elit. Voluptate, maiores! Repellendus
-                  atque ipsam dolores quidem, voluptates aut unde, fugit, Lorem
-                  ipsum dolor sit amet consectetur adipisicing elit.
-                  Perspiciatis reprehenderit voluptatibus corporis natus harum
-                  architecto perferendis odio error eius in! Rem excepturi harum
-                  officiis necessitatibus totam vel nobis, quidem dolores. Lorem
-                  ipsum dolor sit amet consectetur adipisicing elit. Voluptate,
-                  maiores! Repellendus atque ipsam dolores quidem, voluptates
-                  aut unde, fugit, Lorem ipsum dolor sit amet consectetur
-                  adipisicing elit. Perspiciatis reprehenderit voluptatibus
-                  corporis natus harum architecto perferendis odio error eius
-                  in! Rem excepturi harum officiis necessitatibus totam vel
-                  nobis, quidem dolores.
-                </p>
-              </div>
-            </div>
-            <span className={classes.readmore} onClick={() => setMore(!more)}>
-              {more ? 'continue reading' : 'less reading'}
-            </span>
-            <Button
-              variant='contained'
-              style={{
-                display: 'block',
-                backgroundColor: 'rgb(245,244,242)',
-                boxShadow: 'none',
-                color: '#444',
-                marginTop: '24px',
-              }}
-            >
-              announcement
-            </Button>
-          </Box>
-          <Box className={classes.btnOptions}>
-            <Box clssName={classes.tools}>
-              <IconButton aria-label='Example'>
-                <FavoriteBorderIcon fontSize='large' />
-              </IconButton>
-              <IconButton aria-label='Example' onClick={handelPopLinkshare} >
-                  <IosShareIcon fontSize='large' />
-                </IconButton>
-                <Popover id={id} open={openLinkShare} anchorEl={popanchorEl} onClose={handlePopClose} anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
-        }}>
-                  <Box sx={{ border: '1px solid rgb(229,227,221)', p: 1, bgcolor: 'background.paper',borderRadius:'4px' }}>
-                    https://localhost:3000/post-detail/1
+  // start here 
+ const { link, audio, video, image, title, content ,like_counts,id:postid,likes,comments,created_at} = props.post;
+      const { profile_image, user } = props.post.creator.user_info;
+      const { name, id: userId } = user;
+      
+      // console.log(getFullUrl(audio));
+      let newimgs = [];
+      
+      
+      const islike=likes.some(function (el) {
+                  
+                    return el.user_info.user.id == authUser.id;
+      })
+
+      const deleteLike = (postid) => {
+        const comment= likes.filter(like => like.user_info.user.id = authUser.id);
+
+        RemoveLike(comment[0].id);
+      }
+      
+      // console.log(image);
+
+      if (image === null && typeof image==='object') {
+        newimgs = [];
+      } else {
+        const images=JSON.parse(image);
+
+        newimgs=images.map(img=>getFullUrl(img));
+      }
+  // end here 
+
+  // action start 
+  {/* comment section start */ }
+  const inputHandle = (e) => {
+    const { name, value } = e.target;
+    console.log(name, value);
+  //   setCommentValue(prev => ({
+  //     ...prev,
+  //     [name]:value
+  //  }))
+  }
+  const handleArea = (e) => {
+    const { name, value } = e.target;
+    if (name === 'comment') {
+      setComment(value)
+    }
+
+    if (name === "reply") {
+      setReply(value);
+    }
+
+     if (name === "editReply") {
+       setEditReply(prev => ({
+         ...prev,
+         reply: value
+      }));
+    }
+    
+  }
+  
+  const submitCommentLine = (id) => {
+    // console.log(id);
+     
+    let formData = new FormData();
+    formData.append('content_id', id);
+    formData.append('comment', comment);
+    CommentCreate(formData);
+    setComment('');
+    props.changeData();
+  
+  }
+
+  const submitReplyline = (comment_id) => {
+    console.log(comment_id);
+     let formData = new FormData();
+    formData.append('comment_id', comment_id);
+    formData.append('comment', reply);
+    ReplyCreate(formData);
+    setReply('');
+    setShowReply(0);
+     props.changeData();
+  }
+
+  const EditComment = (comment_id,comment) => {
+    console.log(comment_id, comment);
+    setEditComment(comment_id);
+    setComment(comment);
+  }
+
+  const cancelUpdateComment=()=>{
+    setEditComment('');
+  }
+
+  const updateComment = (postid,comment_id) => {
+    let formData = new FormData();
+    formData.append('content_id', postid);
+    formData.append('comment', comment);
+    formData.append('_method', 'PUT');
+    CommentUpdate(formData,comment_id);
+    setComment('');
+    setEditComment('');
+     props.changeData();
+  }
+
+  const editReplyHandle = (comment_id,reply_id,reply) => {
+    
+    setEditReply(prev => ({
+      commentId: comment_id,
+      replyId: reply_id,
+      reply:reply
+    }))
+  }
+
+  const cancelUpdateReply = () => {
+    setReply('');
+    setEditReply({
+      commentId: '',
+      replyId:''
+    })
+    
+  }
+  const updateReply = (comment_id,reply_id) => {
+    let formData = new FormData();
+    formData.append('comment_id', comment_id);
+    formData.append('comment', editReply.reply);
+    formData.append('_method', 'PUT');
+    ReplyUpdate(formData,reply_id);
+    setEditReply({
+      commentId: '',
+      replyId: '',
+      reply:''
+    })
+     props.changeData();
+  }
+
+  const loadmorecomment = (e) => {
+    e.preventDefault();
+    setLimit(prev => ({
+      ...prev,
+      comment: prev.comment+5
+    }))
+  }
+  
+ 
+  // React.useEffect(() => {
+  //   let getdata = true;
+  //   if (getdata) {
+  //     getPostByid(postid);
+  //   }
+    
+  //   return getdata = false;
+  // }, []);
+
+  moment.updateLocale('en', {
+    relativeTime : {
+        future: "in %s",
+        past:   "%s ago",
+        s  : 'a few seconds',
+        ss : '%d sec',
+        m:  "a minute",
+        mm: "%d min",
+        h:  "an hour",
+        hh: "%d hr",
+        d:  "a day",
+        dd: "%d d",
+        w:  "a week",
+        ww: "%d w",
+        M:  "a month",
+        MM: "%d m",
+        y:  "a year",
+        yy: "%d yr"
+    }
+});
+  
+ 
+  
+  
+  return <div  className={`${classes.allposts} `}> 
+                {/* account info and to like btn */}
+                <div className={classes.postCard}>
+                  <Box className={classes.accInfo}>
+                    <Avatar
+                      className={classes.avatar}
+                      alt="Remy Sharp"
+                      src={getFullUrl(profile_image)}
+                    />
+                    <h3>{name}</h3>
                   </Box>
-                </Popover>
-              <IconButton aria-label='Example'>
-                <MoreHorizIcon fontSize='large' />
-              </IconButton>
-            </Box>
-            <p>106 Likes</p>
-          </Box>
-        </div>
-        <Divider />
-        {/* comment section start */}
-        <div className={classes.commentSection}>
-          <Box className={classes.commentInfo}>
-            <a href='#'>Load more comments</a>
-            <span>2 of 28</span>
-          </Box>
-          {/* main comment start */}
-          <Box className={classes.Comments}>
-            <div className={classes.MainComment}>
-              <div className={classes.content}>
-                <Avatar
-                  alt='helo world'
-                  src='https://images.unsplash.com/photo-1600037402813-d7f103d0cd05?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=327&q=80'
-                />
 
-                <Box className={classes.commentDetail}>
-                  <h4>Tyler Schibig</h4>
-                  <p>
-                    Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-                    Delectus dolorum, natus inventore consectetur dicta amet.
-                  </p>
-                  <IconButton aria-label='Example'>
-                    <FavoriteBorderIcon fontSize='small' />
-                  </IconButton>
-                  <IconButton aria-label='Example'>
-                    <ChatBubbleOutlineIcon fontSize='small' />
-                  </IconButton>
-                </Box>
-              </div>
-              <div className='commentTime'>1mo</div>
-            </div>
-            {/* replay start */}
-            <div className={classes.reply}>
-              <div className={classes.replyInfo}>
-                <Avatar
-                  alt='helo world'
-                  src='https://images.unsplash.com/photo-1597089542047-b9873d82d8ec?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=387&q=80'
-                />
+                  {/* post info */}
+                  <Box className={classes.postInfo}>
+                    
+                    {/* image */}
+                    {newimgs.length >0 && <Box className={classes.uploadFile}>
+                      {/* file upload are include */}
+                      
+                      <ImageGrid images={newimgs} />
+                      {/* file upload are include end */}
+                    </Box>}
 
-                <Box className={classes.replyDetail}>
-                  <h4>Tyler Schibig</h4>
-                  <p>
-                    Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-                    Delectus dolorum, natus inventore consectetur dicta amet.
-                  </p>
-                  <IconButton aria-label='Example'>
-                    <FavoriteBorderIcon fontSize='small' />{' '}
-                    <span className={classes.count}>3</span>
-                  </IconButton>
-                  <IconButton aria-label='Example'>
-                    <ChatBubbleOutlineIcon fontSize='small' />
-                  </IconButton>
-                </Box>
-              </div>
-              <div>23s</div>
-            </div>
+                    {/*  audio */}
+                    {audio && <Box className={classes.uploadFile}>
+                      {/* file upload are include */}
+                       
+                       <Audio audio={getFullUrl(audio)} />
+                      {/* file upload are include end */}
+                    </Box>}
 
-            <div className={classes.reply}>
-              <div className={classes.replyInfo}>
-                <Avatar
-                  alt='helo world'
-                  src='https://images.unsplash.com/photo-1597089542047-b9873d82d8ec?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=387&q=80'
-                />
+                    {/*  video */}
+                    {video && <Box className={classes.uploadFile}>
+                      {/* file upload are include */}
+                     <video
+                        src={getFullUrl(video)}
+                        style={{ width: '100%', height: 'auto' }}
+                        controls
+                      ></video>
+                      {/* file upload are include end */}
+                    </Box>}
 
-                <Box className={classes.replyDetail}>
-                  <h4>Tyler Schibig</h4>
-                  <p>
-                    Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-                    Delectus dolorum, natus inventore consectetur dicta amet.
-                  </p>
-                  <IconButton aria-label='Example'>
-                    <FavoriteBorderIcon fontSize='small' />{' '}
-                    <span className={classes.count}>3</span>
-                  </IconButton>
-                  <IconButton aria-label='Example'>
-                    <ChatBubbleOutlineIcon fontSize='small' />
-                  </IconButton>
-                </Box>
-              </div>
-              <div>23s</div>
-            </div>
-          </Box>
-          <Box className={classes.Comments}>
-            <div className={classes.MainComment}>
-              <div className={classes.content}>
-                <Avatar
-                  alt='helo world'
-                  src='https://5.imimg.com/data5/AB/RM/HJ/SELLER-96982249/button-rose-500x500.jpg'
-                />
+                     {/*  link */}
+                    {link !== undefined || <Box className={classes.uploadFile}>
+                      {/* file upload are include */}
+                      <LinkPreview link={link}/>
+                      {/* file upload are include end */}
+                    </Box>}
 
-                <Box className={classes.commentDetail}>
-                  <h4>Tyler Schibig</h4>
-                  <p>
-                    Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-                    Delectus dolorum, natus inventore consectetur dicta amet.
-                  </p>
-                  <IconButton aria-label='Example'>
-                    <FavoriteBorderIcon fontSize='small' />
-                  </IconButton>
-                  <IconButton aria-label='Example'>
-                    <ChatBubbleOutlineIcon fontSize='small' />
-                  </IconButton>
-                </Box>
-              </div>
-              <div className='commentTime'>1mo</div>
-            </div>
-            {/* replay start */}
-            {/* <div className={classes.reply}>
-                <div className={classes.replyInfo}>
-                  <Avatar
-                    alt='helo world'
-                    src='https://images.unsplash.com/photo-1597089542047-b9873d82d8ec?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=387&q=80'
-                  />
+                    
 
-                  <Box className={classes.replyDetail}>
-                    <h4>Tyler Schibig</h4>
-                    <p>
-                      Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-                      Delectus dolorum, natus inventore consectetur dicta amet.
-                    </p>
-                    <IconButton aria-label='Example'>
-                      <FavoriteBorderIcon fontSize='small' />{' '}
-                      <span className={classes.count}>3</span>
-                    </IconButton>
-                    <IconButton aria-label='Example'>
-                      <ChatBubbleOutlineIcon fontSize='small' />
-                    </IconButton>
+                    
+                    <span>
+                          {moment(created_at, ["YYYY", moment.ISO_8601]).format("dddd, MMM Do YYYY, ha")}</span>
+                    <h2>{title}</h2>
+                    <div className={classes.postDetail}>
+                      <div
+                        className={classes.shade}
+                        style={{
+                          opacity: more ? "1" : "0",
+                        }}>
+                        </div>
+                      <div
+                        className={classes.postContent}
+                        style={{
+                          overflow: more ? "hidden" : "scroll",
+                          height: more ? "80px" : "100%",
+                          transition: "ease-in",
+                        }}>
+                        <p>
+                          {content}
+                        </p>
+                      </div>
+                    </div>
+                     <span className={classes.readmore} onClick={() => setMore(!more)}> {more ? "continue reading" : "less reading"}</span>
+                    {/* <span
+                      className={classes.readmore}
+                      onClick={() => gotoDetail(postid)}>
+                      {more ? "continue reading" : "less reading"}
+                    </span> */}
+                    <Button
+                      variant="contained"
+                      style={{
+                        display: "block",
+                        backgroundColor: "rgb(245,244,242)",
+                        boxShadow: "none",
+                        color: "#444",
+                        marginTop: "24px",
+                      }}>
+                      announcement
+                    </Button>
                   </Box>
+                   <Box className={classes.btnOptions}>
+                    <Box clssName={classes.tools}>
+                      
+                       
+          {islike || <IconButton aria-label="Example" onClick={() => { LikeHandle(postid); props.changeData();}}> 
+                        <FavoriteBorderIcon fontSize="large" /></IconButton>}
+                      
+          {islike && <IconButton aria-label="Example" onClick={() => { deleteLike(postid); props.changeData();}}>
+                          <FavoriteOutlinedIcon fontSize="large" />
+                          </IconButton>} 
+                      
+
+                      
+                    
+                      
+                      
+                       <IconButton
+                        aria-label="Example"
+                        onClick={handelPopLinkshare}>
+                        <IosShareIcon fontSize="large" />
+                      </IconButton> 
+                      <Popover
+                        id={id}
+                        open={openLinkShare}
+                        anchorEl={popanchorEl}
+                        onClose={handlePopClose}
+                        anchorOrigin={{
+                          vertical: "top",
+                          horizontal: "right",
+                        }}>
+                        <Box
+                          sx={{
+                            border: "1px solid rgb(229,227,221)",
+                            p: 1,
+                            bgcolor: "background.paper",
+                            borderRadius: "4px",
+                          }}>
+                          https://localhost:3000/post-detail/1
+                        </Box>
+                      </Popover>
+
+                      <IconButton aria-label="Example">
+                        <MoreHorizIcon fontSize="large" />
+                      </IconButton>
+                    </Box>
+                    <p>{like_counts} Likes</p>
+                  </Box> 
                 </div>
-                <div>23s</div>
-              </div>
-
-              <div className={classes.reply}>
-                <div className={classes.replyInfo}>
-                  <Avatar
-                    alt='helo world'
-                    src='https://images.unsplash.com/photo-1597089542047-b9873d82d8ec?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=387&q=80'
-                  />
-
-                  <Box className={classes.replyDetail}>
-                    <h4>Tyler Schibig</h4>
-                    <p>
-                      Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-                      Delectus dolorum, natus inventore consectetur dicta amet.
-                    </p>
-                    <IconButton aria-label='Example'>
-                      <FavoriteBorderIcon fontSize='small' />{' '}
-                      <span className={classes.count}>3</span>
-                    </IconButton>
-                    <IconButton aria-label='Example'>
-                      <ChatBubbleOutlineIcon fontSize='small' />
-                    </IconButton>
+                <Divider />
+                {/* comment section start */}
+                <div className={classes.commentSection}>
+                  <Box className={classes.commentInfo}>
+                    <a href='#' onClick={loadmorecomment}>Load more comments</a>
+                    <span>{comments.length === 0 ? 0 : comments.length < limit.comment ? comments.length: limit.comment } of { comments.length }</span>
                   </Box>
+                  
+                  
+                  {comments.slice(0,limit.comment).map((item, i) => {
+                    const { user_info, comment: saying, comment_replies: replies, id: comment_id, comment_like_counts, comment_likes, created_at } = item;
+                    const { profile_image: cProfile } = user_info;
+                    const { name } = user_info.user;
+                    const iscommentlike=comment_likes.some(function (el) {
+                                   return el.user_info.user.id === authUser.id;
+                    })
+
+                    const CommentlikeRemoveHandle = (comment_id) => {
+                      const commentlike= comment_likes.filter(like => like.comment_id === comment_id && like.user_info.user.id === authUser.id);
+
+                      RemoveCommentLikeHandle(commentlike[0].id);
+                    }
+                    return  <Box key={i} className={classes.Comments}>
+                  
+                              <div className={classes.MainComment}>
+                                <div className={classes.content}>
+                                  <Avatar
+                                    alt={name}
+                                    src={getFullUrl(cProfile)}
+                                  />
+                          {editComment !== comment_id ? 
+                                  <Box className={classes.commentDetail} style={{width: `-webkit-fill-available`}}>
+                                          <h4>{ name}</h4>
+                                          <p>
+                                            {saying}
+                                          </p>
+                                          {!iscommentlike ?
+                                <IconButton onClick={() => { CommentLikeHandle(comment_id);props.changeData();}} >
+                                                <StyledBadge badgeContent={comment_like_counts} color="secondary">
+                                                  <FavoriteBorderIcon fontSize='small' />
+                                                </StyledBadge>
+                                              </IconButton>
+                                              :
+                                <IconButton onClick={() => { CommentlikeRemoveHandle(comment_id);props.changeData();}} >
+                                                <StyledBadge badgeContent={comment_like_counts} color="secondary">
+                                                  <FavoriteOutlinedIcon fontSize='small' />
+                                                </StyledBadge>
+                                              </IconButton>
+                                            }
+                                          <IconButton aria-label='Example' onClick={()=>setShowReply(comment_id)}>
+                                            <ChatBubbleOutlineIcon fontSize='small' />
+                                          </IconButton>
+                                          <IconButton aria-label='Example'  onClick={()=>EditComment(comment_id,saying)}>
+                                            <EditIcon fontSize='small' />
+                                          </IconButton>
+                              <IconButton aria-label='Example' onClick={() => { CommentDelete(comment_id); props.changeData();}}>
+                                            <DeleteIcon fontSize='small' />
+                                          </IconButton>
+                            </Box>
+                            :
+                            <Box className={classes.commentDetail} style={{width: `-webkit-fill-available`}}>
+                                    <h4>{ name}</h4>
+                                    {/*  comment input handleing start  */}
+                                    <div style={{marginRight:'8px'}}>
+                                      <TextareaAutosize
+                                        // onKeyPress={enterCommentLine}
+                                        value={comment}
+                                        name="comment"
+                                        id="comments-input-edit"
+                                              
+                                        onChange={handleArea}
+                                        variant="outlined"
+                                      
+                                          placeholder="Add a comment..."
+                                        aria-label="minimum height"
+                                              minRows={4}
+                                        style={{ width: '100%' ,resize:'none'}}
+                                      />
+                                      <Button style={{float:'right',marginTop:'10px'}}
+                                         onClick={()=>updateComment(postid,comment_id)}
+                                              type="submit"
+                                              variant="outlined"
+                                              
+                                            className="comments-button"
+                                
+                                        disabled={comment.length > 0 ? false:true}
+                                          >
+                                        Save
+                                      </Button>
+                                      <Button style={{float:'left',marginTop:'10px'}} 
+                                         onClick={()=>cancelUpdateComment()}
+                                            color="secondary"
+                                              type="submit"
+                                              variant="outlined"
+                                        className="comments-button"
+                                        
+                                        disabled={comment.length > 0 ? false:true}
+                                          >
+                                        Cancel
+                                      </Button>
+                                    </div>
+                                    {/* comment input handling end */}
+                                  </Box>
+
+                              }
+                          
+                                  {/* comment Edit start  */}
+                                  
+                                </div>
+                        <div className='commentTime'>
+                        
+                          {moment(created_at).fromNow(true)}
+                                </div>
+                              </div>
+                              {/* replay start */}
+                              
+                      {replies.map((r,index) => {
+                        const { user_info, comment: reply, id: rid, created_at: replyCreated_at } = r;
+                        const { profile_image:rProfile } = user_info;
+                        const { name:reply_user } = user_info.user;
+                                return <div key={index} className={classes.reply}>
+                                          <div className={classes.replyInfo}>
+                                            <Avatar
+                                              alt={name}
+                                              src={getFullUrl(rProfile)}
+                                            />
+                                      {(comment_id !== editReply.commentId && rid !== editReply.replyId) ?
+                                          <Box className={classes.replyDetail}>
+                                            <h4>{reply_user}</h4>
+                                            <p>
+                                              {reply}
+                                            </p>
+                                                  
+                                            <IconButton aria-label='Example' onClick={() => editReplyHandle(comment_id, rid, reply)}>
+                                              <EditIcon fontSize='small' />
+                                            </IconButton>
+                                        <IconButton aria-label='Example' onClick={() => { ReplyDelete(rid); props.changeData();}} >
+                                              <DeleteIcon fontSize='small' />
+                                            </IconButton>
+                                            {/* <IconButton aria-label='Example'>
+                                                    <FavoriteBorderIcon fontSize='small' />{' '}
+                                                    <span className={classes.count}>3</span>
+                                                  </IconButton>
+                                                  <IconButton aria-label='Example'>
+                                                    <ChatBubbleOutlineIcon fontSize='small' />
+                                                  </IconButton> */}
+                                          </Box>
+                                          :
+                                          <Box className={`${classes.replyDetail} `} >
+                                            <h4>{authUser.name}</h4>
+                                            {/*  reply input handleing start  */}
+                                            <div style={{ marginRight: '8px' }}>
+                                              <TextareaAutosize
+                                                // onKeyPress={enterCommentLine}
+                                                value={editReply.reply}
+                                                name="editReply"
+                                                id="comments-input"
+                                                              
+                                                onChange={handleArea}
+                                                variant="outlined"
+                                                      
+                                                placeholder="reply here..."
+                                                aria-label="minimum height"
+                                                minRows={2}
+                                                style={{ width: '100%', resize: 'none' }}
+                                              />
+                                              <Button style={{ float: 'left', marginTop: '10px' }}
+                                                 onClick={()=>cancelUpdateReply(comment_id)}
+                                                type="submit"
+                                                variant="outlined"
+                                                className="comments-button"
+                                                color="secondary"  
+                                                disabled={reply.length > 0 ? false : true}
+                                              >
+                                                Cancel
+                                          </Button>
+                                          <Button style={{ float: 'right', marginTop: '10px' }}
+                                                 onClick={()=>updateReply(comment_id,rid)}
+                                                type="submit"
+                                                variant="outlined"
+                                                className="comments-button"
+                                                        
+                                                disabled={reply.length > 0 ? false : true}
+                                              >
+                                                Save
+                                              </Button>
+                                            </div>
+                                            {/* reply input handling end */}
+                                           </Box>
+                                      }
+                                          </div>
+                                          <div>{moment(replyCreated_at).fromNow(true)}</div>
+                                        </div>
+                              })}
+                              
+
+                              {/* comment add here */}
+                              <div className={`${comment_id === showReply ? classes.reply: classes.hideReply}`}>
+                                <div className={classes.replyInfo}>
+                                  <Avatar
+                                    alt='helo world'
+                                    src='https://images.unsplash.com/photo-1597089542047-b9873d82d8ec?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=387&q=80'
+                                  />
+
+                                  <Box className={`${classes.replyDetail} `} >
+                                    <h4>{ authUser.name}</h4>
+                                    {/*  reply input handleing start  */}
+                                      <div style={{marginRight:'8px'}}>
+                                        <TextareaAutosize
+                                          // onKeyPress={enterCommentLine}
+                      
+                                          name="reply"
+                                          id="comments-input"
+                                                
+                                          onChange={handleArea}
+                                          variant="outlined"
+                                        
+                                            placeholder="reply here..."
+                                          aria-label="minimum height"
+                                                minRows={2}
+                                          style={{ width: '100%' ,resize:'none'}}
+                                        />
+                                        <Button style={{float:'right',marginTop:'10px'}}
+                                          onClick={()=>submitReplyline(comment_id)}
+                                                type="submit"
+                                                variant="outlined"
+                                          className="comments-button"
+                                          
+                                          disabled={reply.length > 0 ? false:true}
+                                            >
+                                          Reply
+                                        </Button>
+                                      </div>
+                                      {/* reply input handling end */}
+                                  </Box>
+                                </div>
+                                <div></div>
+                              </div>
+                              
+                      
+                      
+                    </Box>
+                    
+                  })}
+                  <Box className={classes.Comments}>
+                  
+                    <div className={classes.MainComment}>
+                      <div className={classes.content}>
+                        <Avatar
+                          alt='helo world'
+                          src='https://images.unsplash.com/photo-1600037402813-d7f103d0cd05?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=327&q=80'
+                        />
+
+                        <Box className={classes.commentDetail} style={{width: `-webkit-fill-available`}}>
+                          <h4>{authUser.name}</h4>
+                          {/*  comment input handleing start  */}
+                          <div style={{ marginRight: '3px' }}>
+                            <TextareaAutosize
+                              // onKeyPress={enterCommentLine}
+          
+                              name="comment"
+                              id="comments-input"
+                                    
+                              onChange={handleArea}
+                              variant="outlined"
+                            
+                                placeholder="Add a comment..."
+                              aria-label="minimum height"
+                                    minRows={3}
+                              style={{ width: '100%' ,resize:'none'}}
+                            />
+                            <Button style={{float:'right',marginTop:'10px'}}
+                               onClick={()=>submitCommentLine(postid)}
+                                    type="submit"
+                                    variant="outlined"
+                              className="comments-button"
+                              
+                               disabled={comment.length > 0 ? false:true}
+                                >
+                              Post
+                            </Button>
+                          </div>
+                          {/* comment input handling end */}
+                          {/* <IconButton aria-label='Example' >
+                            <FavoriteBorderIcon fontSize='small' />
+                          </IconButton>
+                          <IconButton aria-label='Example'>
+                            <ChatBubbleOutlineIcon fontSize='small' />
+                          </IconButton> */}
+                        </Box>
+                      </div>
+                      <div className='commentTime'></div>
+                    </div>
+                    
+                  </Box>
+
                 </div>
-                <div>23s</div>
-              </div> */}
-          </Box>
-        </div>
-      </div>
-      {/*  posts ending here */}
-    </Box>
-  )
+              </div>
+ 
+  
 }
 
 export default PostDetailModel

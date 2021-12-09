@@ -67,6 +67,15 @@ const useStyles = makeStyles((theme) => ({
 const StepTwo = () => {
   const classes = useStyles()
   const history = useHistory()
+  const [state,setState]=React.useState({
+    selected:1
+  });
+  const inputChange=(id)=>{
+    setState((prev)=>({
+      ...prev,
+      selected:id
+    })) 
+  }
   return (
     <div className={classes.wrapper}>
       <div className={classes.container}>
@@ -85,18 +94,29 @@ const StepTwo = () => {
               accusamus labore natus reiciendis, quae perferendis temporibus
               provident.
             </span>
-            <FormGroup className={classes.choice}>
+            <FormGroup className={classes.choice} >
               <FormControlLabel
-                control={<Checkbox defaultChecked />}
+                control={<Checkbox onChange={(e)=>inputChange(1)} checked={state.selected ===1 ? true:false} />}
                 label='No ,my work does not contain real or illustrated nudity.'
               />
               <FormControlLabel
-                control={<Checkbox />}
+                control={<Checkbox onChange={(e)=>inputChange(2)} checked={state.selected ===2 ? true:false}/>}
                 label='Yes, my work contains real or illustarted nudity'
               />
             </FormGroup>
             <Box className={classes.btngroup}>
-              <Link>Back</Link>
+              
+              <CButton
+                style={{marginRight:'20px'}}
+                ct='0px'
+                onClick={() => {
+                  history.push('/Edit')
+                }}
+               
+                
+              >
+                Back
+              </CButton>
               <CButton
                 ct='0px'
                 onClick={() => {

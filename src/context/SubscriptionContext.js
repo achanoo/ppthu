@@ -24,13 +24,13 @@ const SubscriptionProvider = ({ children }) => {
   const [image, setImage] = React.useState('')
   const [description, setDescription] = React.useState('')
   // console.log(children)
-  React.useEffect(() => {
-    dispatch({ type: 'SET_LOADING' })
-    dispatch({ type: 'DATA_LOADED', payload: plans })
-    dispatch({ type: 'UNSET_LOADING' })
-    // getCategories()
-    // getSubscriptions()
-  }, [])
+  // React.useEffect(() => {
+  //  // dispatch({ type: 'SET_LOADING' })
+  //  // dispatch({ type: 'DATA_LOADED', payload: plans })
+  // //  dispatch({ type: 'UNSET_LOADING' })
+  //   // getCategories()
+  //   // getSubscriptions()
+  // }, [])
 
   const getSubscriptions = async () => {
     dispatch({ type: 'SET_LOADING' })
@@ -47,23 +47,21 @@ const SubscriptionProvider = ({ children }) => {
         },
         { cancelToken: cancelToken.token }
       )
+       
       //dispatch({ type: 'UNSET_LOADING' })
-      if (response.data.data) {
+       if (response.data.data) {
+         console.log(response.data.data);
         const payload = response.data.data
-        dispatch({ type: 'DATA_LOADED', payload: payload })
-        dispatch({ type: 'UNSET_LOADING' })
-      }
+         dispatch({ type: 'DATA_LOADED', payload: payload })
+         dispatch({ type: 'UNSET_LOADING' })
+       }
     } catch (error) {
       console.log('there is error!')
     }
   }
 
-  const createSubscriptions = async () => {
-    const formData = new FormData()
-    formData.append('level', level)
-    formData.append('price', price)
-    formData.append('image', image)
-    formData.append('description', description)
+  const createSubscriptions = async (data) => {
+   //console.log(data);
 
     //console.log(formData)
 
@@ -72,7 +70,7 @@ const SubscriptionProvider = ({ children }) => {
       const response = await axios({
         method: 'post',
         url: `${BaseUrl}/subscription-plan`,
-        data: formData,
+        data: data,
         headers: {
           Accept: 'application/json',
           'Content-Type': 'multipart/form-data',
@@ -85,21 +83,21 @@ const SubscriptionProvider = ({ children }) => {
         dispatch({ type: 'UNSET_LOADING' })
       }
 
-      // axios
-      //   .post(`${BaseUrl}/subscription-plan`, formData, {
-      //     headers: {
-      //       Accept: 'application/json',
-      //       'Content-Type': 'multipart/form-data',
-      //       Authorization: `Bearer ${token}`,
-      //     },
-      //   })
-      //   .then((res) => res.json())
-      //   .then((res) => {
-      //     console.log(res)
-      //   })
-    } catch (error) {
-      console.log('there is error!')
-    }
+    //   // axios
+    //   //   .post(`${BaseUrl}/subscription-plan`, formData, {
+    //   //     headers: {
+    //   //       Accept: 'application/json',
+    //   //       'Content-Type': 'multipart/form-data',
+    //   //       Authorization: `Bearer ${token}`,
+    //   //     },
+    //   //   })
+    //   //   .then((res) => res.json())
+    //   //   .then((res) => {
+    //   //     console.log(res)
+    //   //   })
+       } catch (error) {
+       console.log('there is error!')
+     }
   }
 
   const getCategories = async () => {
@@ -119,7 +117,7 @@ const SubscriptionProvider = ({ children }) => {
       )
 
       const payload = response.data.categories
-      console.log(payload)
+      // console.log(payload)
       dispatch({ type: 'DATA_LOADED_CATEGORY', payload: payload })
       dispatch({ type: 'UNSET_LOADING' })
     } catch (error) {
@@ -127,9 +125,7 @@ const SubscriptionProvider = ({ children }) => {
     }
   }
 
-  React.useEffect(() => {
-    console.log('now every smile')
-  }, [])
+  
 
   return (
     <SubscriptionContext.Provider
@@ -141,6 +137,7 @@ const SubscriptionProvider = ({ children }) => {
         setDescription,
         getSubscriptions,
         createSubscriptions,
+        getCategories,
       }}
     >
       {children}

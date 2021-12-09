@@ -5,11 +5,14 @@ import MenuItem from '@mui/material/MenuItem'
 import FormControl from '@mui/material/FormControl'
 import Select from '@mui/material/Select'
 
-export default function BasicSelect({ categories }) {
+export default function BasicSelect({ categories,getCategory }) {
   const [category, setCategory] = React.useState('')
 
   const handleChange = (event) => {
-    setCategory(event.target.value)
+    const {name,value}=event.target;
+   // console.log(value);
+   setCategory(value)
+    getCategory(value);
   }
 
   return (

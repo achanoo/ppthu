@@ -283,7 +283,7 @@ const Register = () => {
             bgcolor='rgb(195 197 194)'
             type='submit'
             className='btn btn-filled'
-            onClick={gotoHome}
+            onClick={handleSubmitForm}
           >
             Sing Up
           </CButton>

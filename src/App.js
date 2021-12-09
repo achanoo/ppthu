@@ -57,6 +57,7 @@ function App() {
           <UserHome />
         </Route>
 
+
         <Route path='/user-profile'>
           <UserProfile />
         </Route>
@@ -79,7 +80,7 @@ function App() {
 
         <Route exact={true} path='/post-create' component={PostCreate} />
 
-        <Route path='/post-detail/1'>
+        <Route path='/post-detail/:id'>
           <PostDetail />
         </Route>
 

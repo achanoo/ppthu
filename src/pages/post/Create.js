@@ -28,6 +28,8 @@ import { Audio } from '../../components/Audio'
 import Gridview from './../../components/Gridview'
 import { CButton } from '../../layout/CCButton'
 import { display, fontWeight } from '@mui/system'
+import { customFetcher } from '../../helpers/Constant'
+import LinkPreview from '../../components/LinkPreview'
 const useStyles = makeStyles((theme) => ({
   container: {
     marginTop: '10vh',
@@ -127,50 +129,119 @@ const useStyles = makeStyles((theme) => ({
   }
 }))
 const PostCreate = () => {
-  const { isloading, categories } = useSubscriptionContext()
+
+// getting data of customFetcher
+
+/* customFetcher('https://youtu.be/Wjl1lGFqwJw').then(data => {
+   console.log(data);
+ });*/
+
+  const { isloading, categories, getCategories,getSubscriptions } = useSubscriptionContext()
+  
   const history = useHistory()
 
   // for checkbox
   // console.log(categories)
   const [state, setState] = React.useState({
-    gilad: true,
-    jason: false,
-    antoine: false,
+    title:'',
+    content:'',
+    subscription_plan:[],
+    category_id:'',
+    seefirst:'tierChoices',
+    linkSelected:false,
+    link:{}
   })
 
-  const handleChangecheck = (event) => {
-    setState({
-      ...state,
-      [event.target.name]: event.target.checked,
-    })
-  }
 
-  const { gilad, jason, antoine } = state
-  const error = [gilad, jason, antoine].filter((v) => v).length !== 2
+  
   // end
 
   const {
     isImageSelected,
-    imageData,
     isVideoSelected,
-    video,
+    video,//preview
+    imageData,//preview
+    audio,//preview
     isAudioSelected,
-    audio,
     removeImage,
     removeVideo,
     removeAudio,
     isPollSelected,
+    postCreated
   } = usePostContext()
 
-  const classes = useStyles()
-  const [title, setTitle] = useState('')
-  const [post, setPost] = useState('')
-  const [textCounting,setTextCounting]=useState(540)
 
-  const handlePost = (data) => {
-    //console.log(post)
-    setPost(post)
+  const classes = useStyles()
+  const [loading,setLoading]=useState(false);
+  const [textCounting,setTextCounting]=useState(540)
+  
+
+  const inputChange=(e)=>{
+    const {name,value}=e.target;
+    if(name !== 'link'){
+      setState(prev=>({
+      ...prev,
+      [name]:value
+    }))
+    }else{
+      // console.log(value);
+      setState(prev=>({
+        ...prev,
+        linkSelected:true
+      }))
+      setLoading(true);
+      setTimeout(()=>{
+        customFetcher(value).then(data=>{
+          if(data !==''){
+            setLoading(false);
+          }
+          setState(prev=>({
+            ...prev,
+            link:{
+              ...data,
+              url:value
+            }
+          }))
+        })
+      },2000)
+    }
+    
   }
+  React.useEffect(() => {
+    let data = true;
+    if (data) {
+      getCategories();
+      getSubscriptions();
+    }
+    return data = false;
+  }, [])
+
+  const getTiers=(data)=>{
+   // console.log(data);
+    // setTier(data);
+      setState(prev=>({
+        ...prev,
+        subscription_plan:data
+      }))
+  }
+
+  const getCategory=(data)=>{
+    
+   // console.log(data);
+    //setCategory(data);
+    setState(prev=>({
+        ...prev,
+        category_id:data
+      }))
+  }
+
+  
+  
+
+  // const handlePost = (data) => {
+  //   //console.log(post)
+  //   setPost(post)
+  // }
 
   const CancelPostHandling = () => {
     console.log('posting is cancel and reach home!')
@@ -181,14 +252,30 @@ const PostCreate = () => {
     // setFiles(e.target.files[0]);
   }
 
-  const gotoHome = () => {
-    history.push('/home')
+  const createdPost = () => {
+    let formData=new FormData();
+    formData.append('title',state.title);
+    formData.append('content',state.content);
+    formData.append('category_id',state.category_id);
+    formData.append('subscription_plan',JSON.stringify(state.subscription_plan));
+    formData.append('seefirst',state.seefirst);
+    formData.append('link',state.link.url)
+    postCreated(formData);
+    // history.push('/home')
   }
 
   const checkingTextCount = (e) => {
     let textLenght = e.target.value.length;
     console.log(textLenght);
     setTextCounting(textCounting - textLenght);
+  }
+
+  const removeInput=()=>{
+    setState(prev=>({
+      ...prev,
+      linkSelected:false,
+      link:{}
+    }))
   }
 
   // if (isloading) {
@@ -220,20 +307,24 @@ const PostCreate = () => {
                 <CloseIcon onClick={CancelPostHandling} />
               </Box>
               {/* Post title */}
+              
+              
+
               <Box style={{ padding: '8px' }}>
                 <input
                   type='text'
                   className={classes.postTitle}
-                  name='postTitle'
-                  value={title}
+                  name='title'
+                  value={state.title}
                   placeholder='Post title(required)'
-                  onChange={(e) => setTitle(e.target.value)}
+                  onChange={inputChange}
                 />
 
                 <textarea
                   className={classes.postDiv}
                   placeholder="what's on your mind"
-                  onChange={(e) => handlePost(e.target.value)}
+                  name="content"
+                  onChange={inputChange}
                 ></textarea>
 
                 {/* preview start here */}
@@ -288,14 +379,32 @@ const PostCreate = () => {
                       </button>
                     </div>
                   )}
+
+                  {/* padding preview */}  
+                    {state.linkSelected && 
+                      <React.Fragment>
+                      {loading && <h2> loading...</h2>}
+                      {Object.keys(state.link).length >0 &&
+                         <div className={classes.previewDiv}>
+                        
+                         <LinkPreview link={state.link}/>
+                          <button
+                            className={classes.removeicon}
+                            onClick={removeInput}
+                          >
+                            <FaTimes />
+                          </button>
+                        </div>}
+                        </React.Fragment>
+                      }
                 </Box>
                 {/* preview start here */}
-                <OptionTabs />
+                <OptionTabs inputChange={inputChange} />
               </Box>
               {/*P post creating end */}
             </Grid>
             <Grid item xs={12} sm={12} md={4}>
-              <CButton fullWidth onClick={gotoHome}>
+              <CButton fullWidth onClick={createdPost}>
                 Publish Now
               </CButton>
               <Box className={`${classes.optionDiv} FaintBox`}>
@@ -304,7 +413,7 @@ const PostCreate = () => {
                   Categories
                 </h4>
 
-                <MultipleSelectCheckmarks categories={categories} />
+                <MultipleSelectCheckmarks getCategory={getCategory} categories={categories} />
 
                 <Divider className={classes.divider} />
                 {/* who can see first */}
@@ -314,8 +423,9 @@ const PostCreate = () => {
                 <FormControl component='fieldset'>
                   <RadioGroup
                     aria-label='gender'
-                    defaultValue='female'
-                    name='radio-buttons-group'
+                    name="seefirst" 
+                    value={state.seefirst}
+                     onChange={inputChange}
                   >
                     <FormControlLabel
                       value='public'
@@ -329,7 +439,7 @@ const PostCreate = () => {
                     />
                     <FormControlLabel
                       value='tierChoices'
-                      checked={true}
+                     
                       control={<Radio />}
                       label='Select Tier'
                     />
@@ -341,7 +451,7 @@ const PostCreate = () => {
                 <h4 variant='h6' className={classes.SubTitle}>
                   Select which tiers have access
                 </h4>
-                <SelectSubscriptions />
+                <SelectSubscriptions getTiers={getTiers} />
                 <Divider className={classes.divider} />
                 
                 {/* text teaser start */}
@@ -358,7 +468,7 @@ const PostCreate = () => {
                     aria-label="maximum height"
                     placeholder="Add public taster text ..."
                     
-                    style={{ width: '100%', height: 80, border: '1px solid rgb(229,227,221);', borderRadius: '4px', backgroundColor: 'rgb(208,221,229);' }}
+                    style={{ width: '100%', height: 80, border: '1px solid rgb(229,227,221)', borderRadius: '4px', backgroundColor: 'rgb(208,221,229)' }}
                   />
                   <span className={classes.textCounting}> <span >{ textCounting}</span> characters left</span>
               </Box>

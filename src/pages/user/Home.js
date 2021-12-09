@@ -1,4 +1,4 @@
-import React from 'react'
+import React,{useEffect} from 'react'
 import { useHistory } from 'react-router'
 import { useGlobalContext } from './../../context/AuthContext'
 import styled from 'styled-components'
@@ -13,6 +13,7 @@ import CardActions from '@mui/material/CardActions'
 import { Avatar, Typography, Divider } from '@mui/material'
 import { CustomButton } from '../../layout/CutomerButton'
 import TabContents from '../../components/TabContent'
+
 
 const useStyle = makeStyles((theme) => ({
   root: {
@@ -59,6 +60,7 @@ const useStyle = makeStyles((theme) => ({
 }))
 //first user view/ not creator view
 const UserHome = () => {
+ 
   const history = useHistory()
   const classes = useStyle()
   const theme = useTheme()
@@ -67,6 +69,17 @@ const UserHome = () => {
     history.push('/step/1')
   }
 
+//   React.useEffect(() => {
+//    let getdata=true;
+//    if(getdata){
+//      getPosts();
+//    }
+//    return () => {
+//      getdata=false;
+//    }
+//  }, [])
+
+//  
   return (
     <div className={classes.wrapper}>
       <section className={classes.container}>
@@ -79,7 +92,7 @@ const UserHome = () => {
             display={{ xs: 'block', sm: 'block' }}
             order={{ xs: 1, sm: 2 }}
           >
-            <TabContents />
+            <TabContents  />
           </Grid>
           <Grid
             item

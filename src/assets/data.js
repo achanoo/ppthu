@@ -61,3 +61,10 @@ export const plans = [
     description: 'Desc',
   },
 ]
+
+const post={
+  title:'Goblin Korea Drama',
+  content:'Gonyo is so handsome even he is in forty ! still attractive and still handsome! i am so much in love with hime! and Aliee , she is greate singer in korean and her most OST song in this Globin movie is so good! i love it! love you Gonyoo and Aliee! ',
+  subscript_plan:[1,2],
+  category_id:2,
+}
