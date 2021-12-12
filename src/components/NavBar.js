@@ -132,8 +132,7 @@ export default function SearchAppBar() {
               </>
             )}
             {isAuthenticated || (ismatch && <PcNavbar />)}
-
-            <SearchInput />
+            {isAuthenticated && ismatch && <SearchInput />}
 
             {isAuthenticated && ismatch && <ProfileMenu />}
 

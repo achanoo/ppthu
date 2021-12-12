@@ -283,13 +283,24 @@ const CreatorProfileView = ({ user }) => {
     subscription_plans: plans,
     subscriptions_counts: supportCount,
     content_counts: post_count,
-    user_info: { profile_image, cover_photo, bio, profile_url },
+
+    user_info: { profile_image, cover_photo, bio, profile_url, socials },
   } = user;
   const { name } = user.user_info.user;
   //end for share tooltip
 
   const joinPlanByid = (planid) => {
     history.push(`/join/${profile_url}/checkout/?rid=${planid}`);
+  };
+
+  const socialLinkSetup = (link) => {
+    let linkdata = "";
+
+    console.log(link);
+    const data = socials.filter((i) => i.name === link);
+    if (data.length > 0) {
+      window.open(data.link, "_blank");
+    }
   };
 
   console.log(user);
@@ -355,8 +366,10 @@ const CreatorProfileView = ({ user }) => {
           <Box className={classes.popularCommunity}>
             {socialIcons.map((icon, index) => {
               return (
-                <IconButton key={index}>
-                  <Avatar src={icon} alt={`icons${index}`} />
+                <IconButton
+                  key={index}
+                  onClick={() => socialLinkSetup(icon.name)}>
+                  <Avatar src={icon.image} alt={`icons${index}`} />
                 </IconButton>
               );
             })}

@@ -72,12 +72,23 @@ const SpinnerAdornment = withStyles(styles)((props) => (
 ));
 
 const SearchResult = styled("div")(({ theme }) => ({
+  position: "static",
   height: "auto",
   width: "200px",
   backgroundColor: "#fff",
   color: "#333",
-  zIndex: "0",
+
   borderRadius: "5px",
+  [theme.breakpoints.up("xs")]: {
+    position: "static",
+    zIndex: "1000",
+    width: "500px",
+  },
+  [theme.breakpoints.only("xs")]: {
+    position: "static",
+    zIndex: "1000",
+    width: "200px",
+  },
 }));
 
 const BoxItem = styled("div")(({ theme }) => ({
@@ -92,6 +103,12 @@ const BoxItem = styled("div")(({ theme }) => ({
     backgroundColor: "#edebeb",
     borderRadius: "5px",
   },
+  [theme.breakpoints.up("xs")]: {
+    justifyContent: "flex-start",
+  },
+  [theme.breakpoints.only("xs")]: {
+    justifyContent: "flex-start",
+  },
 }));
 
 const SearchInput = (props) => {
@@ -99,7 +116,7 @@ const SearchInput = (props) => {
   const [open, setOpen] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [keyword, setKeyword] = React.useState("");
-  const [setData, setIsSetData] = React.useState(false);
+  const [setData, setIsSetData] = React.useState(true);
   const [error, setError] = React.useState("");
   const [result, setResult] = React.useState([]);
 
@@ -122,6 +139,7 @@ const SearchInput = (props) => {
       cancel.cancel();
     }
     cancel = axios.CancelToken.source();
+    setIsSetData(true);
     try {
       await axios
         .get(
@@ -139,6 +157,7 @@ const SearchInput = (props) => {
           if (res.data.data.length > 0) {
             setResult(res.data.data);
           }
+          setIsSetData(false);
         });
     } catch (err) {
       console.log(err.message);
@@ -160,7 +179,7 @@ const SearchInput = (props) => {
     <React.Fragment>
       <Search>
         <SearchIconWrapper>
-          {setData ? <SpinnerAdornment /> : <SearchIcon />}
+          {!setData ? <SpinnerAdornment /> : <SearchIcon />}
         </SearchIconWrapper>
         <StyledInputBase
           aria-describedby={id}
@@ -169,7 +188,12 @@ const SearchInput = (props) => {
           inputProps={{ "aria-label": "search" }}
           onChange={handleClick}
         />
-        <Popper id={id} open={open} anchorEl={anchorEl}>
+        <Popper
+          style={{ zIndex: 1900 }}
+          id={id}
+          open={open}
+          anchorEl={anchorEl}
+          disablePortal>
           <SearchResult padding={2}>
             {result.map((item, index) => {
               return (

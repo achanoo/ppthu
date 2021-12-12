@@ -49,7 +49,7 @@ const AuthProvider = ({ children }) => {
         localStorage.setItem("token", JSON.stringify(data.access_token));
         localStorage.setItem("user", JSON.stringify(data));
         dispatch({ type: "LOGIN_SUCCESS", payload: data });
-        history.push("/Edit");
+        history.push("/home");
       }
     } catch (error) {
       //dispatch({ type: GET_PRODUCTS_ERROR })
@@ -87,7 +87,7 @@ const AuthProvider = ({ children }) => {
         localStorage.setItem("token", JSON.stringify(data.access_token));
         localStorage.setItem("user", JSON.stringify(data));
         dispatch({ type: "LOGIN_SUCCESS", payload: data });
-        history.push("/Edit");
+        history.push("/home");
       }
     } catch (error) {
       //dispatch({ type: GET_PRODUCTS_ERROR })
@@ -110,7 +110,7 @@ const AuthProvider = ({ children }) => {
         localStorage.setItem("token", JSON.stringify(data.access_token));
         localStorage.setItem("user", JSON.stringify(data));
         dispatch({ type: "LOGIN_SUCCESS", payload: data });
-        history.push("/Edit");
+        history.push("/home");
       }
     } catch (error) {
       //dispatch({ type: GET_PRODUCTS_ERROR })
@@ -130,7 +130,7 @@ const AuthProvider = ({ children }) => {
         localStorage.setItem("token", JSON.stringify(data.access_token));
         localStorage.setItem("user", JSON.stringify(data));
         dispatch({ type: "LOGIN_SUCCESS", payload: data });
-        history.push("/Edit");
+        history.push("/home");
       }
     } catch (error) {
       //dispatch({ type: GET_PRODUCTS_ERROR })
@@ -150,7 +150,7 @@ const AuthProvider = ({ children }) => {
         localStorage.setItem("token", JSON.stringify(data.access_token));
         localStorage.setItem("user", JSON.stringify(data));
         dispatch({ type: "LOGIN_SUCCESS", payload: data });
-        history.push("/Edit");
+        history.push("/home");
       }
     } catch (error) {
       //dispatch({ type: GET_PRODUCTS_ERROR })
