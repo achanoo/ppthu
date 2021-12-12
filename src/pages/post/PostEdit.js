@@ -1,7 +1,7 @@
 /** @format */
 
 import React, { useState } from "react";
-import { useHistory } from "react-router";
+import { useHistory, useParams } from "react-router";
 import Loading from "./../../components/Loading";
 import MultipleSelectCheckmarks from "./../../components/CheckboxSelect";
 import SelectSubscriptions from "./../../components/Subscript";
@@ -30,8 +30,11 @@ import { Audio } from "../../components/Audio";
 import Gridview from "./../../components/Gridview";
 import { CButton } from "../../layout/CCButton";
 import { display, fontWeight } from "@mui/system";
-import { customFetcher } from "../../helpers/Constant";
+import { customFetcher, getFullUrl } from "../../helpers/Constant";
 import LinkPreview from "../../components/LinkPreview";
+import { useAuthContext } from "../../context/AuthContext";
+import { BaseUrl } from "../../helpers/Constant";
+import axios from "axios";
 const useStyles = makeStyles((theme) => ({
   container: {
     marginTop: "10vh",
@@ -130,15 +133,18 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: "600 !important",
   },
 }));
-const PostCreate = () => {
+const PostEdit = () => {
   // getting data of customFetcher
 
   /* customFetcher('https://youtu.be/Wjl1lGFqwJw').then(data => {
    console.log(data);
  });*/
 
+  const { id } = useParams();
+
   const { isloading, categories, getCategories, getSubscriptions } =
     useSubscriptionContext();
+  const { token } = useAuthContext();
 
   const history = useHistory();
 
@@ -149,10 +155,11 @@ const PostCreate = () => {
     content: "",
     subscription_plan: [],
     category_id: "",
-    seefirst: "1",
+    seefirst: "tierChoices",
     linkSelected: false,
     link: "undefined",
     pollOption: [],
+    postid: "",
   });
 
   // end
@@ -168,7 +175,9 @@ const PostCreate = () => {
     removeVideo,
     removeAudio,
     isPollSelected,
-    postCreated,
+    postUpdated,
+    post,
+    handleEditInputImage,
     RemoveData,
   } = usePostContext();
 
@@ -197,7 +206,6 @@ const PostCreate = () => {
   };
 
   const getPollOption = (data) => {
-    console.log(data);
     setState((prev) => ({
       ...prev,
       pollOption: data,
@@ -209,10 +217,54 @@ const PostCreate = () => {
     if (data) {
       getCategories();
       getSubscriptions();
-      RemoveData();
     }
     return (data = false);
   }, []);
+
+  React.useEffect(() => {
+    // getPostByid(id);
+    try {
+      axios({
+        method: "get",
+        url: `${BaseUrl}/content/${id}`,
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }).then((res) => {
+        let data = res.data.data;
+        console.log(data);
+        setState((prev) => ({
+          postid: data.id,
+          title: data.title,
+          content: data.content,
+          subscription_plan: data.subscription_plans.map((i) => i.id),
+          category_id: data.category.id,
+          seefirst: data.type,
+          linkSelected: data.link === "undefined" ? false : true,
+          link: data.link || "",
+          pollOption: data.pollOption,
+        }));
+        console.log(typeof data.image);
+        let object = {
+          isImageSelected: data.image === null ? false : true,
+          isVideoSelected: data.video === null ? false : true,
+          isAudioSelected: data.audio === null ? false : true,
+          isPollSelected: data.poll_options.length > 0 ? true : false,
+          imageData:
+            data.image === null
+              ? []
+              : JSON.parse(data.image).map((i) => getFullUrl(i)), //preveiw
+          video: data.video === null ? "" : getFullUrl(data.video), //preview
+          audio: data.audio === null ? "" : getFullUrl(data.audio), //preview
+        };
+        // console.log(object);
+        handleEditInputImage(object);
+      });
+    } catch (err) {
+      console.log(err.response);
+    }
+  }, [id]);
 
   const getTiers = (data) => {
     // console.log(data);
@@ -238,7 +290,6 @@ const PostCreate = () => {
   // }
 
   const CancelPostHandling = () => {
-    // console.log("posting is cancel and reach home!");
     RemoveData();
     history.push("/home");
   };
@@ -248,7 +299,8 @@ const PostCreate = () => {
     // setFiles(e.target.files[0]);
   };
 
-  const createdPost = () => {
+  const updatedPost = () => {
+    console.log(state.link);
     let formData = new FormData();
     formData.append("title", state.title);
     formData.append("content", state.content);
@@ -258,9 +310,11 @@ const PostCreate = () => {
       JSON.stringify(state.subscription_plan)
     );
     formData.append("type", state.seefirst);
+
     formData.append("link", state.link);
-    formData.append("poll_options", JSON.stringify(state.pollOption));
-    postCreated(formData);
+
+    formData.append("_method", "PUT");
+    postUpdated(formData, id);
     // history.push('/home')
   };
 
@@ -320,6 +374,7 @@ const PostCreate = () => {
                   className={classes.postDiv}
                   placeholder="what's on your mind"
                   name="content"
+                  value={state.content}
                   onChange={inputChange}></textarea>
 
                 {/* preview start here */}
@@ -397,7 +452,7 @@ const PostCreate = () => {
               {/*P post creating end */}
             </Grid>
             <Grid item xs={12} sm={12} md={4}>
-              <CButton fullWidth onClick={createdPost}>
+              <CButton fullWidth onClick={updatedPost}>
                 Publish Now
               </CButton>
               <Box className={`${classes.optionDiv} FaintBox`}>
@@ -409,6 +464,7 @@ const PostCreate = () => {
                 <MultipleSelectCheckmarks
                   getCategory={getCategory}
                   categories={categories}
+                  category_id={state.category_id}
                 />
 
                 <Divider className={classes.divider} />
@@ -445,7 +501,10 @@ const PostCreate = () => {
                 <h4 variant="h6" className={classes.SubTitle}>
                   Select which tiers have access
                 </h4>
-                <SelectSubscriptions getTiers={getTiers} />
+                <SelectSubscriptions
+                  getTiers={getTiers}
+                  tiers={state.subscription_plan}
+                />
                 <Divider className={classes.divider} />
 
                 {/* text teaser start */}
@@ -484,4 +543,4 @@ const PostCreate = () => {
   );
 };
 
-export default PostCreate;
+export default PostEdit;
