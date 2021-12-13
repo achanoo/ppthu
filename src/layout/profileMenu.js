@@ -31,7 +31,8 @@ export default function AccountMenu() {
   return (
     <React.Fragment>
       <Tooltip title='Account settings'>
-        <IconButton size='small' sx={{ ml: 2 }}>
+        <IconButton  onClick={handleClick} size='small' sx={{ ml: 2 }}>
+
           <Avatar sx={{ width: 32, height: 32 }}>
             {name ? name.charAt(0).toUpperCase() : 'User'}
           </Avatar>
@@ -72,31 +73,29 @@ export default function AccountMenu() {
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
-        <MenuItem>
-          <Avatar /> Profile
+        <MenuItem
+           onClick={() => history.push('/creator-profile')}
+          >
+           Personal Information
+        </MenuItem>
+        <MenuItem  onClick={() => history.push('/rsmanager')}>
+           Relationship Manager
+        </MenuItem>
+        <MenuItem  onClick={() => history.push('/earnings-overview')}>
+           My Earnings
+        </MenuItem>
+        <MenuItem onClick={() => history.push('/user-profile')} >
+          Setting
         </MenuItem>
         <MenuItem>
-          <Avatar /> My account
+           Help & FAQ
         </MenuItem>
-        <Divider />
-        <MenuItem>
-          <ListItemIcon>
-            <PersonAdd fontSize='small' />
-          </ListItemIcon>
-          Add another account
-        </MenuItem>
-        <MenuItem>
-          <ListItemIcon>
-            <Settings fontSize='small' />
-          </ListItemIcon>
-          Settings
-        </MenuItem>
-        <MenuItem onClick={logout}>
-          <ListItemIcon>
-            <Logout fontSize='small' />
-          </ListItemIcon>
+        <MenuItem onClick={()=>logout()}>
           Logout
         </MenuItem>
+
+        
+        
       </Menu>
     </React.Fragment>
   )

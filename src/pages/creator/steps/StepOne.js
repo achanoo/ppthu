@@ -12,11 +12,11 @@ import { CButton } from './../../../layout/CCButton'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { makeStyles } from '@mui/styles'
+import { useSubscriptionContext } from '../../../context/SubscriptionContext'
 const useStyles = makeStyles((theme) => ({
   wrapper: {
     minHeight: '100vh',
     display: 'grid',
-    marginTop: '5vh',
     placeItems: 'center',
     padding: '10px',
     [theme.breakpoints.only('xs')]: {
@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: '700px',
     textAlign: 'start',
     height: 'auto',
-    padding: '20px',
+    padding: '0px 20px',
 
     [theme.breakpoints.only('xs')]: {
       padding: '5px',
@@ -49,8 +49,47 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const StepOne = () => {
+  const {categories,getCategories}=useSubscriptionContext();
   const classes = useStyles()
   const history = useHistory()
+  const [state,setState]=React.useState({
+     selected:JSON.parse(localStorage.getItem('selectedCategory')) || []
+  });
+
+  React.useEffect(() => {
+    let getData = true;
+    if (getData)
+      getCategories();
+    return () => {
+      getData = false;
+    }
+  }, [])
+
+   const handleChange = (id) => {
+    
+    const {selected}=state;
+    let newlist=categories.map((item)=>{
+
+    let find = selected.indexOf(id)
+
+      if(find > -1) {
+        selected.splice(find, 1)
+      } else {
+        selected.push(id)
+      }
+
+    setState((prev)=>({
+      selected
+    })) 
+
+      localStorage.setItem('selectedCategory',JSON.stringify(selected));
+    
+    
+   // props.getTiers(state.selected);
+    
+  });
+}
+
   return (
     <div className={classes.wrapper}>
       <div className={classes.container}>
@@ -64,40 +103,20 @@ const StepOne = () => {
               You can pick up more than one categories
             </span>
             <Grid container className={classes.categories}>
+            
               <Grid item xs={12} sm={12} md={6}>
-                <FormGroup>
-                  <FormControlLabel
-                    control={<Checkbox defaultChecked />}
-                    label='Podcasts'
+              <FormGroup>
+              {categories.map((category,index)=>{
+                const {id,name}=category;
+              return  <FormControlLabel
+                  key={index}
+                    control={<Checkbox checked={state.selected.includes(id)} onChange={(e)=>handleChange(id)} />}
+                    label={name}
                   />
-                  <FormControlLabel
-                    control={<Checkbox />}
-                    label='Animation & illustration'
-                  />
-                  <FormControlLabel control={<Checkbox />} label='Music' />
-                  <FormControlLabel
-                    control={<Checkbox />}
-                    label='Communities'
-                  />
+            })}
                 </FormGroup>
               </Grid>
-              <Grid item xs={12} sm={12} md={6}>
-                <FormGroup>
-                  <FormControlLabel
-                    control={<Checkbox defaultChecked />}
-                    label='Videos'
-                  />
-                  <FormControlLabel
-                    control={<Checkbox />}
-                    label='Writing & Journalism'
-                  />
-                  <FormControlLabel
-                    control={<Checkbox />}
-                    label='Games & SoftWare'
-                  />
-                  <FormControlLabel control={<Checkbox />} label='Others' />
-                </FormGroup>
-              </Grid>
+              
             </Grid>
             <CButton onClick={() => history.push('/step/2')}>Continue</CButton>
           </Grid>

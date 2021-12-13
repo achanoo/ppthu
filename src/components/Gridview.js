@@ -8,10 +8,12 @@ import Modal from './lightModal'
 import { useTheme } from '@mui/material/styles'
 import useMediaQuery from '@mui/material/useMediaQuery'
 
+
 const Gridview = (props) => {
   const theme = useTheme()
   const ismatch = useMediaQuery(theme.breakpoints.up('md'))
   const { images } = props
+  // console.log(images[0]);
   const showImags = [...images]
   const [modal, setModal] = React.useState(false)
   const [index, setIndex] = React.useState('0')

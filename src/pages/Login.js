@@ -154,13 +154,13 @@ const Login = () => {
   }
 
   const handleLogin = (e) => {
-    // e.preventDefault()
-    // const formData = {
-    //   email: aemail,
-    //   password: apassword,
-    // }
-    // loginbyAccount(formData)
-    defaultLogged()
+     e.preventDefault()
+     const formData = {
+       email: aemail,
+      password: apassword,
+    }
+     loginbyAccount(formData)
+    // defaultLogged()
   }
 
   const handlePhoneSubmit = () => {
@@ -231,6 +231,7 @@ const Login = () => {
             bgcolor='rgb(195 197 194)'
             type='submit'
             className='btn btn-filled'
+            
           >
             Log in
           </CButton>

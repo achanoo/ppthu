@@ -17,6 +17,7 @@ import CreatorProfile from './creator/Profile'
 
 import PostCreate from './post/Create'
 import PostDetail from './post/PostDetail'
+import PostEdit from './post/PostEdit'
 
 import StepOne from './creator/steps/StepOne'
 import StepTwo from './creator/steps/StepTwo'
@@ -41,6 +42,7 @@ export {
   EarningsOverview,
   EarningsOverviewDetail,
   PostDetail,
+  PostEdit,
   StepOne,
   StepTwo,
   EditProfile,

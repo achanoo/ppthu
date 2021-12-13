@@ -15,6 +15,12 @@ const theme1 = createTheme({
     primary: {
       main: '#000',
     },
+    secondary: {
+      main:'#A00'
+    },
+    success: {
+      main: '#A400',
+    },
   },
   background: {
     default: '#fff',

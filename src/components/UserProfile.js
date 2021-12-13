@@ -39,6 +39,7 @@ const useStyles = makeStyles((theme) => ({
     placeItems: 'center',
     [theme.breakpoints.only('xs')]: {
       display: 'block',
+      padding:'10px '
     },
   },
   container: {
@@ -51,29 +52,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   boxer: {
-    display: 'flex',
-    padding: '20px 25px',
-    justifyContent: 'flex-start',
-    justifyItems: 'center',
-    alignItems: 'baseline',
-    gap: '10px',
-    '& .MuiAvatar-root': {
-      display: 'flex',
-      alignSelf: 'center',
-      marginRight: theme.spacing(2),
-    },
-    '& h4': {
-      display: 'flex',
-      alignSelf: 'center',
-      marginRight: theme.spacing(1),
-      fontFamily: 'Open Sans, sans-serif',
-      fontSize: '1.3rem',
-    },
-    '& svg': {
-      color: 'rgb(229,227,221)',
-      fontSize: '1.3rem',
-      alignSelf: 'center',
-    },
+    display:'flex'
   },
   cusFormInput: {
     textAlign: 'start',
@@ -216,25 +195,24 @@ const Basic = () => {
   return (
     <div className={classes.wrapper}>
       <div className={classes.container}>
-        <Typography variant='h4' gutterBottom component='div'>
+        <Typography variant='h5' gutterBottom component='div'>
           Personal Information
         </Typography>
 
-        <Box
-          display='flex'
-          justifyContent='space-between'
-          className={` FaintBox `}
-        >
-          <Box className={`${classes.boxer} `}>
-            <Avatar src='https://cdn-icons-png.flaticon.com/128/1946/1946429.png' />
-            <h4>Username</h4>
-            <FiEdit3 />
+        <Box display="flex" justifyContent="space-between">
+           <Box display='flex' justifyContent="space-between" spacing={2} alignItems="center"  >
+              <Avatar src='https://cdn-icons-png.flaticon.com/128/1946/1946429.png' />
+              <h4>Username</h4>
+              <FiEdit3 />
           </Box>
-          <Box className={`${classes.boxer}   `}>
+           <Box display='flex' alignItems="center" >
             <VerifiedUserIcon />
-            <CButton>Verify</CButton>
-          </Box>
+            <CButton >Verify</CButton>
+          </Box> 
+          
         </Box>
+
+       
 
         <Divider className={classes.hrdiv} />
 
@@ -258,7 +236,7 @@ const Basic = () => {
           <TextField
             id='filled-multiline-flexible'
             label='Multiline'
-            displayempty
+            
             inputProps={{ 'aria-label': 'Without label' }}
             multiline
             fullWidth
@@ -409,7 +387,7 @@ const Basic = () => {
           <TextField
             id='filled-multiline-flexible'
             label='example street or quater,example township, example city'
-            displayempty
+            
             inputProps={{ 'aria-label': 'Without label' }}
             multiline
             fullWidth
@@ -419,12 +397,12 @@ const Basic = () => {
           />
         </Box>
         {/* button start */}
-        <Box className={classes.buttonGroup} sx={{ mt: 3 }}>
+        {/* <Box className={classes.buttonGroup} sx={{ mt: 3 }}>
           <CButton bgcolor='#eeeeee' textcolor='#0f0f0f'>
             Cancel
           </CButton>
           <CButton>Save</CButton>
-        </Box>
+        </Box> */}
       </div>
     </div>
   )

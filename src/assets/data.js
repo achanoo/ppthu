@@ -1,16 +1,23 @@
-import img1 from './images/fb-profile.jpeg'
-import img2 from './images/cateogrybanner.jpg'
-import img3 from './images/banner.png'
-import img4 from './images/inmgtwo.png'
-import img5 from './images/social.jpeg'
-import instagram from './instagram.png'
-import twitter from './twitter.png'
-import youtube from './youtube.png'
-import facebook from './facebook.png'
+/** @format */
 
-export const socialIcons = [facebook, youtube, instagram, twitter]
+import img1 from "./images/fb-profile.jpeg";
+import img2 from "./images/cateogrybanner.jpg";
+import img3 from "./images/banner.png";
+import img4 from "./images/inmgtwo.png";
+import img5 from "./images/social.jpeg";
+import instagram from "./instagram.png";
+import twitter from "./twitter.png";
+import youtube from "./youtube.png";
+import facebook from "./facebook.png";
 
-export const itemData = [img1, img2, img3, img4, img5]
+export const socialIcons = [
+  { name: "facebook", image: facebook },
+  { name: "youtube", image: youtube },
+  { name: "instagram", image: instagram },
+  { name: "twitter", image: instagram },
+];
+
+export const itemData = [img1, img2, img3, img4, img5];
 //export const itemData = [img1, img2, img3, img4]
 
 // export const itemData = [img1, img2, img3]
@@ -18,46 +25,54 @@ export const itemData = [img1, img2, img3, img4, img5]
 // export const itemData = [img1]
 
 export const subscriptPlan = [
-  { name: 'Diamond', id: 1, ischecked: true },
-  { name: 'Silver', id: 2, ischecked: false },
-  { name: 'Gold', id: 3, ischecked: false },
-  { name: 'Red Rudy', id: 4, ischecked: false },
-  { name: 'Green Rudy', id: 5, ischecked: false },
-]
+  { name: "Diamond", id: 1, ischecked: true },
+  { name: "Silver", id: 2, ischecked: false },
+  { name: "Gold", id: 3, ischecked: false },
+  { name: "Red Rudy", id: 4, ischecked: false },
+  { name: "Green Rudy", id: 5, ischecked: false },
+];
 
 // post
 export const postPhoto = [
-  'https://images.unsplash.com/photo-1582663804886-7e89d348467c?ixid=MnwxMjA3fDB8MHx0b3BpYy1mZWVkfDN8Ym84alFLVGFFMFl8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60',
-  'https://images.unsplash.com/photo-1592407903525-cfd0314e3e89?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1yZWxhdGVkfDR8fHxlbnwwfHx8fA%3D%3D&auto=format&fit=crop&w=800&q=60',
-]
+  "https://images.unsplash.com/photo-1582663804886-7e89d348467c?ixid=MnwxMjA3fDB8MHx0b3BpYy1mZWVkfDN8Ym84alFLVGFFMFl8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60",
+  "https://images.unsplash.com/photo-1592407903525-cfd0314e3e89?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1yZWxhdGVkfDR8fHxlbnwwfHx8fA%3D%3D&auto=format&fit=crop&w=800&q=60",
+];
 
 //coverprofile
 export const coverphoto =
-  'https://images.unsplash.com/photo-1504966981333-1ac8809be1ca?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2070&q=80'
+  "https://images.unsplash.com/photo-1504966981333-1ac8809be1ca?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2070&q=80";
 
 export const profilephoto =
-  'https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1064&q=80'
+  "https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1064&q=80";
 
 export const plans = [
   {
     id: 1,
-    level: 'Platinums',
+    level: "Platinums",
     price: 10000,
-    image: 'creators/1/plan_images/2021-09-19 20-09Rm2.png',
+    image: "creators/1/plan_images/2021-09-19 20-09Rm2.png",
     description: null,
   },
   {
     id: 2,
-    level: 'Gold',
+    level: "Gold",
     price: 5000,
-    image: 'creators/1/plan_images/2021-09-19 20-09Rm.png',
-    description: 'Desc',
+    image: "creators/1/plan_images/2021-09-19 20-09Rm.png",
+    description: "Desc",
   },
   {
     id: 2,
-    level: 'Silver',
+    level: "Silver",
     price: 6000,
-    image: 'creators/1/plan_images/2021-09-19 20-09Rm.png',
-    description: 'Desc',
+    image: "creators/1/plan_images/2021-09-19 20-09Rm.png",
+    description: "Desc",
   },
-]
+];
+
+const post = {
+  title: "Goblin Korea Drama",
+  content:
+    "Gonyo is so handsome even he is in forty ! still attractive and still handsome! i am so much in love with hime! and Aliee , she is greate singer in korean and her most OST song in this Globin movie is so good! i love it! love you Gonyoo and Aliee! ",
+  subscript_plan: [1, 2],
+  category_id: 2,
+};

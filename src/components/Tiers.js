@@ -1,48 +1,61 @@
-import React, { useState, useRef } from 'react'
-import { useSubscriptionContext } from '../context/SubscriptionContext'
-import Loading from './../components/Loading'
+/** @format */
+
+import React, { useState, useRef } from "react";
+import { useSubscriptionContext } from "../context/SubscriptionContext";
+import Loading from "./../components/Loading";
 import {
   Typography,
   OutlinedInput,
   FormHelperText,
   InputAdornment,
-} from '@mui/material'
-import Card from '@mui/material/Card'
-import CardContent from '@mui/material/CardContent'
-import Button from '@mui/material/Button'
-import Grid from '@mui/material/Grid'
-import TextField from '@mui/material/TextField'
-import Editor from './../components/Editor'
-import Link from '@mui/material/Link'
-import Dialog from '@mui/material/Dialog'
-import DialogActions from '@mui/material/DialogActions'
-import DialogContent from '@mui/material/DialogContent'
-import DialogTitle from '@mui/material/DialogTitle'
-import '../assets/style.css'
+} from "@mui/material";
+import { makeStyles } from "@mui/styles";
+import Card from "@mui/material/Card";
+import Avatar from "@mui/material/Avatar";
+import CardContent from "@mui/material/CardContent";
+import Button from "@mui/material/Button";
+import Grid from "@mui/material/Grid";
+import Box from "@mui/material/Box";
+import TextField from "@mui/material/TextField";
+import Editor from "./../components/Editor";
+import Link from "@mui/material/Link";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material/DialogTitle";
+import "../assets/style.css";
+import { ClassNames } from "@emotion/react";
+import { useAuthContext } from "../context/AuthContext";
+
+const useStyles = makeStyles((theme) => ({
+  tierImage: {
+    display: "inline-flex",
+    justifyContent: "space-around",
+    alignItems: "center",
+    "& .MuiAvatar-root": {
+      width: "80px",
+      height: "80px",
+    },
+  },
+}));
 let initialdata = {
   subcriptPlans: [],
   newDialog: false,
   editDialog: false,
-  newData: {
-    title: '',
-    price: '',
-    image: '',
-    desc: '',
-  },
-  editData: {
-    title: '',
-    price: '',
-    image: '',
-    desc: '',
-  },
+  level: "",
+  price: "",
+  image: "",
+  desc: "",
   isError: {
-    title: '',
-    price: '',
-    image: '',
+    title: "",
+    price: "",
+    image: "",
   },
-}
+};
 
 const Tiers = () => {
+  const classes = useStyles();
+  const { user } = useAuthContext();
   const {
     setLevel,
     setPrice,
@@ -52,139 +65,174 @@ const Tiers = () => {
     subscriptions,
     isloading,
     createSubscriptions,
-  } = useSubscriptionContext()
+  } = useSubscriptionContext();
   // console.log(data)
-  const [state, setState] = React.useState(initialdata)
-  const [open, setOpen] = React.useState(false)
-  const createPlan = React.useRef()
-  const editPlan = React.useRef()
+  const [state, setState] = React.useState(initialdata);
+  const [open, setOpen] = React.useState(false);
+  const createPlan = React.useRef();
+  const editPlan = React.useRef();
 
-  const editor = useRef(null)
-  const [content, setContent] = useState('')
-  const [fullWidth, setFullWidth] = React.useState(true)
-  const [maxWidth, setMaxWidth] = React.useState('sm')
+  const editor = useRef(null);
+  const [content, setContent] = useState("");
+  const [fullWidth, setFullWidth] = React.useState(true);
+  const [maxWidth, setMaxWidth] = React.useState("sm");
+  const [preview, setPreview] = React.useState("");
 
   const config = {
     readonly: false, // all options from https://xdsoft.net/jodit/doc/
-  }
+  };
 
   const newhandleClose = () => {
     setState({
       ...state,
       newDialog: false,
-    })
+    });
     // setState((state) => {
     //   return { ...state, newData: { ...state.newData, desc: value } }
     // })
-  }
+  };
+
   const newhandleOpen = (e) => {
     setState({
       ...state,
       newDialog: true,
-    })
-  }
+    });
+  };
   const edithandleClose = (e) => {
     setState({
       ...state,
       editDialog: false,
-    })
-  }
+    });
+  };
   const edithandleOpen = (e) => {
     setState({
       ...state,
       editDialog: true,
-    })
-  }
+    });
+  };
 
   // console.log(state)
   const NewformInputValue = (e) => {
-    const { name, value, files } = e.target
+    const { name, value, files } = e.target;
 
-    const { isError, newData } = state
+    //console.log(name,value);
 
-    switch (name) {
-      case 'title':
-        isError.title = value.length < 0 ? 'data is required' : ''
-        break
-      case 'price':
-        isError.price = value.length < 0 ? 'data is required' : ''
-        break
-      case 'image':
-        isError.image = value.length < 0 ? 'data is required' : ''
-        break
+    // const { isError } = state;
+
+    // switch (name) {
+    //   case 'title':
+    //     isError.title = value.length < 0 ? 'data is required' : ''
+    //     break
+    //   case 'price':
+    //     isError.price = value.length < 0 ? 'data is required' : ''
+    //     break
+    //   case 'image':
+    //     isError.image = files[0].size < 0 ? 'data is required' : ''
+    //     break
+    // }
+
+    if (name !== "image") {
+      setState((prevState) => ({
+        ...prevState,
+
+        [name]: value,
+      }));
+    } else {
+      setPreview(URL.createObjectURL(files[0]));
+      setState((prevState) => ({
+        ...prevState,
+
+        image: files[0],
+      }));
     }
 
-    if (name === 'title') {
-      isError.title = value.length < 0 ? 'data is required' : ''
-      setLevel(value)
-      setState({ ...state, isError })
-    }
+    // if (name === 'title') {
+    //   isError.title = value.length < 0 ? 'data is required' : ''
+    //   setLevel(value)
+    //   setState({ ...state, isError })
+    // }
 
-    if (name === 'price') {
-      isError.price = value.length < 0 ? 'data is required' : ''
-      setPrice(value)
-      setState({ ...state, isError })
-    }
+    // if (name === 'price') {
+    //   isError.price = value.length < 0 ? 'data is required' : ''
+    //   setPrice(value)
+    //   setState({ ...state, isError })
+    // }
 
-    if (name === 'image') {
-      isError.price = files[0].size < 0 ? 'data is required' : ''
-      setImage(files[0])
-      setState({ ...state, isError })
-    }
+    // if (name === 'image') {
+    //   isError.price = files[0].size < 0 ? 'data is required' : ''
+    //   setImage(files[0])
+    //   setState({ ...state, isError })
+    // }
 
     // setState({
     //   ...state,
     //   isError,
     //   newData: { ...state.newData, [name]: value },
     // })
-  }
+  };
   // console.log(state.newData)
 
   // Edit
   const EditformInputValue = (e) => {
-    const { name, value } = e.target
-    const { isError, newData } = state
+    const { name, value } = e.target;
+    const { isError, newData } = state;
 
     setState({
       ...state,
       editData: { ...state.editData, [name]: value },
-    })
-  }
+    });
+  };
 
   const NewgetValue = (value) => {
-    setDescription(value)
+    setState((prev) => ({
+      ...prev,
+      desc: value,
+    }));
+    // setDescription(value)
     // setState({ ...state, isError })
-  }
+  };
   const editGetValue = (value) => {
     setState({
       ...state,
       editData: { ...state.editData, desc: value },
-    })
-  }
+    });
+  };
 
   React.useEffect(() => {
-    // getSubscriptions()
-  }, [])
+    getSubscriptions();
+  }, []);
 
   const createHandleSubmit = () => {
-    const newformData = {
-      level: state.newData.title,
-      price: state.newData.price,
-      image: state.newData.image,
-      desc: state.newData.desc,
-    }
+    const formData = new FormData();
+    formData.append("level", state.level);
+    formData.append("price", state.price);
+    formData.append("image", state.image);
+    formData.append("description", state.desc);
+    // const newformData = {
+    //   level: state.title,
+    //   price: state.price,
+    //   image: state.image,
+    //   desc: state.desc,
+    // }
     // console.log(newformData)
-    createSubscriptions(newformData)
-    setState({
-      ...state,
-      newDialog: false,
-    })
+    createSubscriptions(formData);
+    setState((prevState) => ({
+      initialdata,
+    }));
+  };
+
+  if (user.role === "user") {
+    return (
+      <h1 style={{ textAlign: "center" }}>
+        Your access is denied, Please become a Creator to create Tier Access!
+      </h1>
+    );
   }
 
   if (isloading) {
-    return <Loading />
+    return <Loading />;
   }
-  console.log(subscriptions)
+  //console.log(subscriptions)
   return (
     <>
       <Grid container spacing={2}>
@@ -194,19 +242,18 @@ const Tiers = () => {
           sm={12}
           md={12}
           lg={12}
-          justifyContent='center'
-          alignItems='center'
-        >
-          <Typography gutterBottom variant='h4' textAlign='center'>
+          justifyContent="center"
+          alignItems="center">
+          <Typography gutterBottom variant="h4" textAlign="center">
             Tiers
           </Typography>
-          <Typography gutterBottom textAlign='center'>
+          <Typography gutterBottom textAlign="center">
             Choose what to offer your patrons
           </Typography>
         </Grid>
-        <Grid item container direction='column' spacing={2}>
+        <Grid item container direction="column" spacing={2}>
           <Grid item xs={12} sm={12} md={12} lg={12}>
-            <Card style={{ borderRadius: '0' }}>
+            <Card style={{ borderRadius: "0" }}>
               {/* <CardMedia
                         component='img'
                         height='140'
@@ -214,7 +261,7 @@ const Tiers = () => {
                         alt='green iguana'
                         /> */}
               <CardContent>
-                <Grid container direction='row' spacing={2}>
+                <Grid container direction="row" spacing={2}>
                   {/* <Grid item xs={12} sm={6} md={4} lg={4}>
                     <Card style={{ borderRadius: '0' }}>
                       <CardContent>
@@ -275,26 +322,25 @@ const Tiers = () => {
                   </Grid> */}
 
                   {subscriptions.map((plan, index) => {
-                    const { id, level, price, description } = plan
-                    console.log(level)
+                    const { id, level, price, description } = plan;
+
                     return (
                       <Grid key={index} item xs={12} sm={6} md={4} lg={4}>
-                        <Card style={{ borderRadius: '0' }}>
+                        <Card style={{ borderRadius: "0" }}>
                           <CardContent>
                             <Grid item container>
                               <Grid item xs={10} sm={10} md={10} lg={10}>
-                                <div className='subtitle'>
-                                  Published Oct 18, 2021{' '}
+                                <div className="subtitle">
+                                  Published Oct 18, 2021{" "}
                                 </div>
-                                <div className='subtitle'>0 pantpoethus</div>
+                                <div className="subtitle">0 pantpoethus</div>
                               </Grid>
                               <Grid item xs={2} sm={2} md={2} lg={2}>
                                 <a
-                                  href='#'
-                                  className='blue-link'
+                                  href="#"
+                                  className="blue-link"
                                   onClick={edithandleOpen}
-                                  data-name='editPlan'
-                                >
+                                  data-name="editPlan">
                                   Edit Tier
                                 </a>
                               </Grid>
@@ -302,8 +348,8 @@ const Tiers = () => {
                             <br />
                             <Grid item container>
                               <Grid item xs={12} sm={12} md={12} lg={12}>
-                                <div className='input-label'>{level}</div>
-                                <div className='subtitle'>
+                                <div className="input-label">{level}</div>
+                                <div className="subtitle">
                                   Ks {price} per month
                                 </div>
                               </Grid>
@@ -312,14 +358,14 @@ const Tiers = () => {
                               <Grid item xs={12} sm={12} md={12} lg={12}>
                                 <div
                                   style={{
-                                    fontWeight: 'bold',
-                                    backgroundColor: 'rgb(245, 244, 242)',
-                                    padding: '6px',
-                                    margin: '16px 0px',
+                                    fontWeight: "bold",
+                                    backgroundColor: "rgb(245, 244, 242)",
+                                    padding: "6px",
+                                    margin: "16px 0px",
                                   }}
-                                >
-                                  {description}
-                                </div>
+                                  dangerouslySetInnerHTML={{
+                                    __html: `${description}`,
+                                  }}></div>
                                 {/* <div
                                   style={{
                                     fontWeight: 'bold',
@@ -336,27 +382,25 @@ const Tiers = () => {
                           </CardContent>
                         </Card>
                       </Grid>
-                    )
+                    );
                   })}
 
                   <Grid item xs={12} sm={6} md={4} lg={4}>
                     <div
                       style={{
-                        fontWeight: 'bold',
-                        backgroundColor: 'rgb(245, 244, 242)',
-                        padding: '16px',
-                        margin: '16px 0px',
-                        textAlign: 'center',
-                        borderRadius: '4px',
-                      }}
-                    >
-                      +{' '}
+                        fontWeight: "bold",
+                        backgroundColor: "rgb(245, 244, 242)",
+                        padding: "16px",
+                        margin: "16px 0px",
+                        textAlign: "center",
+                        borderRadius: "4px",
+                      }}>
+                      +{" "}
                       <a
-                        href='#'
-                        className='blue-link'
+                        href="#"
+                        className="blue-link"
                         onClick={newhandleOpen}
-                        data-name='createPlan'
-                      >
+                        data-name="createPlan">
                         Add Tiers
                       </a>
                     </div>
@@ -376,77 +420,79 @@ const Tiers = () => {
         open={state.newDialog}
         onClose={newhandleClose}
         fullWidth={fullWidth}
-        maxWidth={maxWidth}
-      >
+        maxWidth={maxWidth}>
         <DialogTitle>Create New Subscription</DialogTitle>
         <DialogContent>
-          <Grid container style={{ margin: '16px 0px' }}>
+          <Grid container style={{ margin: "16px 0px" }}>
             <Grid item xs={12} sm={12} md={4}>
-              <p className='input-label'> Tier title </p>
+              <p className="input-label"> Tier title </p>
             </Grid>
             <Grid item xs={12} sm={12} md={8}>
               <TextField
                 fullWidth
                 required
-                id='outlined-required'
-                label='Required'
-                defaultValue='Official Patron'
-                placeholder='Official Patron'
-                color='info'
-                name='title'
+                id="outlined-required"
+                label="Required"
+                defaultValue="Official Patron"
+                placeholder="Official Patron"
+                color="info"
+                name="level"
                 onChange={NewformInputValue}
               />
             </Grid>
           </Grid>
           <Grid container>
             <Grid item xs={12} sm={12} md={4}>
-              <p className='input-label'> Tier Price </p>
+              <p className="input-label"> Tier Price </p>
             </Grid>
             <Grid item xs={12} sm={12} md={8}>
               <TextField
                 fullWidth
                 required
-                id='outlined-required'
-                label='Required'
-                defaultValue='Official Patron'
-                placeholder='300000'
-                color='info'
-                name='price'
+                id="outlined-required"
+                label="Required"
+                defaultValue="Official Patron"
+                placeholder="300000"
+                color="info"
+                name="price"
                 onChange={NewformInputValue}
               />
             </Grid>
           </Grid>
-          <Grid container style={{ margin: '16px 0px' }}>
+          <Grid container style={{ margin: "16px 0px" }}>
             <Grid item xs={12} sm={12} md={4}>
-              <p className='input-label'> Tier Image </p>
+              <p className="input-label"> Tier Image </p>
             </Grid>
-            <Grid item xs={12} sm={12} md={8} style={{ alignSelf: 'center' }}>
-              <input
-                accept='image/*'
-                className=''
-                id='contained-button-file'
-                multiple
-                type='file'
-                name='image'
-                onChange={NewformInputValue}
-              />
+            <Grid item xs={12} sm={12} md={8} style={{ alignSelf: "center" }}>
+              <Box className={classes.tierImage}>
+                <input
+                  accept="image/*"
+                  className=""
+                  id="contained-button-file"
+                  multiple
+                  type="file"
+                  name="image"
+                  onChange={NewformInputValue}
+                />
 
-              <label htmlFor='contained-button-file'></label>
+                <Avatar alt="Remy Sharp" src={preview} />
+              </Box>
+              <label htmlFor="contained-button-file"></label>
             </Grid>
           </Grid>
 
-          <Grid container style={{ margin: '16px 0px' }}>
+          <Grid container style={{ margin: "16px 0px" }}>
             <Grid item xs={12} sm={12} md={4}>
-              <p className='input-label'> Tier Description </p>
+              <p className="input-label"> Tier Description </p>
             </Grid>
             <Grid item xs={12} sm={12} md={8}>
               <Editor contents={content} getValue={NewgetValue} />
-              <label htmlFor='contained-button-file'></label>
+              <label htmlFor="contained-button-file"></label>
             </Grid>
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button onClick={newhandleClose} data-name='createPlan'>
+          <Button onClick={newhandleClose} data-name="createPlan">
             Cancel
           </Button>
           <Button onClick={createHandleSubmit}>Save</Button>
@@ -459,83 +505,82 @@ const Tiers = () => {
         onClose={edithandleClose}
         fullWidth={fullWidth}
         maxWidth={maxWidth}
-        data-name='editPlan'
-      >
+        data-name="editPlan">
         <DialogTitle>Update Subscription</DialogTitle>
         <DialogContent>
-          <Grid container style={{ margin: '16px 0px' }}>
+          <Grid container style={{ margin: "16px 0px" }}>
             <Grid item xs={12} sm={12} md={4}>
-              <p className='input-label'> Tier title </p>
+              <p className="input-label"> Tier title </p>
             </Grid>
             <Grid item xs={12} sm={12} md={8}>
               <TextField
                 fullWidth
                 required
-                id='outlined-required'
-                label='Required'
-                defaultValue='Official Patron'
-                placeholder='Official Patron'
-                color='info'
-                name='title'
+                id="outlined-required"
+                label="Required"
+                defaultValue="Official Patron"
+                placeholder="Official Patron"
+                color="info"
+                name="level"
                 onChange={EditformInputValue}
               />
             </Grid>
           </Grid>
           <Grid container>
             <Grid item xs={12} sm={12} md={4}>
-              <p className='input-label'> Tier Price </p>
+              <p className="input-label"> Tier Price </p>
             </Grid>
             <Grid item xs={12} sm={12} md={8}>
               <TextField
                 fullWidth
                 required
-                id='outlined-required'
-                label='Required'
-                defaultValue='Official Patron'
-                placeholder='300000'
-                color='info'
-                name='price'
+                id="outlined-required"
+                label="Required"
+                defaultValue="Official Patron"
+                placeholder="300000"
+                color="info"
+                name="price"
                 onChange={EditformInputValue}
               />
             </Grid>
           </Grid>
-          <Grid container style={{ margin: '16px 0px' }}>
+          <Grid container style={{ margin: "16px 0px" }}>
             <Grid item xs={12} sm={12} md={4}>
-              <p className='input-label'> Tier Image </p>
+              <p className="input-label"> Tier Image </p>
             </Grid>
-            <Grid item xs={12} sm={12} md={8} style={{ alignSelf: 'center' }}>
+            <Grid item xs={12} sm={12} md={8} style={{ alignSelf: "center" }}>
               <input
-                accept='image/*'
-                className=''
-                id='contained-button-file'
+                accept="image/*"
+                className=""
+                id="contained-button-file"
                 multiple
-                type='file'
-                name='image'
+                type="file"
+                name="image"
                 onChange={EditformInputValue}
               />
 
-              <label htmlFor='contained-button-file'></label>
+              <label htmlFor="contained-button-file"></label>
             </Grid>
           </Grid>
 
-          <Grid container style={{ margin: '16px 0px' }}>
+          <Grid container style={{ margin: "16px 0px" }}>
             <Grid item xs={12} sm={12} md={4}>
-              <p className='input-label'> Tier Description </p>
+              <p className="input-label"> Tier Description </p>
             </Grid>
             <Grid item xs={12} sm={12} md={8}>
               <Editor contents={content} getValue={editGetValue} />
-              <label htmlFor='contained-button-file'></label>
+              <label htmlFor="contained-button-file"></label>
             </Grid>
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button onClick={edithandleClose} data-name='editPlan'>
+          <Button onClick={edithandleClose} data-name="editPlan">
             Cancel
           </Button>
-          <Button onClick={() => console.log('sure')}>Save</Button>
+          <Button onClick={() => console.log("sure")}>Save</Button>
         </DialogActions>
       </Dialog>
     </>
-  )
-}
-export default Tiers
+  );
+};
+export default Tiers;
