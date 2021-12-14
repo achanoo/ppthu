@@ -46,6 +46,10 @@ import { Audio } from "./Audio";
 import LinkPreview from "./LinkPreview";
 import axios from "axios";
 import moment from "moment";
+import { SiOpenaccess } from "react-icons/si";
+import { MdOutlinePublic } from "react-icons/md";
+import { HiUserGroup } from "react-icons/hi";
+
 import PollOption from "./PollOption";
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -69,21 +73,31 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   postCard: {
-    padding: "20px",
+    padding: "0px 20px",
   },
   accInfo: {
     display: "flex",
+    padding: "0px",
     justifyContent: "start",
+    alignItems: "center",
     "& .MuiAvatar-root": {
       width: "50px",
       height: "50px",
     },
     "& h3": {
       fontWeight: "800",
-      display: "flex",
-      alignItems: "center",
       marginLeft: "16px",
       fontSize: "1.2rem",
+      marginBottom: "2px",
+    },
+
+    "& span": {
+      display: "flex",
+      padding: "0px",
+      justifyContent: "start",
+      marginLeft: "16px",
+      fontSize: "1rem",
+      marginBottom: "0px",
     },
   },
   postInfo: {
@@ -292,6 +306,7 @@ const PostDetailModel = (props) => {
     comments,
     created_at,
     poll_options,
+    type,
   } = props.post;
   const { profile_image, user } = props.post.creator.user_info;
   const { name, id: userId } = user;
@@ -467,7 +482,7 @@ const PostDetailModel = (props) => {
       mm: "%d min",
       h: "an hour",
       hh: "%d hr",
-      d: "a day",
+      d: "%d d",
       dd: "%d d",
       w: "a week",
       ww: "%d w",
@@ -488,7 +503,15 @@ const PostDetailModel = (props) => {
             alt="Remy Sharp"
             src={getFullUrl(profile_image)}
           />
-          <h3>{name}</h3>
+          <Box>
+            <h3>{name}</h3>
+            <span>
+              {moment(created_at).fromNow(true)} .
+              {type === 3 && <SiOpenaccess />}
+              {type === 2 && <HiUserGroup />}
+              {type === 1 && <MdOutlinePublic />}
+            </span>
+          </Box>
         </Box>
 
         {/* post info */}

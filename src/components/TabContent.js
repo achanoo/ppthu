@@ -18,10 +18,16 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import { CustomButton } from "./../layout/CutomerButton";
 import imgurl from "../assets/images/subscriptions.png";
-import { Avatar, Button, Divider, IconButton,TextareaAutosize } from "@mui/material";
+import {
+  Avatar,
+  Button,
+  Divider,
+  IconButton,
+  TextareaAutosize,
+} from "@mui/material";
 import IosShareIcon from "@mui/icons-material/IosShare";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import FavoriteOutlinedIcon from '@mui/icons-material/FavoriteOutlined';
+import FavoriteOutlinedIcon from "@mui/icons-material/FavoriteOutlined";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import ImageGrid from "./../components/Gridview";
 import { postPhoto } from "./../assets/data";
@@ -32,13 +38,13 @@ import { Audio } from "./Audio";
 import LinkPreview from "./LinkPreview";
 import { useAuthContext } from "../context/AuthContext";
 import CommentBox from "./CommentBox";
-import { BaseUrl } from "./../helpers/Constant"
+import { BaseUrl } from "./../helpers/Constant";
 import axios from "axios";
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 import { bgcolor } from "@mui/system";
-import PostDetailView from './../components/PostDetailView';
-import moment from 'moment'
+import PostDetailView from "./../components/PostDetailView";
+import moment from "moment";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -162,121 +168,120 @@ const useStyles = makeStyles((theme) => ({
     padding: "20px",
   },
   accInfo: {
-    display: 'flex',
-    justifyContent: 'start',
-    '& .MuiAvatar-root': {
-      width: '50px',
-      height: '50px',
+    display: "flex",
+    justifyContent: "start",
+    "& .MuiAvatar-root": {
+      width: "50px",
+      height: "50px",
     },
-    '& h3': {
-      fontWeight: '800',
-      display: 'flex',
-      alignItems: 'center',
-      marginLeft: '16px',
-      fontSize: '1.2rem',
+    "& h3": {
+      fontWeight: "800",
+      display: "flex",
+      alignItems: "center",
+      marginLeft: "16px",
+      fontSize: "1.2rem",
     },
   },
   postInfo: {
-    textAlign: 'start',
-    marginTop: '20px',
+    textAlign: "start",
+    marginTop: "20px",
   },
   uploadFile: {
-    margin: '8px 0px',
+    margin: "8px 0px",
     padding: 0,
   },
   btnOptions: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    color: '#706c64',
-    '& .MuiSvgIcon-root': {
-      fontSize: '1.5rem',
+    display: "flex",
+    justifyContent: "space-between",
+    color: "#706c64",
+    "& .MuiSvgIcon-root": {
+      fontSize: "1.5rem",
     },
 
-    '& p': {
-      display: 'flex',
-      alignSelf: 'center',
+    "& p": {
+      display: "flex",
+      alignSelf: "center",
     },
   },
   postDetail: {
-    position: 'relative',
+    position: "relative",
     marginBottom: theme.spacing(3),
     marginTop: theme.spacing(2),
   },
   shade: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 0,
-    height: '5rem',
-    width: '100%',
+    height: "5rem",
+    width: "100%",
     backgroundImage:
-      'linear-gradient(rgba(255, 255, 255, 0) 0%, rgb(255, 255, 255) 100%)',
+      "linear-gradient(rgba(255, 255, 255, 0) 0%, rgb(255, 255, 255) 100%)",
   },
   postContent: {
-    height: '80px',
-    overflow: 'hidden',
+    height: "80px",
+    overflow: "hidden",
   },
   // comment start
   commentSection: {
-    padding: '20px !important',
+    padding: "20px !important",
   },
   commentInfo: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    '& a': {
-      color: '#333',
+    display: "flex",
+    justifyContent: "space-between",
+    "& a": {
+      color: "#333",
     },
   },
   MainComment: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    gap: '3px',
-    marginBottom: '1.3rem',
+    display: "flex",
+    justifyContent: "space-between",
+    gap: "3px",
+    marginBottom: "1.3rem",
   },
   content: {
-    display: 'flex',
-    justifyContent: 'start',
-    gap: '16px',
-    flexGrow:1
+    display: "flex",
+    justifyContent: "start",
+    gap: "16px",
+    flexGrow: 1,
   },
   commentDetail: {
-    textAlign: 'start',
+    textAlign: "start",
 
-    '& h4': {
-      marginBottom: '10px',
-      marginTop:'0px'
+    "& h4": {
+      marginBottom: "10px",
+      marginTop: "0px",
     },
-    '& p': {
-      fontSize: '0.978rem',
+    "& p": {
+      fontSize: "0.978rem",
     },
-    '& .MuiButtonBase-root': {
-      padding:'10px 10px'
-    }
+    "& .MuiButtonBase-root": {
+      padding: "10px 10px",
+    },
   },
   commentSection: {
-    padding:'10px',
-    textAlign: 'start',
-    flexGrow:'1',
-    '& h4': {
-      marginBottom: '10px',
-      marginTop:'0px'
+    padding: "10px",
+    textAlign: "start",
+    flexGrow: "1",
+    "& h4": {
+      marginBottom: "10px",
+      marginTop: "0px",
     },
-    
   },
   reply: {
-    marginLeft: '3.75rem',
-    display: 'flex',
-    justifyContent: 'space-between',
+    marginLeft: "3.75rem",
+    display: "flex",
+    justifyContent: "space-between",
   },
   replyInfo: {
-    display: 'flex',
-     flexGrow:1,
-    justifyContent: 'space-between',
-    gap: '10px',
+    display: "flex",
+    flexGrow: 1,
+    justifyContent: "space-between",
+    gap: "10px",
   },
   replyDetail: {
-    flexGrow:1,
-    textAlign: 'start',
-    '& h4': {
-      marginBottom: '10px',
+    flexGrow: 1,
+    textAlign: "start",
+    "& h4": {
+      marginBottom: "10px",
     },
   },
   count: {
@@ -286,42 +291,41 @@ const useStyles = makeStyles((theme) => ({
     color: "#000",
   },
   hideReply: {
-    display:'none'
-  }
+    display: "none",
+  },
 }));
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
-  '& .MuiBadge-badge': {
+  "& .MuiBadge-badge": {
     right: -3,
     top: 13,
     border: `2px solid ${theme.palette.background.paper}`,
-    padding: '0 4px',
+    padding: "0 4px",
   },
 }));
+
+//1 for all, 2 for public and 3 all creator
 
 const BasicTabs = (props) => {
   // const {posts}=props;
   // console.log(posts);
-  const { getPosts,posts} = usePostContext();
+  const { getPosts, posts, loading } = usePostContext();
   const { user: authUser } = useAuthContext();
   const [changes, setChange] = React.useState(false);
   const [value, setValue] = React.useState(0);
-
+  const type = [1, 2, 3];
   const changeData = () => {
     setChange(!changes);
-  }
+  };
 
   // console.log(posts);
   const history = useHistory();
   const classes = useStyles();
   const [firstView, setFirstView] = React.useState(false);
 
-
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-
-  
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -332,19 +336,31 @@ const BasicTabs = (props) => {
     setAnchorEl(null);
   };
 
-
-
   React.useEffect(() => {
-    var controller = new AbortController();
-    getPosts();
-    
-    return () => {
-      controller.abort();
-    }
-    
-   }, [changes])
+    // var controller = new AbortController();
+    // getPosts();
 
-  if (posts.length < 0) {
+    // return () => {
+    //   controller.abort();
+    // }
+    async function anyNameFunction() {
+      await getPosts(value + 1);
+    }
+    anyNameFunction();
+  }, [changes, value]);
+
+  //  React.useEffect(() => {
+  //    setIsSetData(true);
+
+  //    async function anyNameFunction() {
+  //      if (keyword != "") {
+  //        await getData(keyword);
+  //      }
+  //    }
+  //    anyNameFunction();
+  //  }, [keyword]);
+
+  if (loading) {
     return <h2>Loading</h2>;
   }
   return (
@@ -366,8 +382,6 @@ const BasicTabs = (props) => {
         </Tabs>
       </Box>
 
-
-
       <TabPanel posts={posts} value={value} index={0} className={classes.root}>
         {firstView && (
           <div
@@ -380,25 +394,51 @@ const BasicTabs = (props) => {
             <CustomButton>Find your creator</CustomButton>
           </div>
         )}
-       
+
         {posts &&
           posts.map((item, index) => {
-            return <div key={index}><PostDetailView changeData={changeData} post={item} /></div>
-          })
-        }
-        
+            return (
+              <div key={index}>
+                <PostDetailView changeData={changeData} post={item} />
+              </div>
+            );
+          })}
       </TabPanel>
       <TabPanel value={value} index={1} className={classes.root}>
-        <div className={`${classes.allposts}`}>
+        {/* <div className={`${classes.allposts}`}>
           <p>
             <strong> Support</strong> or <strong> Follow</strong> creators to
             see posts in your feed
           </p>
           <CustomButton>Find your creator</CustomButton>
-        </div>
+        </div> */}
+        {posts &&
+          posts.map((item, index) => {
+            return (
+              <div key={index}>
+                <PostDetailView changeData={changeData} post={item} />
+              </div>
+            );
+          })}
       </TabPanel>
       <TabPanel value={value} index={2} className={classes.creatorMenuTab}>
-        Item Three
+        {posts.length <= 0 && (
+          <div className={`${classes.allposts}`}>
+            <p>
+              <strong> Support</strong> or <strong> Follow</strong> creators to
+              see posts in your feed
+            </p>
+            <CustomButton>Find your creator</CustomButton>
+          </div>
+        )}
+        {posts &&
+          posts.map((item, index) => {
+            return (
+              <div key={index}>
+                <PostDetailView changeData={changeData} post={item} />
+              </div>
+            );
+          })}
       </TabPanel>
 
       <StyledMenu

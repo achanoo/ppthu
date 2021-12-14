@@ -260,7 +260,7 @@ const PostProvider = ({ children }) => {
       });
 
       response.then((data) => {
-        getPosts();
+        // getPosts();
       });
     } catch (response) {
       console.log(response);
@@ -367,11 +367,15 @@ const PostProvider = ({ children }) => {
 
   //getting all post
 
-  const getPosts = async () => {
+  const getPosts = async (type) => {
+    dispatch({ type: "SET_LOADING" });
     try {
       const response = await axios({
         method: "get",
         url: `${BaseUrl}/content`,
+        params: {
+          type: type,
+        },
         headers: {
           Accept: "application/json",
           Authorization: `Bearer ${token}`,
@@ -380,6 +384,7 @@ const PostProvider = ({ children }) => {
 
       if (response.status === 200) {
         dispatch({ type: "LOAD_DATA", payload: response.data.data });
+        dispatch({ type: "UNSET_LOADING" });
       }
     } catch (err) {
       console.log(err.response);
