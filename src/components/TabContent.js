@@ -14,14 +14,14 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
+import { AiOutlineDownCircle } from "react-icons/ai";
 import { CustomButton } from "./../layout/CutomerButton";
 import imgurl from "../assets/images/subscriptions.png";
 import {
   Avatar,
   Button,
   Divider,
+  formControlClasses,
   IconButton,
   TextareaAutosize,
 } from "@mui/material";
@@ -79,16 +79,17 @@ const StyledMenu = styled((props) => (
     elevation={0}
     anchorOrigin={{
       vertical: "bottom",
-      horizontal: "right",
+      horizontal: "center",
     }}
     transformOrigin={{
       vertical: "top",
-      horizontal: "right",
+      horizontal: "center",
     }}
     {...props}
   />
 ))(({ theme }) => ({
   "& .MuiPaper-root": {
+    position: "absolute",
     borderRadius: 6,
     marginTop: theme.spacing(1),
     minWidth: 180,
@@ -125,6 +126,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   creatorMenu: {
+    position: "relative",
     padding: "2px",
     border: "1px solid rgb(229, 227, 221)",
     marginBottom: theme.spacing(1),
@@ -337,7 +339,7 @@ const BasicTabs = (props) => {
   };
 
   React.useEffect(() => {
-    // var controller = new AbortController();
+    //var controller = new AbortController();
     // getPosts();
 
     // return () => {
@@ -360,9 +362,9 @@ const BasicTabs = (props) => {
   //    anyNameFunction();
   //  }, [keyword]);
 
-  if (loading) {
-    return <h2>Loading</h2>;
-  }
+  // if (loading) {
+  //   return <h2>Loading</h2>;
+  // }
   return (
     <Box sx={{ width: "100%" }}>
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
@@ -374,9 +376,11 @@ const BasicTabs = (props) => {
           <Tab label="All posts" {...a11yProps(0)} />
           <Tab label="Pantpoe only posts" {...a11yProps(1)} />
           <Tab
-            className={classes.creatorMenu}
-            onClick={handleClick}
             label="Show all creators "
+            icon={
+              <AiOutlineDownCircle fontSize={"large"} onClick={handleClick} />
+            }
+            iconPosition="end"
             {...a11yProps(2)}
           />
         </Tabs>
@@ -394,8 +398,8 @@ const BasicTabs = (props) => {
             <CustomButton>Find your creator</CustomButton>
           </div>
         )}
-
-        {posts &&
+        {loading && <h3>Loading...</h3>}
+        {loading ||
           posts.map((item, index) => {
             return (
               <div key={index}>
@@ -412,7 +416,8 @@ const BasicTabs = (props) => {
           </p>
           <CustomButton>Find your creator</CustomButton>
         </div> */}
-        {posts &&
+        {loading && <h3>Loading...</h3>}
+        {loading ||
           posts.map((item, index) => {
             return (
               <div key={index}>
@@ -431,7 +436,8 @@ const BasicTabs = (props) => {
             <CustomButton>Find your creator</CustomButton>
           </div>
         )}
-        {posts &&
+        {loading && <h3>Loading...</h3>}
+        {loading ||
           posts.map((item, index) => {
             return (
               <div key={index}>
@@ -439,30 +445,29 @@ const BasicTabs = (props) => {
               </div>
             );
           })}
+        <StyledMenu
+          id="demo-customized-menu"
+          MenuListProps={{
+            "aria-labelledby": "demo-customized-button",
+          }}
+          anchorEl={anchorEl}
+          open={open}
+          onClose={handleClose}>
+          <MenuItem onClick={handleClose} disableRipple>
+            Edit
+          </MenuItem>
+          <MenuItem onClick={handleClose} disableRipple>
+            Duplicate
+          </MenuItem>
+
+          <MenuItem onClick={handleClose} disableRipple>
+            Archive
+          </MenuItem>
+          <MenuItem onClick={handleClose} disableRipple>
+            More
+          </MenuItem>
+        </StyledMenu>
       </TabPanel>
-
-      <StyledMenu
-        id="demo-customized-menu"
-        MenuListProps={{
-          "aria-labelledby": "demo-customized-button",
-        }}
-        anchorEl={anchorEl}
-        open={open}
-        onClose={handleClose}>
-        <MenuItem onClick={handleClose} disableRipple>
-          Edit
-        </MenuItem>
-        <MenuItem onClick={handleClose} disableRipple>
-          Duplicate
-        </MenuItem>
-
-        <MenuItem onClick={handleClose} disableRipple>
-          Archive
-        </MenuItem>
-        <MenuItem onClick={handleClose} disableRipple>
-          More
-        </MenuItem>
-      </StyledMenu>
     </Box>
   );
 };

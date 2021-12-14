@@ -73,7 +73,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   postCard: {
-    padding: "0px 20px",
+    padding: "10px 20px",
   },
   accInfo: {
     display: "flex",
@@ -89,6 +89,7 @@ const useStyles = makeStyles((theme) => ({
       marginLeft: "16px",
       fontSize: "1.2rem",
       marginBottom: "2px",
+      marginTop: "0px",
     },
 
     "& span": {
