@@ -14,7 +14,7 @@ import BorderLinearProgress from "@mui/material/LinearProgress";
 import axios from "axios";
 import { BaseUrl } from "../helpers/Constant";
 import { useAuthContext } from "../context/AuthContext";
-const PollOption = ({ postid }) => {
+const PollOption = ({ postid = "" }) => {
   const { token } = useAuthContext();
   const [polls, setPolls] = React.useState([]);
   const [result, setResult] = React.useState([]);

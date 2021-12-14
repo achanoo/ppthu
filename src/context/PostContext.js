@@ -308,7 +308,7 @@ const PostProvider = ({ children }) => {
 
   const ReplyCreate = (formData) => {
     try {
-      const response = axios({
+      axios({
         method: "post",
         url: `${BaseUrl}/comment-reply/`,
         data: formData,
@@ -316,10 +316,9 @@ const PostProvider = ({ children }) => {
           Accept: "application/json",
           Authorization: `Bearer ${token}`,
         },
-      });
-
-      response.then((data) => {
-        //  getPosts();
+      }).then((res) => {
+        console.log("now you r here");
+        //getPosts();
       });
     } catch (response) {
       console.log(response);
@@ -368,6 +367,7 @@ const PostProvider = ({ children }) => {
   //getting all post
 
   const getPosts = async (type) => {
+    console.log("now you r here getposts");
     dispatch({ type: "SET_LOADING" });
     try {
       const response = await axios({
@@ -381,11 +381,13 @@ const PostProvider = ({ children }) => {
           Authorization: `Bearer ${token}`,
         },
       });
+      dispatch({ type: "UNSET_LOADING" });
+      return response.data.data;
 
-      if (response.status === 200) {
-        dispatch({ type: "LOAD_DATA", payload: response.data.data });
-        dispatch({ type: "UNSET_LOADING" });
-      }
+      // if (response.status === 200) {
+      //   dispatch({ type: "LOAD_DATA", payload: response.data.data });
+      //   dispatch({ type: "UNSET_LOADING" });
+      // }
     } catch (err) {
       console.log(err.response);
     }
