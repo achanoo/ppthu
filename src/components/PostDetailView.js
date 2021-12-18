@@ -330,7 +330,7 @@ const PostDetailModel = (props) => {
 
   const deleteLike = (postid) => {
     const comment = likes.filter(
-      (like) => (like.user_info.user.id = authUser.id)
+      (like) => like.user_info.user.id === authUser.id
     );
 
     RemoveLike(comment[0].id);
@@ -348,9 +348,7 @@ const PostDetailModel = (props) => {
   // end here
 
   // action start
-  {
-    /* comment section start */
-  }
+
   const inputHandle = (e) => {
     const { name, value } = e.target;
     console.log(name, value);
@@ -602,7 +600,7 @@ const PostDetailModel = (props) => {
                     </span> */}
 
           {/*  poll */}
-          {poll_options.length >= 1 && <PollOption postid={postid} />}
+          {poll_options.length >= 1 && <PollOption post={props.post} />}
           <Button
             variant="contained"
             style={{
