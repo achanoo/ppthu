@@ -49,6 +49,7 @@ import {
   changeSocials,
 } from "../../helpers/Constant";
 import moment from "moment";
+import Editor from "../../components/Editor";
 const useStyles = makeStyles((theme) => ({
   wrapper: {
     minHeight: "100vh",
@@ -215,6 +216,7 @@ const EditProfile = () => {
   const { token } = useAuthContext();
   const classes = useStyles();
   const editor = useRef(null);
+  const profile = useRef(null);
   const [content, setContent] = useState("");
   const [data, setData] = useState({
     loading: true,
@@ -241,10 +243,6 @@ const EditProfile = () => {
     readonly: false, // all options from https://xdsoft.net/jodit/doc/
   };
 
-  const NewgetValue = (value) => {
-    console.log(value);
-    // setState({ ...state, isError })
-  };
   const getData = () => {
     axios
       .get(`${BaseUrl}/user`, {
@@ -304,6 +302,37 @@ const EditProfile = () => {
     }));
   };
 
+  const inputChange = (e) => {
+    const { name, value, files } = e.target;
+    console.log(value);
+    const { user_info } = data;
+    if (name === "newcover" || name === "newprofile") {
+      if (name === "newprofile") {
+        user_info.profile_image = files[0];
+      } else {
+        user_info.cover_photo = files[0];
+      }
+      setData((prev) => ({
+        ...prev,
+        user_info,
+      }));
+    } else {
+      console.log("helo world");
+      // setState((prev) => ({
+      //   ...prev,
+      //   [name]: value,
+      // }));
+    }
+  };
+  const updateData = () => {
+    console.log("helow rod");
+  };
+
+  const NewgetValue = (value) => {
+    console.log(value);
+    // setState({ ...state, isError })
+  };
+
   return (
     <div className={classes.wrapper}>
       <div className={classes.container}>
@@ -320,9 +349,19 @@ const EditProfile = () => {
         <Box className={classes.cusFormControl}>
           <Box className={classes.cusOptions}>
             <h5 className="input-label"> profile photo </h5>
-            <Button>Edit</Button>
+            <Button onClick={() => profile.current.click()}>Edit</Button>
+            <input
+              style={{ display: "none" }}
+              type="file"
+              ref={profile}
+              onChange={inputChange}
+              name="newprofile"
+              accept="image/*"
+              className={classes.hidddendiv}
+            />
           </Box>
           <Box className={classes.profilephoto} style={{ alignSelf: "center" }}>
+            {console.log(typeof data.user_info.profile_image)}
             <Avatar
               sx={{ width: "80px", height: "80px" }}
               src={getFullUrl(data.user_info.profile_image)}
@@ -631,17 +670,9 @@ const EditProfile = () => {
                   </Typography>
                 </Grid>
                 <Grid item xs={8}>
-                  <TextField
-                    id="outlined-basic"
-                    variant="outlined"
-                    inputProps={{ "aria-label": "Without label" }}
-                    placeholder="text"
-                    multiline={true}
-                    value={item.description}
-                    dangerouslySetInnerHTML={{
-                      __html: `${description}`,
-                    }}
-                  />
+                  <Editor
+                    contents={item.description}
+                    getValue={NewgetValue}></Editor>
                 </Grid>
               </Grid>
 
