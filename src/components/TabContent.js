@@ -311,22 +311,24 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
 const BasicTabs = (props) => {
   // const {posts}=props;
   // console.log(posts);
-  const { getPosts, posts, loading } = usePostContext();
-  const { user: authUser } = useAuthContext();
+  const [loading, setLoading] = React.useState(true);
+  const [posts, setPost] = React.useState([]);
+  const { user: authUser, token } = useAuthContext();
   const [changes, setChange] = React.useState(false);
   const [value, setValue] = React.useState(0);
-  const type = [1, 2, 3];
+  // const [postid, setPostid] = React.useState("");
   const changeData = () => {
     setChange(!changes);
   };
 
-  // console.log(posts);
+  //console.log(posts);
   const history = useHistory();
   const classes = useStyles();
   const [firstView, setFirstView] = React.useState(false);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
+    settype(newValue + 1);
   };
 
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -337,19 +339,41 @@ const BasicTabs = (props) => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+  const [type, settype] = React.useState(1);
+
+  // React.useEffect(() => {
+  //   var controller = new AbortController();
+  //   // getPosts();
+  //   console.log("i am working");
+  //   async function anyNameFunction() {
+  //     const apiposts = await getPosts(1);
+  //     setItem(apiposts);
+  //     console.log(items);
+  //   }
+  //   anyNameFunction();
+  //   return () => {
+  //     controller.abort();
+  //   };
+  // }, []);
 
   React.useEffect(() => {
-    //var controller = new AbortController();
-    // getPosts();
-
-    // return () => {
-    //   controller.abort();
-    // }
-    async function anyNameFunction() {
-      await getPosts(value + 1);
-    }
-    anyNameFunction();
-  }, [changes, value]);
+    const getData = async () => {
+      const res = await axios({
+        method: "get",
+        url: `${BaseUrl}/content`,
+        params: {
+          type: 1,
+        },
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setPost(res.data.data);
+      setLoading(false);
+    };
+    getData();
+  }, [changes]);
 
   //  React.useEffect(() => {
   //    setIsSetData(true);
@@ -362,9 +386,9 @@ const BasicTabs = (props) => {
   //    anyNameFunction();
   //  }, [keyword]);
 
-  // if (loading) {
-  //   return <h2>Loading</h2>;
-  // }
+  if (loading) {
+    return <h2>Loading</h2>;
+  }
   return (
     <Box sx={{ width: "100%" }}>
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
@@ -398,15 +422,20 @@ const BasicTabs = (props) => {
             <CustomButton>Find your creator</CustomButton>
           </div>
         )}
+
         {loading && <h3>Loading...</h3>}
+
         {loading ||
-          posts.map((item, index) => {
-            return (
-              <div key={index}>
-                <PostDetailView changeData={changeData} post={item} />
-              </div>
-            );
-          })}
+          (posts &&
+            posts
+              .filter((post) => post.type === type)
+              .map((item, index) => {
+                return (
+                  <div key={index}>
+                    <PostDetailView changeData={changeData} post={item} />
+                  </div>
+                );
+              }))}
       </TabPanel>
       <TabPanel value={value} index={1} className={classes.root}>
         {/* <div className={`${classes.allposts}`}>
@@ -417,14 +446,18 @@ const BasicTabs = (props) => {
           <CustomButton>Find your creator</CustomButton>
         </div> */}
         {loading && <h3>Loading...</h3>}
+
         {loading ||
-          posts.map((item, index) => {
-            return (
-              <div key={index}>
-                <PostDetailView changeData={changeData} post={item} />
-              </div>
-            );
-          })}
+          (posts &&
+            posts
+              .filter((post) => post.type === type)
+              .map((item, index) => {
+                return (
+                  <div key={index}>
+                    <PostDetailView changeData={changeData} post={item} />
+                  </div>
+                );
+              }))}
       </TabPanel>
       <TabPanel value={value} index={2} className={classes.creatorMenuTab}>
         {posts.length <= 0 && (
@@ -437,14 +470,18 @@ const BasicTabs = (props) => {
           </div>
         )}
         {loading && <h3>Loading...</h3>}
+
         {loading ||
-          posts.map((item, index) => {
-            return (
-              <div key={index}>
-                <PostDetailView changeData={changeData} post={item} />
-              </div>
-            );
-          })}
+          (posts &&
+            posts
+              .filter((post) => post.type === type)
+              .map((item, index) => {
+                return (
+                  <div key={index}>
+                    <PostDetailView changeData={changeData} post={item} />
+                  </div>
+                );
+              }))}
         <StyledMenu
           id="demo-customized-menu"
           MenuListProps={{

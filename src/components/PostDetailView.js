@@ -230,6 +230,7 @@ const PostDetailModel = (props) => {
   const { id } = useParams();
   const history = useHistory();
   const { user: authUser, token } = useAuthContext();
+  const [post, setPost] = React.useState({});
   const {
     getPostByid,
     LikeHandle,
@@ -267,6 +268,8 @@ const PostDetailModel = (props) => {
     reply: "",
   });
   // new add end
+
+  // end here too
 
   // console.log(newimgs);
 
@@ -308,6 +311,11 @@ const PostDetailModel = (props) => {
     created_at,
     poll_options,
     type,
+    creator: {
+      user_info: {
+        user: { id: creator_id },
+      },
+    },
   } = props.post;
   const { profile_image, user } = props.post.creator.user_info;
   const { name, id: userId } = user;
@@ -322,7 +330,7 @@ const PostDetailModel = (props) => {
 
   const deleteLike = (postid) => {
     const comment = likes.filter(
-      (like) => (like.user_info.user.id = authUser.id)
+      (like) => like.user_info.user.id === authUser.id
     );
 
     RemoveLike(comment[0].id);
@@ -340,9 +348,7 @@ const PostDetailModel = (props) => {
   // end here
 
   // action start
-  {
-    /* comment section start */
-  }
+
   const inputHandle = (e) => {
     const { name, value } = e.target;
     console.log(name, value);
@@ -380,13 +386,12 @@ const PostDetailModel = (props) => {
     formData.append("content_id", id);
     formData.append("comment", comment);
     CommentCreate(formData);
-
     props.changeData();
     setComment("");
   };
 
   const submitReplyline = (comment_id) => {
-    console.log(comment_id);
+    // console.log(comment_id);
     let formData = new FormData();
     formData.append("comment_id", comment_id);
     formData.append("comment", reply);
@@ -595,7 +600,7 @@ const PostDetailModel = (props) => {
                     </span> */}
 
           {/*  poll */}
-          {poll_options.length >= 1 && <PollOption postid={postid} />}
+          {poll_options.length >= 1 && <PollOption post={props.post} />}
           <Button
             variant="contained"
             style={{
@@ -656,9 +661,12 @@ const PostDetailModel = (props) => {
             </Popover>
 
             {/*  post edit */}
-            <IconButton aria-label="Example" onClick={() => editPost(postid)}>
-              <EditIcon fontSize="large" />
-            </IconButton>
+
+            {authUser.id === creator_id && (
+              <IconButton aria-label="Example" onClick={() => editPost(postid)}>
+                <EditIcon fontSize="large" />
+              </IconButton>
+            )}
             {/* post edit end */}
             <IconButton aria-label="Example">
               <MoreHorizIcon fontSize="large" />
@@ -698,7 +706,7 @@ const PostDetailModel = (props) => {
               created_at,
             } = item;
             const { profile_image: cProfile } = user_info;
-            const { name } = user_info.user;
+            const { name, id: commenter_id } = user_info.user;
             const iscommentlike = comment_likes.some(function (el) {
               return el.user_info.user.id === authUser.id;
             });
@@ -753,21 +761,27 @@ const PostDetailModel = (props) => {
                           onClick={() => setShowReply(comment_id)}>
                           <ChatBubbleOutlineIcon fontSize="small" />
                         </IconButton>
-                        <IconButton
-                          aria-label="Example"
-                          onClick={() =>
-                            EditComment(postid, comment_id, saying)
-                          }>
-                          <EditIcon fontSize="small" />
-                        </IconButton>
-                        <IconButton
-                          aria-label="Example"
-                          onClick={() => {
-                            CommentDelete(comment_id);
-                            props.changeData();
-                          }}>
-                          <DeleteIcon fontSize="small" />
-                        </IconButton>
+
+                        {authUser.id === commenter_id && (
+                          <IconButton
+                            aria-label="Example"
+                            onClick={() =>
+                              EditComment(postid, comment_id, saying)
+                            }>
+                            <EditIcon fontSize="small" />
+                          </IconButton>
+                        )}
+
+                        {authUser.id === commenter_id && (
+                          <IconButton
+                            aria-label="Example"
+                            onClick={() => {
+                              CommentDelete(comment_id);
+                              props.changeData();
+                            }}>
+                            <DeleteIcon fontSize="small" />
+                          </IconButton>
+                        )}
                       </Box>
                     ) : (
                       <Box
@@ -832,7 +846,7 @@ const PostDetailModel = (props) => {
                     created_at: replyCreated_at,
                   } = r;
                   const { profile_image: rProfile } = user_info;
-                  const { name: reply_user } = user_info.user;
+                  const { name: reply_user, id: reply_id } = user_info.user;
                   return (
                     <div key={index} className={classes.reply}>
                       <div className={classes.replyInfo}>
@@ -882,21 +896,25 @@ const PostDetailModel = (props) => {
                             <h4>{reply_user}</h4>
                             <p>{reply}</p>
 
-                            <IconButton
-                              aria-label="Example"
-                              onClick={() =>
-                                editReplyHandle(comment_id, rid, reply)
-                              }>
-                              <EditIcon fontSize="small" />
-                            </IconButton>
-                            <IconButton
-                              aria-label="Example"
-                              onClick={() => {
-                                ReplyDelete(rid);
-                                props.changeData();
-                              }}>
-                              <DeleteIcon fontSize="small" />
-                            </IconButton>
+                            {authUser.id === reply_id && (
+                              <IconButton
+                                aria-label="Example"
+                                onClick={() =>
+                                  editReplyHandle(comment_id, rid, reply)
+                                }>
+                                <EditIcon fontSize="small" />
+                              </IconButton>
+                            )}
+                            {authUser.id === reply_id && (
+                              <IconButton
+                                aria-label="Example"
+                                onClick={() => {
+                                  ReplyDelete(rid);
+                                  props.changeData();
+                                }}>
+                                <DeleteIcon fontSize="small" />
+                              </IconButton>
+                            )}
                             {/* <IconButton aria-label='Example'>
                                                     <FavoriteBorderIcon fontSize='small' />{' '}
                                                     <span className={classes.count}>3</span>

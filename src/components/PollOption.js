@@ -1,6 +1,8 @@
 /** @format */
 
 import React from "react";
+
+import PropTypes from "prop-types";
 import {
   Grid,
   FormControlLabel,
@@ -8,23 +10,44 @@ import {
   FormLabel,
   RadioGroup,
   Radio,
+  Box,
+  Typography,
 } from "@mui/material";
 
-import BorderLinearProgress from "@mui/material/LinearProgress";
+import LinearProgress from "@mui/material/LinearProgress";
 import axios from "axios";
 import { BaseUrl } from "../helpers/Constant";
 import { useAuthContext } from "../context/AuthContext";
-const PollOption = ({ postid }) => {
+import set from "date-fns/set";
+
+function LinearProgressWithLabel({ value }) {
+  return (
+    <Box sx={{ display: "flex", alignItems: "center" }}>
+      <Box sx={{ width: "100%", mr: 1 }}>
+        <LinearProgress variant="determinate" value={value} />
+      </Box>
+      <Box sx={{ minWidth: 35 }}>
+        <Typography variant="body2" color="text.secondary">{`${Math.round(
+          value
+        )}%`}</Typography>
+      </Box>
+    </Box>
+  );
+}
+
+const PollOption = (props) => {
+  const { id: postid, poll_options: polls } = props.post;
   const { token } = useAuthContext();
-  const [polls, setPolls] = React.useState([]);
+  // const [polls, setPolls] = React.useState([]);
   const [result, setResult] = React.useState([]);
   const [selected, setSelected] = React.useState({
-    poll_option_id: "0",
+    poll_option_id: "",
   });
 
-  const [finalValue, setfinalValue] = React.useState(0);
+  const [finalValue, setfinalValue] = React.useState(false);
 
   React.useEffect(() => {
+    console.log("i am useeffect of poll");
     const controller = new AbortController();
     async function anyfunction() {
       if (postid !== null) {
@@ -37,7 +60,37 @@ const PollOption = ({ postid }) => {
           .then((response) => {
             let arrobj = response.data.data;
             // console.log(arrobj.voted.poll_option_id);
-            setPolls(arrobj.poll_options);
+            // const pollOptions = arrobj.poll_options;
+            // setPolls(pollOptions);
+
+            // setResult((prev) => {
+            //   let newarr = arrobj.poll_options.map((item) => {
+            //     if (item.id in arrobj.result) {
+            //       return { [item.id]: arrobj.result[item.id] };
+            //     } else {
+            //       return { [item.id]: 0 };
+            //     }
+            //   });
+            //   return { ...newarr };
+            // });
+            let data = {};
+            for (var key in polls) {
+              var obj = polls[key].id;
+              if (obj in arrobj.result) {
+                data = { ...data, [obj]: arrobj.result[obj] };
+              } else {
+                data = { ...data, [obj]: 0 };
+              }
+            }
+            setResult(data);
+            // pollOptions.map((item) => {
+            //   if (item.id in arrobj.result) {
+            //     data = { ...data, [item.id]: arrobj.result[item.id] };
+            //   } else {
+            //     data = { ...data, [item.id]: 0 };
+            //   }
+            // });
+            // console.log(data);
 
             setSelected((prev) => ({
               poll_option_id:
@@ -49,37 +102,65 @@ const PollOption = ({ postid }) => {
           .catch((error) => console.log);
       }
     }
-    setfinalValue(selected.poll_option_id);
+
     anyfunction();
 
     return () => {
       controller.abort();
-      setPolls([]);
       setSelected({});
       setResult([]);
     };
-  }, [postid]);
+  }, [finalValue]);
 
   const votedSubmit = async (e) => {
+    console.log("i am submit");
     const option_id = e.target.value;
     console.log(option_id);
     let formdata = new FormData();
     formdata.append("poll_option_id", option_id);
-    await axios({
-      method: "post",
-      url: `${BaseUrl}/poll/`,
-      data: formdata,
-      headers: {
-        Accept: "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((res) => {
-        console.log(res);
+    console.log("helo");
+    if (selected.poll_option_id !== undefined) {
+      await axios({
+        method: "DELETE",
+        url: `${BaseUrl}/poll/${selected.poll_option_id}`,
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
       })
-      .catch((err) => {
-        console.log(e.message);
-      });
+        .then(function () {
+          return axios({
+            method: "post",
+            url: `${BaseUrl}/poll/`,
+            data: formdata,
+            headers: {
+              Accept: "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }).catch((err) => {
+            throw new Error("something went wrong");
+          });
+        })
+        .catch((error) => console.log(error.message));
+    } else {
+      await axios({
+        method: "post",
+        url: `${BaseUrl}/poll/`,
+        data: formdata,
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => {
+          console.log(e.message);
+        });
+    }
+    setfinalValue(!finalValue);
+    // props.changeData();
   };
 
   return (
@@ -88,25 +169,25 @@ const PollOption = ({ postid }) => {
       <RadioGroup
         aria-label="gender"
         onChange={votedSubmit}
-        value={finalValue}
         name="radio-buttons-group">
         {polls.map((poll, index) => {
           return (
             <Grid container key={index}>
-              <Grid item sm={6} md={6}>
+              <Grid item xs={12} sm={6} md={6}>
                 <FormControlLabel
                   value={poll.id}
-                  control={<Radio />}
+                  control={
+                    <Radio
+                      checked={
+                        selected.poll_option_id === poll.id ? true : false
+                      }
+                    />
+                  }
                   label={poll.name}
                 />
               </Grid>
-              <Grid item sm={6} md={6}>
-                <BorderLinearProgress
-                  style={{ marginTop: "1.2em", width: "60%" }}
-                  variant="determinate"
-                  value={50}
-                  color="secondary"
-                />
+              <Grid item xs={12} sm={6} md={6}>
+                <LinearProgressWithLabel value={parseInt(result[poll.id])} />
               </Grid>
             </Grid>
           );
