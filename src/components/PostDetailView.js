@@ -569,30 +569,38 @@ const PostDetailModel = (props) => {
             )}
           </span>
           <h2>{title}</h2>
-          <div className={classes.postDetail}>
-            <div
-              className={classes.shade}
-              style={{
-                opacity: content.length > 250 ? "1" : "0",
-                display: more ? "block" : "none",
-              }}></div>
-            <div
-              className={classes.postContent}
-              style={{
-                overflow: more ? "hidden" : "visible",
-                height: more ? "80px" : "100%",
-                transition: "ease-in",
-              }}>
-              <p>{content}</p>
-            </div>
-          </div>
 
-          {content.length > 250 && (
-            <span className={classes.readmore} onClick={() => setMore(!more)}>
-              {" "}
-              {more ? "continue reading" : "less reading"}
-            </span>
+          {content && (
+            <React.Fragment>
+              <div className={classes.postDetail}>
+                <div
+                  className={classes.shade}
+                  style={{
+                    opacity: content.length > 250 ? "1" : "0",
+                    display: more ? "block" : "none",
+                  }}></div>
+                <div
+                  className={classes.postContent}
+                  style={{
+                    overflow: more ? "hidden" : "visible",
+                    height: more ? "80px" : "100%",
+                    transition: "ease-in",
+                  }}>
+                  <p>{content}</p>
+                </div>
+              </div>
+
+              {content.length > 250 && (
+                <span
+                  className={classes.readmore}
+                  onClick={() => setMore(!more)}>
+                  {" "}
+                  {more ? "continue reading" : "less reading"}
+                </span>
+              )}
+            </React.Fragment>
           )}
+
           {/* <span
                       className={classes.readmore}
                       onClick={() => gotoDetail(postid)}>
