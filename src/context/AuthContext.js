@@ -217,12 +217,14 @@ const AuthProvider = ({ children }) => {
             userobj.name = data.data.user_info.user.name;
             userobj.role = data.data.user_info.user.role.name;
             userobj.profile_image = data.data.user_info.profile_image;
+            userobj.profile_url = data.data.user_info.profile_url;
 
             localStorage.setItem("user", JSON.stringify(userobj));
-
+            localStorage.removeItem("sexual_content");
+            localStorage.removeItem("selectedCategory");
             dispatch({
               type: "UPDATE_USER",
-              payload: data.data.user_info.user.role.name,
+              payload: data.data,
             });
           }
         });
@@ -236,6 +238,38 @@ const AuthProvider = ({ children }) => {
     } catch (error) {
       console.log("there is error!");
     }
+  };
+
+  const updateUserProfile = (data) => {
+    axios({
+      method: "post",
+      url: `${BaseUrl}/user/update`,
+      data: data,
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${state.token}`,
+      },
+    })
+      .then((res) => {
+        let user_var = localStorage.getItem("user");
+        if (user_var) {
+          let userobj = JSON.parse(user_var);
+
+          userobj.name = res.data.data.user.name;
+          userobj.role = res.data.data.user.role.name;
+          userobj.profile_image = res.data.data.profile_image;
+          userobj.profile_url = res.data.data.profile_url;
+
+          localStorage.setItem("user", JSON.stringify(userobj));
+          dispatch({
+            type: "UPDATE_USER",
+            payload: res.data.data,
+          });
+          // getUserData();
+        }
+      })
+      .catch((error) => console.log(error.message));
   };
 
   const searchByprofileUrl = (data) => {
@@ -270,6 +304,7 @@ const AuthProvider = ({ children }) => {
         updatetoCreator,
         getUserData,
         searchByprofileUrl,
+        updateUserProfile,
       }}>
       {children}
     </AuthContext.Provider>

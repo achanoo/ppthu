@@ -92,7 +92,7 @@ const StyledMenu = styled((props) => (
     position: "absolute",
     borderRadius: 6,
     marginTop: theme.spacing(1),
-    minWidth: 180,
+    minWidth: 200,
     color:
       theme.palette.mode === "light"
         ? "rgb(55, 65, 81)"
@@ -100,7 +100,7 @@ const StyledMenu = styled((props) => (
     boxShadow:
       "rgb(255, 255, 255) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px",
     "& .MuiMenu-list": {
-      padding: "4px 0",
+      padding: "0px 0",
     },
     "& .MuiMenuItem-root": {
       "& .MuiSvgIcon-root": {
@@ -316,10 +316,13 @@ const BasicTabs = (props) => {
   const { user: authUser, token } = useAuthContext();
   const [changes, setChange] = React.useState(false);
   const [value, setValue] = React.useState(0);
+  const [creators, setCreator] = React.useState([]);
   // const [postid, setPostid] = React.useState("");
   const changeData = () => {
     setChange(!changes);
   };
+
+  const [selectedCreator, setSelectedCreator] = React.useState("");
 
   //console.log(posts);
   const history = useHistory();
@@ -327,6 +330,7 @@ const BasicTabs = (props) => {
   const [firstView, setFirstView] = React.useState(false);
 
   const handleChange = (event, newValue) => {
+    setSelectedCreator("");
     setValue(newValue);
     settype(newValue + 1);
   };
@@ -362,18 +366,31 @@ const BasicTabs = (props) => {
         method: "get",
         url: `${BaseUrl}/content`,
         params: {
-          type: 1,
+          type: "all",
         },
         headers: {
           Accept: "application/json",
           Authorization: `Bearer ${token}`,
         },
       });
-      setPost(res.data.data);
+      if (value === 2) {
+        setCreator(props.creators);
+      }
+      if (selectedCreator) {
+        setPost((prev) =>
+          res.data.data.filter((item) => item.creator.id === selectedCreator)
+        );
+      } else {
+        setPost(res.data.data);
+      }
+
       setLoading(false);
     };
     getData();
-  }, [changes]);
+    return () => {
+      setCreator([]);
+    };
+  }, [changes, value, selectedCreator]);
 
   //  React.useEffect(() => {
   //    setIsSetData(true);
@@ -385,6 +402,11 @@ const BasicTabs = (props) => {
   //    }
   //    anyNameFunction();
   //  }, [keyword]);
+
+  const creatorChosen = (id) => {
+    setSelectedCreator(id);
+    handleClose();
+  };
 
   if (loading) {
     return <h2>Loading</h2>;
@@ -474,7 +496,7 @@ const BasicTabs = (props) => {
         {loading ||
           (posts &&
             posts
-              .filter((post) => post.type === type)
+              .filter((post) => post.type === 3)
               .map((item, index) => {
                 return (
                   <div key={index}>
@@ -490,19 +512,37 @@ const BasicTabs = (props) => {
           anchorEl={anchorEl}
           open={open}
           onClose={handleClose}>
-          <MenuItem onClick={handleClose} disableRipple>
-            Edit
-          </MenuItem>
-          <MenuItem onClick={handleClose} disableRipple>
-            Duplicate
-          </MenuItem>
-
-          <MenuItem onClick={handleClose} disableRipple>
-            Archive
-          </MenuItem>
-          <MenuItem onClick={handleClose} disableRipple>
-            More
-          </MenuItem>
+          {creators &&
+            creators.map((item, index) => (
+              <MenuItem
+                onClick={() => creatorChosen(item.creator.id)}
+                disableRipple
+                key={index}>
+                <Box
+                  display={"flex"}
+                  justifyContent={"space-between"}
+                  alignItems={"center"}>
+                  <Avatar
+                    alt={item.creator.user_info.user.name}
+                    src={getFullUrl(item.creator.user_info.profile_image)}
+                  />
+                  <div style={{ marginLeft: "10px" }}>
+                    <Typography
+                      variant="body1"
+                      component={"div"}
+                      gutterBottom={false}>
+                      {item.creator.user_info.user.name}
+                    </Typography>
+                    <Typography
+                      variant="caption"
+                      component={"div"}
+                      gutterBottom={false}>
+                      ({item.creator.user_info.profile_url})
+                    </Typography>
+                  </div>
+                </Box>
+              </MenuItem>
+            ))}
         </StyledMenu>
       </TabPanel>
     </Box>

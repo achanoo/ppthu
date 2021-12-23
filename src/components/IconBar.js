@@ -44,7 +44,7 @@ export default function IconButtons() {
         onClick={() => {
           user.role === "creator"
             ? history.push(`/creator-profile/${user.profile_url}`)
-            : history.push(`/creator-edit`);
+            : history.push(`/user-profile`);
         }}>
         <AccountCircleIcon />
       </IconButton>

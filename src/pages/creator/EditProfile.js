@@ -42,6 +42,7 @@ import SelectOption from "./../../layout/SelectOption";
 import { useEffect } from "react";
 import { useAuthContext } from "../../context/AuthContext";
 import axios from "axios";
+import TierUpdate from "../../components/TierUpdate";
 import {
   BaseUrl,
   getFullUrl,
@@ -49,7 +50,6 @@ import {
   changeSocials,
 } from "../../helpers/Constant";
 import moment from "moment";
-import Editor from "../../components/Editor";
 const useStyles = makeStyles((theme) => ({
   wrapper: {
     minHeight: "100vh",
@@ -201,22 +201,21 @@ const useStyles = makeStyles((theme) => ({
     },
     gap: "15px",
   },
-  logodiv: {
-    marginLeft: "-66px",
-    [theme.breakpoints.only("xs")]: {
-      marginLeft: "-66px",
-    },
-  },
 }));
 
 // input formula=> (valu.length + 1)*8
 
 const EditProfile = () => {
   const { id } = useParams();
-  const { token } = useAuthContext();
+  const { token, updatetoCreator, getRegions, regions } = useAuthContext();
   const classes = useStyles();
-  const editor = useRef(null);
   const profile = useRef(null);
+  const newLinkButton = useRef(null);
+  const cover = useRef(null);
+  const [social, setSocial] = useState({
+    name: "none",
+    link: "",
+  });
   const [content, setContent] = useState("");
   const [data, setData] = useState({
     loading: true,
@@ -224,17 +223,24 @@ const EditProfile = () => {
     month: "",
     year: "",
     socials: [],
+    bio: "",
+    gender: "",
+    categories: "",
   });
 
+  const getCategories = (data) => {
+    return data.map((item) => item.id);
+  };
+
   const socialArray = [
-    "facebook",
-    "instagram",
-    "youtube",
-    "twitter",
-    "twitch",
-    "discord",
-    "tiktok",
-    "others",
+    { id: 1, name: "facebook" },
+    { id: 2, name: "instagram" },
+    { id: 3, name: "youtube" },
+    { id: 4, name: "twitter" },
+    { id: 5, name: "twitch" },
+    { id: 6, name: "discord" },
+    { id: 7, name: "tiktok" },
+    { id: 8, name: "others" },
   ];
 
   const places = ["yangon", "mandalay", "sagaing"];
@@ -268,6 +274,9 @@ const EditProfile = () => {
               : moment(response.user_info.dob).get("year"),
           socials: changeSocials(response.user_info.socials),
           ...response,
+          bio: response.user_info.bio,
+          gender: response.user_info.gender,
+          categories: getCategories(response.categories),
         }));
       })
       .catch((err) => {
@@ -282,6 +291,7 @@ const EditProfile = () => {
 
     async function anyfunction() {
       await getData();
+      await getRegions();
     }
     anyfunction();
     return () => {
@@ -302,9 +312,16 @@ const EditProfile = () => {
     }));
   };
 
+  const handleNewSocial = (e) => {
+    const { value, name } = e.target;
+
+    if (e.key === "Enter") {
+      addMore();
+    }
+  };
+
   const inputChange = (e) => {
     const { name, value, files } = e.target;
-    console.log(value);
     const { user_info } = data;
     if (name === "newcover" || name === "newprofile") {
       if (name === "newprofile") {
@@ -312,25 +329,77 @@ const EditProfile = () => {
       } else {
         user_info.cover_photo = files[0];
       }
+
       setData((prev) => ({
         ...prev,
         user_info,
       }));
     } else {
-      console.log("helo world");
-      // setState((prev) => ({
-      //   ...prev,
-      //   [name]: value,
-      // }));
+      setData((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
     }
   };
+  const genderChange = (gender) => {
+    setData((prev) => ({
+      ...prev,
+      gender: gender,
+    }));
+  };
   const updateData = () => {
-    console.log("helow rod");
+    let dob = moment()
+      .add(data.day, "days")
+      .month(data.month - 1)
+      .year(data.year)
+      .format("YYYY-MM-DD HH:mm:ss");
+    let formData = new FormData();
+    formData.append("name", data.user_info.user.name);
+    formData.append("email", data.user_info.user.email);
+    formData.append("phone_2", data.user_info.phone_no);
+    formData.append("role_id", "");
+    formData.append("cover_photo", data.user_info.cover_photo);
+    formData.append("profile_image", data.user_info.profile_image);
+    formData.append("categories", JSON.stringify(data.categories));
+    formData.append("socials", JSON.stringify(data.socials));
+    formData.append("gender", data.gender);
+    formData.append("region_id", data.user_info.region.id);
+    formData.append("dob", dob);
+    formData.append("address", data.user_info.address);
+    formData.append("bio", data.user_info.bio);
+    formData.append("profile_url", data.user_info.profile_url);
+
+    updatetoCreator(formData);
   };
 
-  const NewgetValue = (value) => {
-    console.log(value);
-    // setState({ ...state, isError })
+  const addMore = () => {
+    let acc = [];
+    let cc = [];
+    let { socials } = data;
+    acc.push(social.name);
+    acc.push(social.link);
+    socials.push(acc);
+
+    setData((prev) => ({
+      ...prev,
+      socials,
+    }));
+    setSocial({ link: "", name: "none" });
+  };
+
+  const inputLinkChange = (e) => {
+    const { name, value } = e.target;
+    if (name === "social") {
+      setSocial((prev) => ({
+        ...prev,
+        name: value,
+      }));
+    } else {
+      setSocial((prev) => ({
+        ...prev,
+        link: value,
+      }));
+    }
   };
 
   return (
@@ -349,7 +418,7 @@ const EditProfile = () => {
         <Box className={classes.cusFormControl}>
           <Box className={classes.cusOptions}>
             <h5 className="input-label"> profile photo </h5>
-            <Button onClick={() => profile.current.click()}>Edit</Button>
+            <Button onClick={updateData}>Edit</Button>
             <input
               style={{ display: "none" }}
               type="file"
@@ -360,11 +429,19 @@ const EditProfile = () => {
               className={classes.hidddendiv}
             />
           </Box>
-          <Box className={classes.profilephoto} style={{ alignSelf: "center" }}>
+          {console.log(typeof data.user_info.profile_image)}
+          <Box
+            onClick={() => profile.current.click()}
+            className={`${classes.profilephoto} imgDiv`}
+            style={{ alignSelf: "center" }}>
             {console.log(typeof data.user_info.profile_image)}
             <Avatar
               sx={{ width: "80px", height: "80px" }}
-              src={getFullUrl(data.user_info.profile_image)}
+              src={
+                typeof data.user_info.profile_image === "string"
+                  ? getFullUrl(data.user_info.profile_image)
+                  : window.URL.createObjectURL(data.user_info.profile_image)
+              }
             />
           </Box>
         </Box>
@@ -376,13 +453,25 @@ const EditProfile = () => {
           <Box className={classes.cusOptions}>
             <h5 className="input-label"> Cover photo </h5>
             <Button>Edit</Button>
+            <input
+              style={{ display: "none" }}
+              type="file"
+              ref={cover}
+              onChange={inputChange}
+              name="newcover"
+              accept="image/*"
+              className={classes.hidddendiv}
+            />
           </Box>
           <Box
-            className={classes.coverphoto}
+            className={`${classes.coverphoto} imgDiv`}
+            onClick={() => cover.current.click()}
             style={{
-              backgroundImage: `url('${getFullUrl(
-                data.user_info.cover_photo
-              )}')`,
+              backgroundImage: `url('${
+                typeof data.user_info.cover_photo === "string"
+                  ? getFullUrl(data.user_info.cover_photo)
+                  : window.URL.createObjectURL(data.user_info.cover_photo)
+              }')`,
             }}></Box>
         </Box>
 
@@ -391,7 +480,7 @@ const EditProfile = () => {
         <Box className={classes.cusFormControl}>
           <Box className={classes.cusOptions}>
             <h5 className="input-label"> Bio </h5>
-            <Button>Edit</Button>
+            <Button onClick={updateData}>Edit</Button>
           </Box>
 
           <TextField
@@ -399,9 +488,10 @@ const EditProfile = () => {
             inputProps={{ "aria-label": "Without label" }}
             multiline
             fullWidth
-            defaultValue={data.user_info.bio}
+            name="bio"
+            defaultValue={data.bio}
             maxRows={4}
-            onChange={() => console.log("helow")}
+            onChange={inputChange}
             variant="standard"
           />
         </Box>
@@ -410,7 +500,7 @@ const EditProfile = () => {
         <Box className={classes.cusFormControl}>
           <Box className={classes.cusOptions}>
             <h5 className="input-label"> General Info </h5>
-            <Button>Edit</Button>
+            <Button onClick={updateData}>Edit</Button>
           </Box>
           <Box className={classes.general}>
             <Box className={classes.cusFormControl}>
@@ -422,19 +512,19 @@ const EditProfile = () => {
                   variant="contained"
                   aria-label="outlined primary button group">
                   <Button
-                    //onClick={() => genderChange("male")}
+                    onClick={() => genderChange("male")}
                     style={{
                       backgroundColor: `${
-                        data.user_info.gender === "male" ? "#333" : ""
+                        data.gender === "male" ? "#333" : ""
                       }`,
                     }}>
                     <MaleIcon />
                   </Button>
                   <Button
-                    //onClick={() => genderChange("female")}
+                    onClick={() => genderChange("female")}
                     style={{
                       backgroundColor: `${
-                        data.user_info.gender === "female" ? "#333" : ""
+                        data.gender === "female" ? "#333" : ""
                       }`,
                     }}>
                     <FemaleIcon />
@@ -456,8 +546,7 @@ const EditProfile = () => {
                   name="day"
                   className={classes.inputField}
                   placeholder="XX"
-
-                  // onChange={(e) => setEmail(e.target.value)}
+                  onChange={inputChange}
                 />
                 <span className={classes.mdsize}>Day</span>
                 <span className={classes.xssize}>Month</span>
@@ -466,6 +555,7 @@ const EditProfile = () => {
                   type="text"
                   id="month"
                   value={data.month}
+                  onChange={inputChange}
                   name="month"
                   placeholder="XX"
                 />
@@ -476,6 +566,7 @@ const EditProfile = () => {
                   type="text"
                   name="year"
                   value={data.year}
+                  onChange={inputChange}
                   id="year"
                   placeholder="XXXX"
                 />
@@ -490,26 +581,36 @@ const EditProfile = () => {
         <Box className={classes.cusFormControl}>
           <Box className={classes.cusOptions}>
             <h5 className="input-label"> Links </h5>
-            <Button>Edit</Button>
+            <Button onClick={updateData}>Edit</Button>
           </Box>
-          <SelectOption fullWidth={true} data={socialArray} />
+          <SelectOption
+            fullWidth={true}
+            data={socialArray}
+            onChange={social.name}
+            name="social"
+            inputChange={inputLinkChange}
+          />
           <TextField
             id="standard-basic"
             inputProps={{ "aria-label": "Without label" }}
             fullWidth
             variant="standard"
             placeholder="https://www.example.com/..."
+            onKeyUp={handleNewSocial}
+            onChange={inputLinkChange}
+            value={social.link}
           />
+
           <List>
-            {data.socials.map((acc, index) => {
+            {data.socials.map((acc, i) => {
               return (
                 <ListItem
-                  key={index}
+                  key={i}
                   secondaryAction={
                     <IconButton
                       edge="end"
                       aria-label="delete"
-                      onClick={() => removeLink(index)}>
+                      onClick={() => removeLink(i)}>
                       <RemoveCircleOutlineSharpIcon />
                     </IconButton>
                   }>
@@ -599,102 +700,15 @@ const EditProfile = () => {
         </Box> */}
 
         {/* starting tier */}
-        {data.subscription_plans.map((item) => {
-          return (
-            <Box className={classes.cusFormControl}>
-              <Box className={classes.cusOptions}>
-                <h5 className="input-label"> Tiers </h5>
-                <Button>Edit</Button>
-              </Box>
-              {/* name  */}
-              <Grid container>
-                <Grid item xs={4}>
-                  <Typography variant="subtitle2" gutterBottom component="div">
-                    Tier Name
-                  </Typography>
-                </Grid>
-                <Grid item xs={8}>
-                  <TextField
-                    id="outlined-basic"
-                    variant="outlined"
-                    value={item.level}
-                    inputProps={{ "aria-label": "Without label" }}
-                    placeholder="sample"
-                  />
-                </Grid>
-              </Grid>
-              {/* logo  */}
-              <Grid container>
-                <Grid item xs={4}>
-                  <Typography variant="subtitle2" gutterBottom component="div">
-                    Tier Logo
-                  </Typography>
-                </Grid>
-                <Grid item xs={8} className={classes.logodiv}>
-                  <img
-                    src={`${getFullUrl(item.image)}`}
-                    alt="name"
-                    loading="lazy"
-                    style={{
-                      width: "80px",
-                      height: "80px",
-                      objectFit: "cover",
-                      marginLeft: "20px",
-                    }}
-                  />
-                </Grid>
-              </Grid>
-              {/* price */}
-              <Grid container>
-                <Grid item xs={4}>
-                  <Typography variant="subtitle2" gutterBottom component="div">
-                    Tier price
-                  </Typography>
-                </Grid>
-                <Grid item xs={8}>
-                  <TextField
-                    id="outlined-basic"
-                    variant="outlined"
-                    value={item.price}
-                    inputProps={{ "aria-label": "Without label" }}
-                    placeholder="0,000,000"
-                  />
-                </Grid>
-              </Grid>
 
-              {/* desc  */}
-              <Grid container>
-                <Grid item xs={4}>
-                  <Typography variant="subtitle2" gutterBottom component="div">
-                    Description
-                  </Typography>
-                </Grid>
-                <Grid item xs={8}>
-                  <Editor
-                    contents={item.description}
-                    getValue={NewgetValue}></Editor>
-                </Grid>
-              </Grid>
-
-              {/* benefit  */}
-              <Grid container display={"none"}>
-                <Grid item xs={4}>
-                  <Typography variant="subtitle2" gutterBottom component="div">
-                    Benefit
-                  </Typography>
-                </Grid>
-                <Grid item xs={8}>
-                  <TextField
-                    id="outlined-basic"
-                    variant="outlined"
-                    inputProps={{ "aria-label": "Without label" }}
-                    placeholder="text"
-                  />
-                </Grid>
-              </Grid>
-            </Box>
-          );
-        })}
+        {data.subscription_plans &&
+          data.subscription_plans.map((item, index) => {
+            return (
+              <div key={index}>
+                <TierUpdate data={item} />
+              </div>
+            );
+          })}
 
         <Divider className={classes.hrdiv} />
       </div>

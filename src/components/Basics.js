@@ -255,6 +255,8 @@ const initalData = {
   categories: JSON.parse(localStorage.getItem("selectedCategory")) || [],
   role: "",
   urlKeyword: "",
+  content_status:
+    JSON.parse(localStorage.getItem("sexual_content")) === 1 ? 1 : "" || "",
 };
 
 const Basic = () => {
@@ -267,7 +269,7 @@ const Basic = () => {
     getUserData,
   } = useAuthContext();
   const { role, name } = authUser;
-  console.log(role);
+  // console.log(role);
   const [dense, setDense] = React.useState(false);
   const [secondary, setSecondary] = React.useState(false);
   const [userInfo, setUserInfo] = React.useState("");
@@ -447,8 +449,8 @@ const Basic = () => {
     let formData = new FormData();
     formData.append("name", state.username);
     formData.append("email", state.email);
-    formData.append("phone_1", state.phone);
-    formData.append("role_id", "2");
+    formData.append("phone_2", state.phone);
+    formData.append("role_id", role === "creator" ? "" : 2);
     formData.append(
       "cover_photo",
       state.cover === "" ? state.oldcover : state.cover
@@ -468,8 +470,10 @@ const Basic = () => {
     );
     formData.append("bio", state.bio);
     formData.append("profile_url", state.urlKeyword);
+    formData.append("content_status", state.content_status);
 
     updatetoCreator(formData);
+
     // setState(prev=>({
     //   ...prev,
     //   role:'creator'
@@ -547,21 +551,57 @@ const Basic = () => {
           userdata = r.data;
           setState((prev) => ({
             ...prev,
-            username: userdata.user_info.user.name,
-            oldcover: userdata.user_info.cover_photo,
-            oldprofile: userdata.user_info.profile_image,
-            regions: userdata.user_info.region.name,
-            address: userdata.user_info.address,
-            phone: userdata.user_info.user.phone_no,
-            gender: userdata.user_info.gender,
-            dob: userdata.user_info.dob,
-            bio: userdata.user_info.bio,
+            username:
+              userdata.user_info.user.name === null
+                ? ""
+                : userdata.user_info.user.name,
+            oldcover:
+              userdata.user_info.cover_photo === null
+                ? ""
+                : userdata.user_info.cover_photo,
+            oldprofile:
+              userdata.user_info.profile_image === null
+                ? ""
+                : userdata.user_info.profile_image,
+            regions:
+              userdata.user_info.region === null
+                ? ""
+                : userdata.user_info.region.name,
+            address:
+              userdata.user_info.address === null
+                ? ""
+                : userdata.user_info.address,
+            phone:
+              userdata.user_info.user.phone_no === null
+                ? ""
+                : userdata.user_info.user.phone_no,
+            gender:
+              userdata.user_info.gender === null
+                ? ""
+                : userdata.user_info.gender,
+            dob: userdata.user_info.dob === null ? "" : userdata.user_info.dob,
+            bio: userdata.user_info.bio === null ? "" : userdata.user_info.bio,
             socials: changeSocials(userdata.user_info.socials),
-            day: moment(userdata.user_info.dob).get("date"),
-            month: moment(userdata.user_info.dob).get("month"),
-            year: moment(userdata.user_info.dob).get("year"),
-            email: userdata.user_info.user.email,
-            urlKeyword: userdata.user_info.profile_url,
+            day:
+              userdata.user_info.dob === null
+                ? ""
+                : moment(userdata.user_info.dob).get("date"),
+            month:
+              userdata.user_info.dob === null
+                ? ""
+                : moment(userdata.user_info.dob).get("month"),
+            year:
+              userdata.user_info.dob === null
+                ? ""
+                : moment(userdata.user_info.dob).get("year"),
+            email:
+              userdata.user_info.user.email === null
+                ? ""
+                : userdata.user_info.user.email,
+            urlKeyword:
+              userdata.user_info.profile_url === null
+                ? ""
+                : userdata.user_info.profile_url,
           }));
         } else {
           userdata = r.data;

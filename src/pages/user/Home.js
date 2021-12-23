@@ -15,7 +15,8 @@ import CardActions from "@mui/material/CardActions";
 import { Avatar, Typography, Divider } from "@mui/material";
 import { CustomButton } from "../../layout/CutomerButton";
 import TabContents from "../../components/TabContent";
-import { getFullUrl } from "../../helpers/Constant";
+import { getFullUrl, BaseUrl } from "../../helpers/Constant";
+import axios from "axios";
 
 const useStyle = makeStyles((theme) => ({
   root: {
@@ -67,6 +68,7 @@ const UserHome = () => {
   const classes = useStyle();
   const theme = useTheme();
   const islaptop = useMediaQuery(theme.breakpoints.down("md"));
+  const [creators, setCreator] = React.useState([]);
   const goToEdit = () => {
     if (user.role === "creator") {
       history.push("/edit");
@@ -75,15 +77,37 @@ const UserHome = () => {
     }
   };
 
-  //   React.useEffect(() => {
-  //    let getdata=true;
-  //    if(getdata){
-  //      getPosts();
-  //    }
-  //    return () => {
-  //      getdata=false;
-  //    }
-  //  }, [])
+  const getCreators = async () => {
+    await axios({
+      method: "get",
+      url: `${BaseUrl}/user/get-creators`,
+      headers: {
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((res) => {
+        if (res) {
+          if (res.data.data) {
+            setCreator(res.data.data);
+          }
+        }
+      })
+      .catch((error) => console.log(error.message));
+  };
+
+  React.useEffect(() => {
+    let controller = new AbortController();
+
+    async function anyfunction() {
+      await getCreators();
+    }
+    anyfunction();
+
+    return () => {
+      controller.abort();
+    };
+  }, []);
 
   //
   return (
@@ -97,7 +121,7 @@ const UserHome = () => {
             md={6}
             display={{ xs: "block", sm: "block" }}
             order={{ xs: 1, sm: 2 }}>
-            <TabContents />
+            <TabContents creators={creators} />
           </Grid>
           <Grid
             item
@@ -131,7 +155,31 @@ const UserHome = () => {
                 </Grid>
                 <Divider />
                 <Grid p={2}>
-                  <span m={0}>You aren’t supporting any creators yet.</span>
+                  {creators.length > 0 || (
+                    <span m={0}>You aren’t supporting any creators yet.</span>
+                  )}
+
+                  {creators.length > 0 &&
+                    creators.map((item, index) => (
+                      <Box
+                        key={index}
+                        display="flex"
+                        justifyContent={"center"}
+                        alignItems={"center"}>
+                        <Typography
+                          variant="body1"
+                          component={"div"}
+                          gutterBottom={false}>
+                          {item.creator.user_info.user.name}
+                        </Typography>
+                        <Typography
+                          variant="caption"
+                          component={"div"}
+                          gutterBottom={false}>
+                          ({item.creator.user_info.profile_url})
+                        </Typography>
+                      </Box>
+                    ))}
                 </Grid>
               </CardContent>
             </Card>

@@ -67,6 +67,7 @@ import axios from "axios";
 import { BaseUrl } from "../../helpers/Constant";
 import { useAuthContext } from "../../context/AuthContext";
 import moment from "moment";
+import RSFilter from "./RSFilter";
 
 const useStyles = makeStyles((theme) => ({
   [theme.breakpoints.up("md")]: {
@@ -442,35 +443,6 @@ EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
 };
 // DataTable End
-//Tab Start
-function TabPanel(props) {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
-      {...other}>
-      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
-    </div>
-  );
-}
-
-TabPanel.propTypes = {
-  children: PropTypes.node,
-  index: PropTypes.number.isRequired,
-  value: PropTypes.number.isRequired,
-};
-
-function a11yProps(index) {
-  return {
-    id: `simple-tab-${index}`,
-    "aria-controls": `simple-tabpanel-${index}`,
-  };
-}
-//Tab End
 
 const RSManager = () => {
   const classes = useStyles();
@@ -540,256 +512,8 @@ const RSManager = () => {
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
   // DataTable End
-
   //Drawer Start
 
-  const [state, setState] = React.useState({
-    top: false,
-    left: false,
-    bottom: false,
-    right: false,
-  });
-
-  const toggleDrawer = (anchor, open) => (event) => {
-    if (
-      event.type === "keydown" &&
-      (event.key === "Tab" || event.key === "Shift")
-    ) {
-      return;
-    }
-
-    setState({ ...state, [anchor]: open });
-  };
-
-  //Tab Start
-  const [value, setValue] = React.useState(0);
-
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
-
-  //Tab End
-  const list = (anchor) => (
-    <Box
-      sx={{ width: 350 }}
-      // role="presentation"
-      // onClick={toggleDrawer(anchor, false)}
-      // onKeyDown={toggleDrawer(anchor, false)}
-    >
-      <Box sx={{ padding: "20px" }}>
-        <Grid container>
-          <Grid item xs={10}></Grid>
-          <Grid item xs={2}>
-            <Close />
-          </Grid>
-        </Grid>
-      </Box>
-      <Box sx={{ width: "100%" }}>
-        <Box>
-          <Tabs
-            value={value}
-            onChange={handleChange}
-            textColor="secondary"
-            indicatorColor="secondary"
-            aria-label="secondary tabs example"
-            centered
-            variant="fullWidth">
-            <Tab label="All filters" {...a11yProps(0)} />
-            <Tab label="Saved filters" {...a11yProps(1)} />
-          </Tabs>
-        </Box>
-        <TabPanel value={value} index={0}>
-          <Box>
-            <Grid container>
-              <Grid item xs={12} sm={12} md={12}>
-                <Typography
-                  variant="subtitle1"
-                  display="inline"
-                  className={classes.subTitle}>
-                  Status
-                </Typography>
-              </Grid>
-              <Grid item xs={12} sm={12} md={12}>
-                <FormGroup>
-                  <FormControlLabel
-                    control={<Checkbox defaultChecked />}
-                    label="Active"
-                    className={classes.subTitle}
-                  />
-                  <FormControlLabel
-                    control={<Checkbox />}
-                    label="New"
-                    className={classes.subTitle}
-                  />
-                  <FormControlLabel
-                    control={<Checkbox />}
-                    label="Cancelled"
-                    className={classes.subTitle}
-                  />
-                </FormGroup>
-              </Grid>
-            </Grid>
-          </Box>
-
-          <Divider />
-          <Box>
-            <Grid container>
-              <Grid item xs={12} sm={12} md={12}>
-                <Typography
-                  variant="subtitle1"
-                  display="inline"
-                  className={classes.subTitle}>
-                  Tiers
-                </Typography>
-              </Grid>
-              <Grid item xs={6} sm={6} md={6}>
-                <FormGroup>
-                  <FormControlLabel
-                    control={<Checkbox defaultChecked />}
-                    label="All Tiers"
-                    className={classes.subTitle}
-                  />
-                  <FormControlLabel
-                    control={<Checkbox />}
-                    label="Bronze"
-                    className={classes.subTitle}
-                  />
-                  <FormControlLabel
-                    control={<Checkbox />}
-                    label="Silver"
-                    className={classes.subTitle}
-                  />
-                </FormGroup>
-              </Grid>
-              <Grid item xs={6} sm={6} md={6}>
-                <FormGroup>
-                  <FormControlLabel
-                    control={<Checkbox defaultChecked />}
-                    label="Gold"
-                    className={classes.subTitle}
-                  />
-                  <FormControlLabel
-                    control={<Checkbox />}
-                    label="Diamond"
-                    className={classes.subTitle}
-                  />
-                  <FormControlLabel
-                    control={<Checkbox />}
-                    label="No Tier"
-                    className={classes.subTitle}
-                  />
-                </FormGroup>
-              </Grid>
-            </Grid>
-          </Box>
-          <Box>
-            <Grid container>
-              <Grid item xs={12} sm={12} md={12}>
-                <Typography
-                  variant="subtitle1"
-                  display="inline"
-                  className={classes.subTitle}>
-                  Benefits
-                </Typography>
-              </Grid>
-              <Grid item xs={12} sm={12} md={12}>
-                <Typography
-                  variant="subtitle1"
-                  display="inline"
-                  className={classes.subTitle}>
-                  All benefits to your tiers to acces the filter.{" "}
-                  <Link
-                    to="#"
-                    className={classes.linkBtn}
-                    sx={{ float: "right" }}>
-                    Learn more
-                  </Link>
-                </Typography>
-              </Grid>
-            </Grid>
-          </Box>
-          <Divider />
-          <Box>
-            <Grid container>
-              <Grid item xs={12} sm={12} md={12}>
-                <Typography
-                  variant="subtitle1"
-                  display="inline"
-                  className={classes.subTitle}>
-                  Join Date
-                </Typography>
-              </Grid>
-              <Grid item xs={6} sm={6} md={6}>
-                <CustomButtonWhite
-                  size="small"
-                  className={classes.customButtonWhite}>
-                  This week
-                </CustomButtonWhite>
-              </Grid>
-              <Grid item xs={6} sm={6} md={6}>
-                <CustomButtonWhite
-                  size="small"
-                  className={classes.customButtonWhite}>
-                  Last week
-                </CustomButtonWhite>
-              </Grid>
-              <Grid item xs={6} sm={6} md={6}>
-                <CustomButtonWhite
-                  size="small"
-                  className={classes.customButtonWhite}>
-                  This month
-                </CustomButtonWhite>
-              </Grid>
-              <Grid item xs={6} sm={6} md={6}>
-                <CustomButtonWhite
-                  size="small"
-                  className={classes.customButtonWhite}>
-                  Last month
-                </CustomButtonWhite>
-              </Grid>
-              <Grid item xs={12} sm={12} md={12}>
-                <LocalizationProvider dateAdapter={AdapterDateFns}>
-                  <DatePicker
-                    label="Basic example"
-                    value={value}
-                    onChange={(newValue) => {
-                      setValue(newValue);
-                    }}
-                    renderInput={(params) => <TextField {...params} />}
-                  />
-                </LocalizationProvider>
-              </Grid>
-            </Grid>
-          </Box>
-          <Divider />
-          <Box>
-            <Grid container>
-              <Grid item xs={2} sm={2} md={2}></Grid>
-              <Grid item xs={5} sm={5} md={5}>
-                <CustomButtonWhite
-                  size="small"
-                  className={classes.customButtonWhite}>
-                  Save filters
-                </CustomButtonWhite>
-              </Grid>
-              <Grid item xs={5} sm={5} md={5}>
-                <CustomButton
-                  size="small"
-                  className={classes.customButtonWhite}>
-                  Apply filters
-                </CustomButton>
-              </Grid>
-            </Grid>
-          </Box>
-        </TabPanel>
-        <TabPanel value={value} index={1}>
-          Item Two
-        </TabPanel>
-      </Box>
-      <Divider />
-    </Box>
-  );
-  //Drawer End
   const getData = async () => {
     try {
       const response = await axios({
@@ -857,6 +581,24 @@ const RSManager = () => {
 
     // console.log(newrow);
     setFilter(newrow);
+  };
+
+  const [state, setState] = React.useState({
+    top: false,
+    left: false,
+    bottom: false,
+    right: false,
+  });
+
+  const toggleDrawer = (anchor, open) => (event) => {
+    if (
+      event.type === "keydown" &&
+      (event.key === "Tab" || event.key === "Shift")
+    ) {
+      return;
+    }
+
+    setState({ ...state, [anchor]: open });
   };
 
   return (
@@ -993,7 +735,7 @@ const RSManager = () => {
                     anchor={"right"}
                     open={state["right"]}
                     onClose={toggleDrawer("right", false)}>
-                    {list("right")}
+                    <RSFilter />
                   </Drawer>
                 </React.Fragment>
               </Grid>

@@ -37,7 +37,18 @@ const auth_reducers = (state, action) => {
 
   if (action.type === "UPDATE_USER") {
     let { user } = state;
-    user.role = action.payload;
+    if (action.payload.hasOwnProperty("user_info")) {
+      user.role = action.payload.user_info.user.role.name;
+      user.profile_image = action.payload.user_info.profile_image;
+      user.name = action.payload.user_info.user.name;
+      user.profile_url = action.payload.user_info.profile_url;
+    } else {
+      user.role = action.payload.user.role.name;
+      user.profile_image = action.payload.profile_image;
+      user.name = action.payload.user.name;
+      user.profile_url = action.payload.profile_url;
+    }
+
     return { ...state, user };
   }
 
