@@ -28,6 +28,12 @@ import {
   Toolbar,
   Tooltip,
   Typography,
+  Popover,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  FormHelperText,
 } from "@mui/material";
 import { Box } from "@mui/system";
 import { makeStyles } from "@mui/styles";
@@ -145,6 +151,17 @@ const useStyles = makeStyles((theme) => ({
     padding: "8px",
     fontSize: "14px",
     fontWeight: "bold",
+  },
+  FilterSelection: {
+    borderRadius: "50px",
+    color: "black",
+    height: "40px",
+    width: "100px",
+    textTransform: "capitalize",
+    fontSize: "0.872rem",
+    "&:hover": {
+      cursor: "pointer",
+    },
   },
 }));
 
@@ -443,8 +460,53 @@ EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
 };
 // DataTable End
+function FilterSelection({ lists, appliedFilterById, selectedSaveFilter }) {
+  const classes = useStyles();
+  const [age, setAge] = React.useState("");
+
+  const handleChange = (event) => {
+    setAge(event.target.value);
+    appliedFilterById(event.target.value);
+  };
+  React.useEffect(() => {
+    if (selectedSaveFilter) {
+      setAge(selectedSaveFilter);
+    }
+    return () => {
+      setAge("");
+    };
+  }, [selectedSaveFilter]);
+  return (
+    <Select
+      className={classes.FilterSelection}
+      value={age}
+      onChange={handleChange}
+      displayEmpty
+      inputProps={{
+        "aria-label": "Without label",
+      }}>
+      <MenuItem value="">
+        <em>None</em>
+      </MenuItem>
+      {lists.map((list, index) => (
+        <MenuItem key={index} value={list.id}>
+          Filter-({list.id})
+        </MenuItem>
+      ))}
+    </Select>
+  );
+}
+
+const initialOptionData = {
+  statusValue: [],
+  tierValue: [],
+  joinDate: { name: "", start: "", end: "" },
+};
 
 const RSManager = () => {
+  // pop over start
+
+  // pop over end
   const classes = useStyles();
   const { token } = useAuthContext();
   // DataTable Start
@@ -456,6 +518,13 @@ const RSManager = () => {
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [rows, setRows] = React.useState([]);
   const [filter, setFilter] = React.useState([]);
+  const [filterOption, setFilterOption] = React.useState(initialOptionData);
+  const [filterChange, setFilterChange] = React.useState(false);
+  const [filterData, setFilterData] = React.useState([]);
+  const [selectedSaveFilter, setSelectedSaveFilter] = React.useState("");
+  const filterRefresh = () => {
+    setFilterChange(!filterChange);
+  };
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -534,13 +603,40 @@ const RSManager = () => {
     }
   };
 
+  const getFilter = async () => {
+    await axios({
+      method: "get",
+      url: `${BaseUrl}/filter/`,
+      headers: {
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((res) => {
+        if (res.data) {
+          setFilterData(res.data.filters);
+        }
+      })
+      .catch((error) => console.log(error));
+  };
+
   React.useEffect(() => {
     const controller = new AbortController();
     getData();
+    console.log("you first called");
     return () => {
       controller.abort();
     };
   }, []);
+
+  React.useEffect(() => {
+    const controller = new AbortController();
+    getFilter();
+    console.log("you second called");
+    return () => {
+      controller.abort();
+    };
+  }, [filterChange]);
 
   moment.updateLocale("en", {
     relativeTime: {
@@ -601,6 +697,93 @@ const RSManager = () => {
     setState({ ...state, [anchor]: open });
   };
 
+  const apiFilter = async (type, data) => {
+    await axios({
+      method: "get",
+      url: `${BaseUrl}/creator/rsmanager/`,
+      params: {
+        type: type,
+        status: JSON.stringify(data.statusValue),
+        tiers: JSON.stringify(data.tierValue),
+        this_week: data.joinDate.name === "thisWeek" ? 1 : 0,
+        last_week: data.joinDate.name === "lastWeek" ? 1 : 0,
+        this_month: data.joinDate.name === "thisMonth" ? 1 : 0,
+        last_month: data.joinDate.name === "lastMonth" ? 1 : 0,
+        fdate: data.joinDate.start,
+        tdate: data.joinDate.end,
+      },
+      headers: {
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((res) => {
+        setFilter(res.data.data);
+      })
+      .catch((error) => console.log(error.message));
+  };
+
+  const deleteFilter = async (id) => {
+    await axios({
+      method: "DELETE",
+      url: `${BaseUrl}/filter/${id}`,
+      headers: {
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((res) => {
+        if (res.data) {
+          filterRefresh();
+          clearFilterOption();
+        }
+      })
+      .catch((error) => console.log(error.message));
+  };
+
+  const appliedFilterById = (id) => {
+    let result = filterData.find((x) => x.id === id);
+    let newarray = { ...filterOption };
+    if (result) {
+      let name = "";
+      if (result.this_week === 1) {
+        name = "thisWeek";
+      } else if (result.this_month === 1) {
+        name = "thisMonth";
+      } else if (result.last_week === 1) {
+        name = "lastWeek";
+      } else if (result.last_month === 1) {
+        name = "lastMonth";
+      } else {
+        name = "";
+      }
+      newarray.joinDate.name = name;
+      newarray.joinDate.start = result.from_date;
+      newarray.joinDate.end = result.to_date;
+      newarray.statusValue =
+        result.status == !null
+          ? result.status.split(",").map((item) => parseInt(item))
+          : [];
+      newarray.tierValue =
+        result.tiers == !null
+          ? result.tiers.split(",").map((item) => parseInt(item))
+          : [];
+      setFilterOption(newarray);
+      apiFilter("apply_filter", newarray);
+      setSelectedSaveFilter(id);
+    }
+  };
+  const getFilterOption = (data) => {
+    console.log(data);
+    setFilterOption(data);
+    apiFilter("apply_filter", data);
+  };
+  const clearFilterOption = () => {
+    setFilter(rows);
+    setFilterOption(initialOptionData);
+    setSelectedSaveFilter("");
+  };
+
   return (
     <Box className={classes.container}>
       <Grid container>
@@ -648,6 +831,9 @@ const RSManager = () => {
                         margin: "6px",
                         textAlign: "start",
                         width: "115px",
+                        display: "flex",
+                        justifyContent: "space-around",
+                        alignItems: "center",
                       }}
                       className={classes.customButton}>
                       <Avatar
@@ -661,7 +847,13 @@ const RSManager = () => {
                   <Grid item xs={6} sm={6} md={6} style={{ textAlign: "end" }}>
                     <CustomButton
                       size="small"
-                      style={{ margin: "6px", textAlign: "end" }}
+                      style={{
+                        margin: "6px",
+                        textAlign: "end",
+                        display: "flex",
+                        justifyContent: "space-around",
+                        alignItems: "center",
+                      }}
                       className={classes.customButton}>
                       <Avatar
                         alt="Remy Sharp"
@@ -696,26 +888,18 @@ const RSManager = () => {
                   className={classes.customButtonWhite}>
                   Cancelled
                 </CustomButtonWhite>
-                <CustomButtonWhite
-                  size="small"
-                  style={{
-                    height: "40px",
-                    margin: "0px 4px",
-                    padding: "0px 20px",
-                  }}>
-                  <Avatar
-                    alt="Remy Sharp"
-                    src={filter}
-                    sx={{ width: 20, height: 16, display: "inline-flex" }}
-                  />
-                  Filters - 1
-                </CustomButtonWhite>
-                <Link
-                  to="#"
+                <FilterSelection
+                  lists={filterData}
+                  appliedFilterById={appliedFilterById}
+                  selectedSaveFilter={selectedSaveFilter}
+                />
+
+                <Button
+                  onClick={clearFilterOption}
                   className={classes.linkBtn}
                   sx={{ float: "right" }}>
                   Clear all
-                </Link>
+                </Button>
               </Grid>
             </Grid>
           </Box>
@@ -735,7 +919,16 @@ const RSManager = () => {
                     anchor={"right"}
                     open={state["right"]}
                     onClose={toggleDrawer("right", false)}>
-                    <RSFilter />
+                    <RSFilter
+                      filterOption={filterOption}
+                      getFilterOption={getFilterOption}
+                      filterData={filterData}
+                      filterRefresh={filterRefresh}
+                      selectedSaveFilter={selectedSaveFilter}
+                      appliedFilterById={appliedFilterById}
+                      deleteFilter={deleteFilter}
+                      toggleDrawer={toggleDrawer}
+                    />
                   </Drawer>
                 </React.Fragment>
               </Grid>
@@ -902,43 +1095,48 @@ const RSManager = () => {
                   </Grid>
                 </Grid>
                 <Divider style={{ margin: "6px 0px" }} />
-                <Grid
-                  item
-                  xs={12}
-                  sm={12}
-                  md={12}
-                  justifyContent="center"
-                  alignItems="center"
-                  textAlign="center">
-                  <CustomButton
-                    size="small"
-                    style={{
-                      color: "#fff",
-                      height: "36px",
-                      margin: "6px",
-                      padding: "0px 20px",
-                    }}>
-                    <Avatar
-                      alt="Remy Sharp"
-                      src={send}
-                      sx={{ width: 20, height: 18, display: "inline-flex" }}
-                    />
-                    Message
-                  </CustomButton>
-                  <CustomButton
-                    size="small"
-                    style={{
-                      color: "#fff",
-                      height: "36px",
-                      padding: "0px 20px",
-                    }}>
-                    <Avatar
-                      alt="Remy Sharp"
-                      src={more}
-                      sx={{ width: 20, height: 18, display: "inline-flex" }}
-                    />
-                    More
-                  </CustomButton>
+                <Grid item xs={12} sm={12} md={12}>
+                  <Box
+                    display={"flex"}
+                    justifyContent={"space-evenly"}
+                    alignContent={"center"}>
+                    <CustomButton
+                      size="small"
+                      style={{
+                        color: "#fff",
+                        height: "36px",
+                        margin: "6px",
+                        padding: "0px 20px",
+                        display: "flex",
+                        justifyContent: "space-around",
+                        alignItems: "center",
+                      }}>
+                      <Avatar
+                        alt="Remy Sharp"
+                        src={send}
+                        sx={{ width: 20, height: 18, display: "inline-flex" }}
+                      />
+                      Message
+                    </CustomButton>
+                    <CustomButton
+                      size="small"
+                      style={{
+                        color: "#fff",
+                        height: "36px",
+                        margin: "6px",
+                        padding: "0px 20px",
+                        display: "flex",
+                        justifyContent: "space-around",
+                        alignItems: "center",
+                      }}>
+                      <Avatar
+                        alt="Remy Sharp"
+                        src={more}
+                        sx={{ width: 20, height: 18, display: "inline-flex" }}
+                      />
+                      More
+                    </CustomButton>
+                  </Box>
                 </Grid>
               </CardContent>
             </Card>

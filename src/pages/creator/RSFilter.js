@@ -5,6 +5,7 @@ import { CustomButtonWhite } from "../../layout/CutomButtonWhite";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import { CustomButton } from "../../layout/CutomerButton";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
+import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 
 import DatePicker from "@mui/lab/DatePicker";
 import {
@@ -51,6 +52,9 @@ const useStyles = makeStyles((theme) => ({
     display: "grid",
     gridTemplateColumns: "auto auto",
   },
+  active: {
+    backgroundColor: "#eaeaea",
+  },
 }));
 
 //Tab Start
@@ -92,58 +96,31 @@ const RSFilter = (props) => {
   const classes = useStyles();
   const { getSubscriptions, subscriptions } = useSubscriptionContext();
   const { token } = useAuthContext();
-  const [filterData, setFilterData] = React.useState([]);
 
   //Tab Start
   const [value, setValue] = React.useState(0);
   const [state, setState] = React.useState({
     statusValue: [],
     tierValue: [],
-    joinDate: "",
+    joinDate: {},
   });
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
-  const getFilter = async () => {
-    await axios({
-      method: "get",
-      url: `${BaseUrl}/filter/`,
-      headers: {
-        Accept: "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((res) => {
-        if (res.data) {
-          setFilterData(res.data.filters);
-        }
-      })
-      .catch((error) => console.log(error));
-  };
-
   useEffect(() => {
     let getData = true;
     if (getData) {
       getSubscriptions();
+      setState(props.filterOption);
     }
 
     return () => {
       getData = false;
+      setState({});
     };
-  }, []);
-
-  useEffect(() => {
-    let getData = true;
-    if (value === 1) {
-      getFilter();
-    }
-
-    return () => {
-      getData = false;
-    };
-  }, [value]);
+  }, [props.filterOption]);
 
   const statusChange = (statusId) => {
     const { statusValue } = state;
@@ -177,20 +154,23 @@ const RSFilter = (props) => {
 
   const joinDateChange = (name) => {
     let dateobj = {};
+    const joinDate = { ...state };
+    joinDate.name = name;
 
-    if (name === "thisWeek") {
-      dateobj = getBycurrentWeek();
-    } else if (name === "lastWeek") {
-      dateobj = getByLastWeek();
-    } else if (name === "thisMonth") {
-      dateobj = getByThisMonth();
-    } else {
-      dateobj = getByLastMonth();
-    }
-    let newjoinDate = { name: name, ...dateobj };
+    // if (name === "thisWeek") {
+    //   dateobj = getBycurrentWeek();
+    // } else if (name === "lastWeek") {
+    //   dateobj = getByLastWeek();
+    // } else if (name === "thisMonth") {
+    //   dateobj = getByThisMonth();
+    // } else {
+    //   dateobj = getByLastMonth();
+    // }
+    // console.log("worling");
+
     setState((prev) => ({
       ...prev,
-      joinDate: newjoinDate,
+      joinDate,
     }));
   };
 
@@ -236,6 +216,10 @@ const RSFilter = (props) => {
     };
   };
 
+  const applyFilter = () => {
+    props.getFilterOption(state);
+  };
+
   const saveFilter = () => {
     let formData = new FormData();
     formData.append("status", state.statusValue);
@@ -256,7 +240,11 @@ const RSFilter = (props) => {
         Authorization: `Bearer ${token}`,
       },
     })
-      .then((res) => console.log(res))
+      .then((res) => {
+        if (res.data) {
+          props.filterRefresh();
+        }
+      })
       .catch((error) => console.log(error));
   };
 
@@ -272,7 +260,9 @@ const RSFilter = (props) => {
         <Grid container>
           <Grid item xs={10}></Grid>
           <Grid item xs={2}>
-            <Close />
+            <IconButton onClick={props.toggleDrawer("right", false)}>
+              <Close />
+            </IconButton>
           </Grid>
         </Grid>
       </Box>
@@ -441,13 +431,45 @@ const RSFilter = (props) => {
                   Last month
                 </CustomButtonWhite>
               </Grid>
+              <Grid item xs={12} sm={12} md={12} marginTop={3} marginBottom={2}>
+                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                  <DatePicker
+                    label="Start Date"
+                    value={
+                      state.joinDate.start === ""
+                        ? moment()
+                        : state.joinDate.start
+                    }
+                    onChange={(e) => {
+                      let joinDate = state;
+
+                      joinDate.name = "";
+                      joinDate.start = moment(e).format("YYYY-MM-DD");
+
+                      setState((prev) => {
+                        return { ...prev, joinDate };
+                      });
+                    }}
+                    renderInput={(params) => <TextField {...params} />}
+                  />
+                </LocalizationProvider>
+              </Grid>
               <Grid item xs={12} sm={12} md={12} marginBottom={2}>
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                   <DatePicker
-                    label="Basic example"
-                    value={value}
-                    onChange={(newValue) => {
-                      setValue(newValue);
+                    label="End Date"
+                    value={
+                      state.joinDate.end === "" ? moment() : state.joinDate.end
+                    }
+                    onChange={(e) => {
+                      let joinDate = state;
+
+                      joinDate.name = "";
+                      joinDate.end = moment(e).format("YYYY-MM-DD");
+
+                      setState((prev) => {
+                        return { ...prev, joinDate };
+                      });
                     }}
                     renderInput={(params) => <TextField {...params} />}
                   />
@@ -471,6 +493,7 @@ const RSFilter = (props) => {
               <Grid item xs={5} sm={5} md={5}>
                 <CustomButton
                   size="small"
+                  onClick={applyFilter}
                   className={classes.customButtonWhite}>
                   Apply filters
                 </CustomButton>
@@ -479,11 +502,24 @@ const RSFilter = (props) => {
           </Box>
         </TabPanel>
         <TabPanel value={value} index={1}>
-          {filterData &&
-            filterData.map((item, index) => {
+          {props.filterData &&
+            props.filterData.map((item, index) => {
               return (
-                <ListItemButton component="div" key={index}>
-                  <ListItemText primary={`item${item.id}`} />
+                <ListItemButton
+                  component="div"
+                  key={index}
+                  className={
+                    props.selectedSaveFilter === item.id ? classes.active : ""
+                  }>
+                  <ListItemText
+                    primary={`Filter-(${item.id})`}
+                    onClick={() => props.appliedFilterById(item.id)}
+                  />
+                  <IconButton
+                    aria-label="Example"
+                    onClick={() => props.deleteFilter(item.id)}>
+                    <RemoveCircleOutlineIcon style={{ color: "#ff0000" }} />
+                  </IconButton>
                 </ListItemButton>
               );
             })}
