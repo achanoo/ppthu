@@ -70,7 +70,13 @@ import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import DatePicker from "@mui/lab/DatePicker";
 import axios from "axios";
-import { BaseUrl } from "../../helpers/Constant";
+import {
+  BaseUrl,
+  getByLastMonth,
+  getBycurrentWeek,
+  getByThisMonth,
+  getByLastWeek,
+} from "../../helpers/Constant";
 import { useAuthContext } from "../../context/AuthContext";
 import moment from "moment";
 import RSFilter from "./RSFilter";
@@ -521,6 +527,7 @@ const RSManager = () => {
   const [filterOption, setFilterOption] = React.useState(initialOptionData);
   const [filterChange, setFilterChange] = React.useState(false);
   const [filterData, setFilterData] = React.useState([]);
+  const [activeState, setActiveState] = React.useState({ name: "active" });
   const [selectedSaveFilter, setSelectedSaveFilter] = React.useState("");
   const filterRefresh = () => {
     setFilterChange(!filterChange);
@@ -632,7 +639,7 @@ const RSManager = () => {
   React.useEffect(() => {
     const controller = new AbortController();
     getFilter();
-    console.log("you second called");
+    // console.log("you second called");
     return () => {
       controller.abort();
     };
@@ -662,10 +669,12 @@ const RSManager = () => {
   const handleSearchChange = (e) => {
     const value = e.target.value;
     let newrow = "";
-    console.log(value.length);
-    if (value.length > 0) {
+    console.log(value);
+    if (value.length >= 3) {
+      console.log("you called");
+
       var regExp = new RegExp("^" + value, "i");
-      newrow = filter.filter((row) => {
+      newrow = rows.filter((row) => {
         return (
           regExp.test(row.user_info.user.email) ||
           regExp.test(row.user_info.user.name)
@@ -677,6 +686,41 @@ const RSManager = () => {
 
     // console.log(newrow);
     setFilter(newrow);
+  };
+
+  const filterByStatus = (name) => {
+    console.log(name);
+    let dateobj = {};
+    let newArray = "";
+    let newarray = [];
+
+    if (name === "new") {
+      dateobj = getByThisMonth();
+
+      newarray = rows.filter((item) => {
+        let joinDate = new Date(item.join_date);
+        let expireDate = new Date(item.end_date);
+        return (
+          joinDate.getTime() > dateobj.start && joinDate.getTime() < dateobj.end
+        );
+      });
+    } else if (name === "active") {
+      let current = new Date().getTime();
+
+      newarray = rows.filter((item) => {
+        let joinDate = new Date(item.join_date);
+        let expireDate = new Date(item.end_date);
+        return expireDate.getTime() > current;
+      });
+    } else if (name === "cancelled") {
+      newarray = rows.filter((item) => {
+        return item.cancel_date !== null;
+      });
+    } else {
+      newarray = rows;
+    }
+    setFilter(newarray);
+    setActiveState((prev) => ({ ...prev, name }));
   };
 
   const [state, setState] = React.useState({
@@ -794,10 +838,10 @@ const RSManager = () => {
                 <Typography gutterBottom variant="h6" display="inline">
                   Relationship Manager
                 </Typography>
-                <MenuButton
+                {/* <MenuButton
                   label="As of today"
                   icon={<KeyboardArrowDown fontSize="large" />}
-                />
+                /> */}
               </Grid>
             </Grid>
           </Box>
@@ -818,7 +862,7 @@ const RSManager = () => {
                   <StyledInputBase
                     placeholder="Search Name or Email"
                     inputProps={{ "aria-label": "search" }}
-                    onKeyUp={handleSearchChange}
+                    onChange={handleSearchChange}
                   />
                 </Search>
               </Grid>
@@ -827,6 +871,7 @@ const RSManager = () => {
                   <Grid item xs={6} sm={6} md={6}>
                     <CustomButton
                       size="small"
+                      btnactive={"active"}
                       style={{
                         margin: "6px",
                         textAlign: "start",
@@ -847,6 +892,7 @@ const RSManager = () => {
                   <Grid item xs={6} sm={6} md={6} style={{ textAlign: "end" }}>
                     <CustomButton
                       size="small"
+                      btnactive="active"
                       style={{
                         margin: "6px",
                         textAlign: "end",
@@ -875,19 +921,24 @@ const RSManager = () => {
                 <CustomButton
                   size="small"
                   style={{ margin: "8px 2px" }}
-                  className={classes.customButton}>
+                  onClick={() => filterByStatus("active")}
+                  btnactive={activeState.name === "active" ? "active" : ""}>
                   Acitve
                 </CustomButton>
-                <CustomButtonWhite
+                <CustomButton
                   size="small"
+                  onClick={() => filterByStatus("new")}
+                  btnactive={activeState.name === "new" ? "active" : ""}
                   className={classes.customButtonWhite}>
                   New
-                </CustomButtonWhite>
-                <CustomButtonWhite
+                </CustomButton>
+                <CustomButton
                   size="small"
+                  onClick={() => filterByStatus("cancelled")}
+                  btnactive={activeState.name === "cancelled" ? "active" : ""}
                   className={classes.customButtonWhite}>
                   Cancelled
-                </CustomButtonWhite>
+                </CustomButton>
                 <FilterSelection
                   lists={filterData}
                   appliedFilterById={appliedFilterById}
@@ -1102,6 +1153,7 @@ const RSManager = () => {
                     alignContent={"center"}>
                     <CustomButton
                       size="small"
+                      btnactive={"active"}
                       style={{
                         color: "#fff",
                         height: "36px",
@@ -1120,6 +1172,7 @@ const RSManager = () => {
                     </CustomButton>
                     <CustomButton
                       size="small"
+                      btnactive={"active"}
                       style={{
                         color: "#fff",
                         height: "36px",

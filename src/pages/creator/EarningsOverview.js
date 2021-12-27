@@ -20,6 +20,9 @@ import Select from "@mui/material/Select";
 import { CutomButtonWhiteOutline } from "../../layout/CutomButtonWhiteOutline";
 import { Link } from "react-router-dom";
 import { useSubscriptionContext } from "./../../context/SubscriptionContext";
+import axios from "axios";
+import { useAuthContext } from "../../context/AuthContext";
+import { BaseUrl } from "../../helpers/Constant";
 
 const useStyles = makeStyles((theme) => ({
   [theme.breakpoints.up("md")]: {
@@ -88,8 +91,18 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const EarningsOverview = () => {
+  const { token } = useAuthContext();
   const classes = useStyles();
-  const { getSubscriptions } = useSubscriptionContext();
+  const { getEarningOverview } = useSubscriptionContext();
+  const [rating, setRating] = React.useState([]);
+  const [paymentType, setPaymentType] = React.useState([]);
+  const [state, setState] = React.useState({
+    bank_info: [],
+    selectedBank_info: "",
+    paymentType: "",
+    bankAccount: "",
+    bankAccountName: "",
+  });
 
   const data = [
     { argument: "Bronze", value: 30 },
@@ -100,16 +113,100 @@ const EarningsOverview = () => {
   const [age, setAge] = React.useState("");
 
   const handleChange = (event) => {
-    setAge(event.target.value);
+    const { name, value } = event.target;
+    setState((prev) => ({ ...prev, [name]: value }));
   };
 
   React.useEffect(() => {
     const controller = new AbortController();
-    getSubscriptions();
+    let getData = getEarningOverview();
+    getData
+      .then((res) => {
+        if (res.data.success) {
+          let response = res.data.data;
+          let obj = response.map((r) => ({
+            argument: r.subscription_plan.level,
+            value: r.total,
+          }));
+          setRating(obj);
+        }
+      })
+      .catch((error) => console.log(error));
+
     return () => {
       controller.abort();
     };
   }, []);
+
+  const getPaymentType = async () => {
+    const response = await axios({
+      method: "get",
+      url: `${BaseUrl}/payment-type`,
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response;
+  };
+
+  const getBankInfo = async () => {
+    const response = await axios({
+      method: "get",
+      url: `${BaseUrl}/bank-info`,
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response;
+  };
+
+  React.useEffect(() => {
+    const controller = new AbortController();
+    let getData = getPaymentType();
+    getData
+      .then((res) => {
+        if (res.data.success) {
+          let response = res.data.payment_types;
+          setPaymentType(response);
+        }
+      })
+      .catch((error) => console.log(error));
+
+    const bankInfo = getBankInfo();
+    bankInfo
+      .then((res) => {
+        console.log(res.data.bank_info);
+        if (res.data.success) {
+          let result = res.data.bank_info;
+
+          setState((prev) => {
+            return {
+              ...prev,
+              bank_info: result,
+            };
+          });
+        }
+      })
+      .catch((error) => console.log(error));
+
+    return () => {
+      controller.abort();
+    };
+  }, []);
+
+  const addBankInfo = async () => {
+    let formData = new FormData();
+    formData.append("payment_type_id", state.paymentType);
+    formData.append("account_no", state.bankAccount);
+    formData.append("account_name", state.bankAccountName);
+    await axios({
+      method: "post",
+      url: `${BaseUrl}/bank-info`,
+      data: formData,
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: "application/json",
+      },
+    })
+      .then((res) => console.log(res))
+      .catch((error) => console.log(error));
+  };
 
   return (
     <Box className={classes.container} style={{ margin: "25px" }}>
@@ -146,7 +243,7 @@ const EarningsOverview = () => {
             <Grid container spacing={2}>
               <Grid item xs={12} sm={12} md={12}>
                 <Paper>
-                  <Chart data={data}>
+                  <Chart data={rating}>
                     <ArgumentAxis />
                     <ValueAxis />
 
@@ -224,26 +321,29 @@ const EarningsOverview = () => {
                   </Grid>
                   <Grid
                     item
-                    xs={10}
-                    sm={10}
-                    md={10}
+                    xs={12}
+                    sm={12}
+                    md={12}
                     justifyContent="center"
                     alignItems="center">
                     <div>
-                      <FormControl sx={{ m: 1, minWidth: 120 }}>
+                      <FormControl fullWidth>
                         <InputLabel id="demo-simple-select-helper-label">
                           Bank
                         </InputLabel>
                         <Select
                           labelId="demo-simple-select-helper-label"
                           id="demo-simple-select-helper"
-                          value={age}
                           label="Age"
+                          value={state.paymentType}
+                          name="paymentType"
                           onChange={handleChange}
                           className={classes.inputField}>
-                          <MenuItem value={10}>KBZ</MenuItem>
-                          <MenuItem value={20}>AYA</MenuItem>
-                          <MenuItem value={30}>CB</MenuItem>
+                          {paymentType.map((item, index) => (
+                            <MenuItem key={index} value={item.id}>
+                              {item.name}
+                            </MenuItem>
+                          ))}
                         </Select>
                       </FormControl>
                     </div>
@@ -262,7 +362,9 @@ const EarningsOverview = () => {
                     <TextField
                       id="bankAccount"
                       type="number"
+                      value={state.bankAccount}
                       name="bankAccount"
+                      onChange={handleChange}
                       className={classes.inputField}
                       fullWidth
                     />
@@ -281,7 +383,9 @@ const EarningsOverview = () => {
                     <TextField
                       id="bankAccountName"
                       type="text"
+                      value={state.bankAccountName}
                       name="bankAccountName"
+                      onChange={handleChange}
                       className={classes.inputField}
                       fullWidth
                     />
@@ -291,6 +395,7 @@ const EarningsOverview = () => {
                     xs={12}
                     sm={12}
                     md={12}
+                    display={"none"}
                     justifyContent="center"
                     alignItems="center"
                     className={classes.cusFormInput}>
@@ -321,6 +426,7 @@ const EarningsOverview = () => {
                           xs={6}
                           sm={6}
                           md={6}
+                          display={"none"}
                           justifyContent="center"
                           alignItems="center"
                           style={{ textAlign: "start" }}>
@@ -332,13 +438,14 @@ const EarningsOverview = () => {
                         </Grid>
                         <Grid
                           item
-                          xs={6}
-                          sm={6}
-                          md={6}
-                          justifyContent="center"
+                          xs={12}
+                          sm={12}
+                          md={12}
+                          justifyContent="flex-end"
                           alignItems="center"
                           style={{ textAlign: "end" }}>
                           <CustomButtonNormal
+                            onClick={addBankInfo}
                             size="small"
                             className={classes.customButtonWhite}>
                             Confirm

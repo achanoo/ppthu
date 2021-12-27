@@ -31,6 +31,7 @@ import { useAuthContext } from "../context/AuthContext";
 import ProfileMenu from "./../layout/profileMenu";
 import IconBar from "./../components/IconBar";
 import SearchInput from "../layout/SearchInput";
+import { CButton } from "../layout/CCButton";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -142,19 +143,19 @@ export default function SearchAppBar() {
                   Log In
                 </Button>
 
-                <CustomButton
+                <CButton
                   size="small"
                   style={{ color: "#fff" }}
                   onClick={goToRegister}>
                   <span
                     style={{
-                      fontSize: "0.52rem",
+                      fontSize: "0.852rem",
                       display: "flex",
                       alignSelf: "center",
                     }}>
                     Create a Pantpoe
                   </span>
-                </CustomButton>
+                </CButton>
               </>
             )}
             {isAuthenticated && (ismatch || <Sidebar logout={logout} />)}

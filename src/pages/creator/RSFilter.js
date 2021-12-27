@@ -153,7 +153,7 @@ const RSFilter = (props) => {
   };
 
   const joinDateChange = (name) => {
-    let dateobj = {};
+    // let dateobj = {};
     const joinDate = { ...state };
     joinDate.name = name;
 
@@ -172,48 +172,6 @@ const RSFilter = (props) => {
       ...prev,
       joinDate,
     }));
-  };
-
-  const getByLastMonth = () => {
-    // var date = new Date();
-    // var firstDay = new Date(date.getFullYear(), date.getMonth() - 1, 1);
-    // var lastDay = new Date(date.getFullYear(), date.getMonth(), 0);
-    // alert(firstDay.format("MM/DD/YYYY") + "===" + lastDay.format("MM/DD/YYYY"));
-    let thisMoment = moment();
-    let endOfMonth = moment(thisMoment).endOf("month").subtract(1, "months");
-    let startOfMonth = moment(thisMoment)
-      .startOf("month")
-      .subtract(1, "months");
-
-    return {
-      start: startOfMonth.format("YYYY-MM-DD"),
-      end: endOfMonth.format("YYYY-MM-DD"),
-    };
-  };
-
-  const getByLastWeek = () => {
-    return {
-      start: moment().subtract(1, "weeks").startOf("week").format("YYYY-MM-DD"),
-      end: moment().subtract(1, "weeks").endOf("week").format("YYYY-MM-DD"),
-    };
-  };
-  const getBycurrentWeek = () => {
-    var startDate = moment().startOf("week");
-    var endDate = moment().endOf("week");
-
-    return {
-      start: startDate.format("YYYY-MM-DD"),
-      end: endDate.format("YYYY-MM-DD"),
-    };
-  };
-  const getByThisMonth = () => {
-    let thisMoment = moment();
-    let endOfMonth = moment(thisMoment).endOf("month");
-    let startOfMonth = moment(thisMoment).startOf("month");
-    return {
-      start: startOfMonth.format("YYYY-MM-DD"),
-      end: endOfMonth.format("YYYY-MM-DD"),
-    };
   };
 
   const applyFilter = () => {

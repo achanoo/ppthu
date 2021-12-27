@@ -127,6 +127,16 @@ const SubscriptionProvider = ({ children }) => {
     }
   };
 
+  const getEarningOverview = async (type) => {
+    const response = await axios({
+      method: "get",
+      url: `${BaseUrl}/creator/earnings`,
+      params: { status: type },
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response;
+  };
+
   return (
     <SubscriptionContext.Provider
       value={{
@@ -138,6 +148,7 @@ const SubscriptionProvider = ({ children }) => {
         getSubscriptions,
         createSubscriptions,
         getCategories,
+        getEarningOverview,
       }}>
       {children}
     </SubscriptionContext.Provider>
