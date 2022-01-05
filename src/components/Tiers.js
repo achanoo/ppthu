@@ -9,6 +9,7 @@ import {
   FormHelperText,
   InputAdornment,
 } from "@mui/material";
+import DOMPurify from "dompurify";
 import { makeStyles } from "@mui/styles";
 import Card from "@mui/material/Card";
 import Avatar from "@mui/material/Avatar";
@@ -364,7 +365,7 @@ const Tiers = () => {
                                     margin: "16px 0px",
                                   }}
                                   dangerouslySetInnerHTML={{
-                                    __html: `${description}`,
+                                    __html: DOMPurify.sanitize(description),
                                   }}></div>
                                 {/* <div
                                   style={{

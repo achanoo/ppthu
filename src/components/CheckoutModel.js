@@ -17,6 +17,7 @@ import {
   Button,
   Paper,
 } from "@mui/material";
+import DOMPurify from "dompurify";
 import moment from "moment";
 import CreditCardIcon from "@mui/icons-material/CreditCard";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
@@ -438,7 +439,7 @@ const CheckOutModel = () => {
                     <Typography
                       className={classes.tiercontent}
                       dangerouslySetInnerHTML={{
-                        __html: `${data.plan.description}`,
+                        __html: DOMPurify.sanitize(data.plan.description),
                       }}></Typography>
                   </Collapse>
                 </Box>

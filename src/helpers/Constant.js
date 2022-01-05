@@ -2,7 +2,13 @@
 
 import React from "react";
 import moment from "moment";
-export const BaseUrl = " http://localhost:8000/api/v1";
+//export const BaseUrl2 = validateURL("http://localhost:8000/api/v1");
+function validateURL(url) {
+  const parsed = new URL(url);
+  return ["https:", "http:"].includes(parsed.protocol) ? url : "invaluid route";
+}
+
+export const BaseUrl = validateURL("http://localhost:8000/api/v1");
 //export const single_product_url = `https://course-api.com/react-store-single-product?id=`
 
 export const ImgUrl = "http://localhost:8000/storage/";

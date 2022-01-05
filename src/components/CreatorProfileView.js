@@ -17,6 +17,7 @@ import Tooltip from "@mui/material/Tooltip";
 import { CButton } from "./../layout/CCButton";
 import { Repeat } from "@mui/icons-material";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import DOMPurify from "dompurify";
 import { BsFacebook } from "react-icons/bs";
 import { FaInstagramSquare, FaYoutubeSquare, FaWifi } from "react-icons/fa";
 import { AiFillTwitterCircle, AiOutlineWifi } from "react-icons/ai";
@@ -473,7 +474,7 @@ const CreatorProfileView = ({ user }) => {
                           textAlign: "center",
                         }}
                         dangerouslySetInnerHTML={{
-                          __html: `${description}`,
+                          __html: DOMPurify.sanitize(description),
                         }}></div>
                     </div>
                   </Grid>

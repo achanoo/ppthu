@@ -10,8 +10,10 @@ import {
   ArgumentAxis,
   ValueAxis,
   Chart,
+  Title,
   BarSeries,
 } from "@devexpress/dx-react-chart-material-ui";
+import { Animation, ValueScale } from "@devexpress/dx-react-chart";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormHelperText from "@mui/material/FormHelperText";
@@ -22,7 +24,8 @@ import { Link } from "react-router-dom";
 import { useSubscriptionContext } from "./../../context/SubscriptionContext";
 import axios from "axios";
 import { useAuthContext } from "../../context/AuthContext";
-import { BaseUrl } from "../../helpers/Constant";
+import { BaseUrl, getByThisMonth } from "../../helpers/Constant";
+import moment from "moment";
 
 const useStyles = makeStyles((theme) => ({
   [theme.breakpoints.up("md")]: {
@@ -89,49 +92,129 @@ const useStyles = makeStyles((theme) => ({
     background: "rgb(245, 244, 242)",
   },
 }));
-
+const makeLabel =
+  (symbol, color) =>
+  ({ text, style, ...restProps }) =>
+    (
+      <ValueAxis.Label
+        text={`${text} ${symbol}`}
+        style={{
+          fill: color,
+          ...style,
+        }}
+        {...restProps}
+      />
+    );
+const PriceLabel = makeLabel("Ks", "#333");
 const EarningsOverview = () => {
   const { token } = useAuthContext();
   const classes = useStyles();
-  const { getEarningOverview } = useSubscriptionContext();
+  const { getEarningOverview, getSubscriptions, subscriptions } =
+    useSubscriptionContext();
+  const { getUserData } = useAuthContext();
   const [rating, setRating] = React.useState([]);
   const [paymentType, setPaymentType] = React.useState([]);
   const [state, setState] = React.useState({
+    ratingapi: [],
     bank_info: [],
     selectedBank_info: "",
     paymentType: "",
     bankAccount: "",
     bankAccountName: "",
+    total_earning: 0,
+    current_month_total_earning: 0,
   });
 
   const data = [
     { argument: "Bronze", value: 30 },
-    { argument: "Silver", value: 20 },
+    { argument: "Silver", value: 60 },
     { argument: "Gold", value: 10 },
     { argument: "Diamond", value: 50 },
   ];
   const [age, setAge] = React.useState("");
+  const modifyPriceDomain = () => [0, 110];
+
+  const onSelectionChange = (event) => {
+    const { name, value } = event.target;
+    let result = state.bank_info.filter((i) => i.payment_type.id === value)[0];
+    if (result) {
+      setState((prev) => ({
+        ...prev,
+        selectedBank_info: result.id,
+        paymentType: value,
+        bankAccount: result.account_no,
+        bankAccountName: result.account_name,
+      }));
+    } else {
+      setState((prev) => ({
+        ...prev,
+        paymentType: value,
+        bankAccount: "",
+        bankAccountName: "",
+        selectedBank_info: "",
+      }));
+    }
+  };
 
   const handleChange = (event) => {
     const { name, value } = event.target;
-    setState((prev) => ({ ...prev, [name]: value }));
+    setState((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
   React.useEffect(() => {
     const controller = new AbortController();
+
+    getSubscriptions();
     let getData = getEarningOverview();
+    getUserData()
+      .then((res) => {
+        let totalsubscriptions = res.data.subscriptions;
+
+        let total_earning = totalsubscriptions.reduce((a, b) => {
+          return { subscription_fee: a.subscription_fee + b.subscription_fee };
+        });
+
+        totalsubscriptions = totalsubscriptions.filter((i) => {
+          return (
+            new Date(i.join_date).getTime() > getByThisMonth().start &&
+            new Date(i.join_date).getTime() < getByThisMonth().end
+          );
+        });
+
+        let current_month_total_earning = totalsubscriptions.reduce((a, b) => {
+          return { subscription_fee: a.subscription_fee + b.subscription_fee };
+        });
+
+        setState((prev) => ({
+          ...prev,
+          total_earning: total_earning.subscription_fee,
+          current_month_total_earning:
+            current_month_total_earning.subscription_fee,
+        }));
+      })
+      .catch((error) => console.log(error));
+
+    let realdata = { level: "", value: "" };
     getData
       .then((res) => {
         if (res.data.success) {
           let response = res.data.data;
-          let obj = response.map((r) => ({
-            argument: r.subscription_plan.level,
-            value: r.total,
+          // setRating(ratingchart(res));
+          setState((prev) => ({
+            ...prev,
+            ratingapi: response,
           }));
-          setRating(obj);
         }
       })
       .catch((error) => console.log(error));
+    // let obj = response.map((r) => ({
+    //   argument: r.subscription_plan.level,
+    //   value: r.total,
+    // }));
+    // setRating(obj);
 
     return () => {
       controller.abort();
@@ -171,7 +254,7 @@ const EarningsOverview = () => {
     const bankInfo = getBankInfo();
     bankInfo
       .then((res) => {
-        console.log(res.data.bank_info);
+        //console.log(res.data.bank_info);
         if (res.data.success) {
           let result = res.data.bank_info;
 
@@ -206,6 +289,46 @@ const EarningsOverview = () => {
     })
       .then((res) => console.log(res))
       .catch((error) => console.log(error));
+  };
+
+  const updateBankinfo = async () => {
+    let formData = new FormData();
+    formData.append("payment_type_id", state.paymentType);
+    formData.append("account_no", state.bankAccount);
+    formData.append("account_name", state.bankAccountName);
+    formData.append("_method", "put");
+    await axios({
+      method: "post",
+      url: `${BaseUrl}/bank-info/${state.selectedBank_info}`,
+      data: formData,
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: "application/json",
+      },
+    })
+      .then((res) => console.log(res))
+      .catch((error) => console.log(error));
+  };
+
+  const ratingchart = (apiData, plans) => {
+    // console.log(apiData);
+    let model = { argument: "", value: 0 };
+    let obj = [];
+    plans.forEach((i, v) => {
+      model.argument = i.level;
+      apiData.forEach(function (j, v) {
+        if (j.subscription_plan.id === i.id) {
+          model.value = parseInt(j.total);
+        }
+        return false;
+      });
+
+      obj = [...obj, model];
+
+      model = { argument: "", value: 0 };
+    });
+
+    return obj;
   };
 
   return (
@@ -243,12 +366,20 @@ const EarningsOverview = () => {
             <Grid container spacing={2}>
               <Grid item xs={12} sm={12} md={12}>
                 <Paper>
-                  <Chart data={rating}>
-                    <ArgumentAxis />
-                    <ValueAxis />
+                  {state.ratingapi && (
+                    <Chart data={ratingchart(state.ratingapi, subscriptions)}>
+                      <ValueScale
+                        name="price"
+                        modifyDomain={modifyPriceDomain}
+                      />
+                      <ArgumentAxis />
+                      <ValueAxis max={2000} labelComponent={PriceLabel} />
 
-                    <BarSeries valueField="value" argumentField="argument" />
-                  </Chart>
+                      <BarSeries valueField="value" argumentField="argument" />
+                      <Title text="Earning Report" />
+                      <Animation />
+                    </Chart>
+                  )}
                 </Paper>
               </Grid>
             </Grid>
@@ -267,13 +398,13 @@ const EarningsOverview = () => {
                   gutterBottom
                   variant="h6"
                   className={classes.subTitle}>
-                  Total of this month = 540, 000
+                  Total of this month = {state.current_month_total_earning} Ks
                 </Typography>
                 <Typography
                   gutterBottom
                   variant="h6"
                   className={classes.subTitle}>
-                  Total = 1, 000, 000
+                  Total = {state.total_earning} Ks
                 </Typography>
               </Grid>
 
@@ -337,7 +468,7 @@ const EarningsOverview = () => {
                           label="Age"
                           value={state.paymentType}
                           name="paymentType"
-                          onChange={handleChange}
+                          onChange={onSelectionChange}
                           className={classes.inputField}>
                           {paymentType.map((item, index) => (
                             <MenuItem key={index} value={item.id}>
@@ -444,12 +575,22 @@ const EarningsOverview = () => {
                           justifyContent="flex-end"
                           alignItems="center"
                           style={{ textAlign: "end" }}>
-                          <CustomButtonNormal
-                            onClick={addBankInfo}
-                            size="small"
-                            className={classes.customButtonWhite}>
-                            Confirm
-                          </CustomButtonNormal>
+                          {state.selectedBank_info === "" && (
+                            <CustomButtonNormal
+                              onClick={addBankInfo}
+                              size="small"
+                              className={classes.customButtonWhite}>
+                              Confirm
+                            </CustomButtonNormal>
+                          )}
+                          {state.selectedBank_info.length !== "" && (
+                            <CustomButtonNormal
+                              onClick={updateBankinfo}
+                              size="small"
+                              className={classes.customButtonWhite}>
+                              Update Bank Info
+                            </CustomButtonNormal>
+                          )}
                         </Grid>
                       </Grid>
                     </Box>

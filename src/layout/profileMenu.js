@@ -91,6 +91,10 @@ export default function AccountMenu() {
         <MenuItem onClick={() => history.push("/earnings-overview")}>
           My Earnings
         </MenuItem>
+        <MenuItem onClick={() => history.push("/membership")}>
+          Manage Memberships
+        </MenuItem>
+
         <MenuItem onClick={() => history.push("/user-profile")}>
           Setting
         </MenuItem>

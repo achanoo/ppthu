@@ -20,6 +20,9 @@ import {
   EditProfile,
   UserProfile,
   PostEdit,
+  Membership,
+  Faq,
+  TermsAndCondition,
 } from "./pages/";
 
 import RSManager from "./pages/creator/RSManager";
@@ -55,6 +58,7 @@ function App() {
         <Route path="/edit" component={Edit} />
         <Route path="/rsmanager" component={RSManager} />
         <Route path="/earnings-overview" component={EarningsOverview} />
+        <Route path="/membership" component={Membership} />
         <Route
           path="/earnings-overview-detail"
           component={EarningsOverviewDetail}
@@ -107,6 +111,13 @@ function App() {
         </Route>
         <Route path="/step/2">
           <StepTwo />
+        </Route>
+
+        <Route path="/faq">
+          <Faq />
+        </Route>
+        <Route path="/policy/legal">
+          <TermsAndCondition />
         </Route>
 
         <Route path="*" component={Error} />

@@ -45,7 +45,10 @@ const SubscriptionProvider = ({ children }) => {
         {
           method: "get",
           url: `${BaseUrl}/subscription-plan`,
-          headers: { Authorization: `Bearer ${token}` },
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            Authorization: `Bearer ${token}`,
+          },
         },
         { cancelToken: cancelToken.token }
       );
@@ -127,7 +130,7 @@ const SubscriptionProvider = ({ children }) => {
     }
   };
 
-  const getEarningOverview = async (type) => {
+  const getEarningOverview = async (type = "") => {
     const response = await axios({
       method: "get",
       url: `${BaseUrl}/creator/earnings`,
@@ -135,6 +138,28 @@ const SubscriptionProvider = ({ children }) => {
       headers: { Authorization: `Bearer ${token}` },
     });
     return response;
+  };
+
+  const getUserSubscriptions = async () => {
+    const response = await axios({
+      method: "get",
+      url: `${BaseUrl}/user/user-subscriptions`,
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data;
+  };
+
+  const terminateSubscription = async (id) => {
+    const headers = {
+      Authorization: `Bearer ${token}`,
+      "My-Custom-Header": "foobar",
+    };
+    const res = await axios.delete(
+      `${BaseUrl}/subscription/${id}
+      `,
+      { headers }
+    );
+    console.log(res.status);
   };
 
   return (
@@ -149,6 +174,8 @@ const SubscriptionProvider = ({ children }) => {
         createSubscriptions,
         getCategories,
         getEarningOverview,
+        getUserSubscriptions,
+        terminateSubscription,
       }}>
       {children}
     </SubscriptionContext.Provider>

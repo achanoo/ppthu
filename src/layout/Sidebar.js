@@ -155,7 +155,7 @@ export default function TemporaryDrawer({ props }) {
           button
           key="Manage Memberships"
           onClick={() => {
-            history.push("/rsmanager");
+            history.push("/membership");
             closeSidebar();
           }}>
           <ListItemIcon>

@@ -2,6 +2,7 @@
 
 import React from "react";
 import { Box } from "@mui/system";
+import { Link } from "react-router-dom";
 import { makeStyles } from "@mui/styles";
 import { Avatar, Grid, Typography } from "@mui/material";
 import logo from "../assets/images/logo.png";
@@ -244,7 +245,10 @@ const PC = () => {
               justifyContent="center"
               alignItems="center">
               <Typography className={classes.subTitle}>Blog</Typography>
-              <Typography className={classes.subTitle}>Help & FAQ</Typography>
+              <Link to="/faq">
+                {" "}
+                <Typography className={classes.subTitle}>Help & FAQ</Typography>
+              </Link>
             </Grid>
             <Grid
               item
@@ -256,7 +260,10 @@ const PC = () => {
               alignItems="center">
               <Typography className={classes.subTitle}>About</Typography>
               <Typography className={classes.subTitle}>Privacy</Typography>
-              <Typography className={classes.subTitle}>
+              <Typography
+                className={classes.subTitle}
+                to="/policy/legal`"
+                component={Link}>
                 Term & Condition
               </Typography>
             </Grid>
