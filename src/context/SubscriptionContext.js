@@ -2,6 +2,7 @@
 
 import React from "react";
 import axios from "axios";
+import api from "./../services/apiAction.service";
 import { useHistory } from "react-router";
 import { BaseUrl } from "../helpers/Constant";
 import reducer from "../reducers/subscriptionReducers";
@@ -36,22 +37,20 @@ const SubscriptionProvider = ({ children }) => {
 
   const getSubscriptions = async () => {
     dispatch({ type: "SET_LOADING" });
-    if (typeof cancelToken != typeof undefined) {
-      cancelToken.cancel("cancel the previous req");
-    }
+
     try {
-      cancelToken = axios.CancelToken.source();
-      const response = await axios(
-        {
-          method: "get",
-          url: `${BaseUrl}/subscription-plan`,
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-            Authorization: `Bearer ${token}`,
-          },
-        },
-        { cancelToken: cancelToken.token }
-      );
+      // const response = await axios(
+      //   {
+      //     method: "get",
+      //     url: `${BaseUrl}/subscription-plan`,
+      //     headers: {
+      //       "Content-Type": "application/x-www-form-urlencoded",
+      //       Authorization: `Bearer ${token}`,
+      //     },
+      //   },
+      //   { cancelToken: cancelToken.token }
+      // );
+      const response = await api.get("/subscription-plan");
 
       //dispatch({ type: 'UNSET_LOADING' })
       if (response.data.data) {
@@ -107,19 +106,9 @@ const SubscriptionProvider = ({ children }) => {
 
   const getCategories = async () => {
     dispatch({ type: "SET_LOADING" });
-    if (typeof cancelToken != typeof undefined) {
-      cancelToken.cancel("cancel the previous req");
-    }
+
     try {
-      cancelToken = axios.CancelToken.source();
-      const response = await axios(
-        {
-          method: "get",
-          url: `${BaseUrl}/category`,
-          headers: { Authorization: `Bearer ${token}` },
-        },
-        { cancelToken: cancelToken.token }
-      );
+      const response = await api.get("/category");
 
       const payload = response.data.categories;
       // console.log(payload)

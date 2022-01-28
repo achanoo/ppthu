@@ -8,6 +8,7 @@ import { useHistory } from "react-router";
 import { BaseUrl } from "../helpers/Constant";
 import { useAuthContext } from "./AuthContext";
 import { SettingsInputAntennaTwoTone } from "@mui/icons-material";
+import api from "../services/apifinal.service";
 
 const PostContext = React.createContext();
 
@@ -105,17 +106,18 @@ const PostProvider = ({ children }) => {
     // dispatch({type:'SET_LOADING'});
 
     try {
-      const response = axios({
-        method: "post",
-        url: `${BaseUrl}/content`,
-        data: data,
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      // const response = axios({
+      //   method: "post",
+      //   url: `${BaseUrl}/content`,
+      //   data: data,
+      //   headers: {
+      //     Accept: "application/json",
+      //     "Content-Type": "multipart/form-data",
+      //     Authorization: `Bearer ${token}`,
+      //   },
+      // });
 
+      const response = api.post("/content", data);
       response
         .then((data) => {
           console.log(data.data);
@@ -134,7 +136,7 @@ const PostProvider = ({ children }) => {
     }
   };
 
-  const postUpdated = (data, id) => {
+  const postUpdated = async (data, id) => {
     // console.log(id);
     if (state.formAudio != "") {
       data.append("audio", state.formAudio[0]);
@@ -151,18 +153,17 @@ const PostProvider = ({ children }) => {
     }
 
     try {
-      const response = axios({
-        method: "post",
-        url: `${BaseUrl}/content/${id}`,
-        data: data,
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      response.then((data) => {
+      // const response = axios({
+      //   method: "post",
+      //   url: `${BaseUrl}/content/${id}`,
+      //   data: data,
+      //   headers: {
+      //     Accept: "application/json",
+      //     "Content-Type": "multipart/form-data",
+      //     Authorization: `Bearer ${token}`,
+      //   },
+      // });
+      await api.post(`/content/${id}`, data).then((data) => {
         console.log(data.data);
         if (data.data.success) {
           history.push("/home");
@@ -174,45 +175,51 @@ const PostProvider = ({ children }) => {
     }
   };
 
-  const LikeHandle = (id) => {
+  const LikeHandle = async (id) => {
     console.log("like");
     console.log(id);
     try {
-      const response = axios({
-        method: "post",
-        url: `${BaseUrl}/like/`,
-        data: { content_id: id },
-        headers: {
-          Accept: "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      // const response = axios({
+      //   method: "post",
+      //   url: `${BaseUrl}/like/`,
+      //   data: { content_id: id },
+      //   headers: {
+      //     Accept: "application/json",
+      //     Authorization: `Bearer ${token}`,
+      //   },
+      // });
 
-      response.then((data) => {
-        //  getPosts();
-      });
+      // response.then((data) => {
+      //   //  getPosts();
+      // });
+      return await api.post(`/like`, { content_id: id });
     } catch (err) {
       console.log(err);
     }
   };
 
-  const CommentLikeHandle = (id) => {
+  const CommentLikeHandle = async (id) => {
     let formData = new FormData();
     formData.append("comment_id", id);
     try {
-      const response = axios({
-        method: "post",
-        url: `${BaseUrl}/comment-like/`,
-        data: formData,
-        headers: {
-          Accept: "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      // const response = axios({
+      //   method: "post",
+      //   url: `${BaseUrl}/comment-like/`,
+      //   data: formData,
+      //   headers: {
+      //     Accept: "application/json",
+      //     Authorization: `Bearer ${token}`,
+      //   },
+      // });
 
-      response.then((data) => {
-        //  getPosts();
+      // response.then((data) => {
+      //   //  getPosts();
+      // });
+      let promise = new Promise((resolve, reject) => {
+        let res = api.post("/comment-like", formData);
+        return resolve(res);
       });
+      await promise;
     } catch (err) {
       console.log(err);
     }
@@ -220,14 +227,15 @@ const PostProvider = ({ children }) => {
 
   const RemoveLike = (id) => {
     try {
-      const response = axios({
-        method: "DELETE",
-        url: `${BaseUrl}/like/${id}`,
-        headers: {
-          Accept: "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      // const response = axios({
+      //   method: "DELETE",
+      //   url: `${BaseUrl}/like/${id}`,
+      //   headers: {
+      //     Accept: "application/json",
+      //     Authorization: `Bearer ${token}`,
+      //   },
+      // });
+      const response = api.delete(`/like/${id}`);
 
       response.then((data) => {
         //  getPosts();
@@ -239,18 +247,19 @@ const PostProvider = ({ children }) => {
 
   const RemoveCommentLikeHandle = (id) => {
     try {
-      const response = axios({
-        method: "DELETE",
-        url: `${BaseUrl}/comment-like/${id}`,
-        headers: {
-          Accept: "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      // const response = axios({
+      //   method: "DELETE",
+      //   url: `${BaseUrl}/comment-like/${id}`,
+      //   headers: {
+      //     Accept: "application/json",
+      //     Authorization: `Bearer ${token}`,
+      //   },
+      // });
 
-      response.then((data) => {
-        //  getPosts();
-      });
+      // response.then((data) => {
+      //   //  getPosts();
+      // });
+      return api.delete(`comment-like/${id}`);
     } catch (err) {
       console.log(err);
     }
@@ -260,7 +269,7 @@ const PostProvider = ({ children }) => {
 
   const CommentCreate = (formData) => {
     try {
-      const response = axios({
+      /* const response = axios({
         method: "post",
         url: `${BaseUrl}/comment/`,
         data: formData,
@@ -272,7 +281,8 @@ const PostProvider = ({ children }) => {
 
       response.then((data) => {
         // getPosts();
-      });
+      }); */
+      return api.post("/comment", formData);
     } catch (response) {
       console.log(response);
     }
@@ -280,7 +290,7 @@ const PostProvider = ({ children }) => {
 
   const CommentUpdate = (formData, id) => {
     try {
-      const response = axios({
+      /* const response = axios({
         method: "post",
         url: `${BaseUrl}/comment/${id}`,
         data: formData,
@@ -292,7 +302,9 @@ const PostProvider = ({ children }) => {
 
       response.then((data) => {
         //  getPosts();
-      });
+      }); */
+
+      return api.post(`/comment/${id}`, formData);
     } catch (response) {
       console.log(response);
     }
@@ -300,7 +312,7 @@ const PostProvider = ({ children }) => {
 
   const CommentDelete = (id) => {
     try {
-      const response = axios({
+      /*  const response = axios({
         method: "DELETE",
         url: `${BaseUrl}/comment/${id}`,
         headers: {
@@ -311,7 +323,8 @@ const PostProvider = ({ children }) => {
 
       response.then((data) => {
         //  getPosts();
-      });
+      }); */
+      return api.delete(`/comment/${id}`);
     } catch (response) {
       console.log(response);
     }
@@ -319,18 +332,19 @@ const PostProvider = ({ children }) => {
 
   const ReplyCreate = (formData) => {
     try {
-      axios({
-        method: "post",
-        url: `${BaseUrl}/comment-reply/`,
-        data: formData,
-        headers: {
-          Accept: "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      }).then((res) => {
-        console.log("now you r here");
-        //getPosts();
-      });
+      // axios({
+      //   method: "post",
+      //   url: `${BaseUrl}/comment-reply/`,
+      //   data: formData,
+      //   headers: {
+      //     Accept: "application/json",
+      //     Authorization: `Bearer ${token}`,
+      //   },
+      // }).then((res) => {
+      //   console.log("now you r here");
+      //   //getPosts();
+      // });
+      return api.post("/comment-reply", formData);
     } catch (response) {
       console.log(response);
     }

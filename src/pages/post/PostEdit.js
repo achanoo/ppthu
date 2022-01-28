@@ -35,7 +35,7 @@ import { customFetcher, getFullUrl } from "../../helpers/Constant";
 import LinkPreview from "../../components/LinkPreview";
 import { useAuthContext } from "../../context/AuthContext";
 import { BaseUrl } from "../../helpers/Constant";
-import axios from "axios";
+import api from "./../../services/apiAction.service";
 const label = { inputProps: { "aria-label": "Checkbox demo" } };
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -236,23 +236,19 @@ const PostEdit = () => {
   React.useEffect(() => {
     let data = true;
     if (data) {
-      getCategories();
-      getSubscriptions();
+      async function anyfunction() {
+        await getCategories();
+        await getSubscriptions();
+        await getDatabyid(id);
+      }
+      anyfunction();
     }
     return (data = false);
-  }, []);
+  }, [id]);
 
-  React.useEffect(() => {
-    // getPostByid(id);
+  const getDatabyid = async (id) => {
     try {
-      axios({
-        method: "get",
-        url: `${BaseUrl}/content/${id}`,
-        headers: {
-          Accept: "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      }).then((res) => {
+      await api.get(`/content/${id}`).then((res) => {
         let data = res.data.data;
         console.log(data);
         setState((prev) => ({
@@ -285,7 +281,7 @@ const PostEdit = () => {
     } catch (err) {
       console.log(err.response);
     }
-  }, [id]);
+  };
 
   const getTiers = (data) => {
     // console.log(data);

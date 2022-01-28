@@ -4,6 +4,8 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { useHistory } from "react-router-dom";
 import { makeStyles } from "@mui/styles";
+import axios from "axios";
+import { BaseUrl } from "../../helpers/Constant";
 //form input
 import FormControl, { useFormControl } from "@mui/material/FormControl";
 import {
@@ -86,7 +88,7 @@ const CodeVerify = (props) => {
   const [openVerification, setOpenVerification] = React.useState(false);
 
   const handlVerifyCode = (e) => {
-    setVerifyCode(e.target.value);
+    setVerifyCode(parseInt(e.target.value));
   };
 
   const handleSubmit = () => {
@@ -109,8 +111,15 @@ const CodeVerify = (props) => {
     setOpenVerification(true);
   };
   const Resending = () => {
-    setSMScode(gettingCode(phone));
-    setOpenVerification(false);
+    axios.get(`${BaseUrl}/auth/phone/send-sms/${phone}`).then(
+      (res) => {
+        if (res.status === 200) {
+          setSMScode(res.data.data.code);
+          setOpenVerification(false);
+        }
+      },
+      (error) => console.log(error)
+    );
   };
   const ChangeLogin = () => {
     history.push("/login");
@@ -222,7 +231,7 @@ const CreatePassword = (props) => {
     registerByPhone(formData);
   };
   return (
-    <>
+    <React.Fragment>
       <div className={classes.wrapper}>
         <h2>Sing Up</h2>
         <div className={`${classes.container} FaintBox `}>
@@ -293,7 +302,7 @@ const CreatePassword = (props) => {
           </Box>
         </div>
       </div>
-    </>
+    </React.Fragment>
   );
 };
 const Signup = () => {
@@ -372,11 +381,19 @@ const Signup = () => {
   };
 
   const NextToVerification = () => {
-    setState({
-      ...state,
-      codeMessage: false,
-      verifyDialog: true,
-    });
+    axios.get(`${BaseUrl}/auth/phone/send-sms/${phone}`).then(
+      (res) => {
+        if (res.status === 200) {
+          setCode(res.data.data.code);
+          setState({
+            ...state,
+            codeMessage: false,
+            verifyDialog: true,
+          });
+        }
+      },
+      (error) => console.log(error)
+    );
   };
 
   const nextToPasswordCreate = (data) => {

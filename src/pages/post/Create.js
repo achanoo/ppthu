@@ -32,6 +32,7 @@ import { CButton } from "../../layout/CCButton";
 import { display, fontWeight } from "@mui/system";
 import { customFetcher } from "../../helpers/Constant";
 import LinkPreview from "../../components/LinkPreview";
+import api from "./../../services/apifinal.service";
 const useStyles = makeStyles((theme) => ({
   container: {
     marginTop: "10vh",
@@ -176,7 +177,6 @@ const PostCreate = () => {
   const classes = useStyles();
   const [loading, setLoading] = useState(false);
   const [textCounting, setTextCounting] = useState(540);
-
   const inputChange = (e) => {
     const { name, value } = e.target;
     if (name !== "link") {
@@ -210,6 +210,12 @@ const PostCreate = () => {
     if (data) {
       getCategories();
       getSubscriptions();
+      // async function anyfunction() {
+      //   await getCategories();
+      //   await getSubscriptions();
+      // }
+
+      //anyfunction();
       RemoveData();
     }
     return (data = false);

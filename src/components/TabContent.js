@@ -31,7 +31,6 @@ import FavoriteOutlinedIcon from "@mui/icons-material/FavoriteOutlined";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import ImageGrid from "./../components/Gridview";
 import { postPhoto } from "./../assets/data";
-import PostDetailModel from "./PostDetailView";
 import { usePostContext } from "../context/PostContext";
 import { getFullUrl } from "./../helpers/Constant";
 import { Audio } from "./Audio";
@@ -45,7 +44,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import { bgcolor } from "@mui/system";
 import PostDetailView from "./../components/PostDetailView";
 import moment from "moment";
-
+import api from "./../services/apifinal.service";
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -312,6 +311,7 @@ const BasicTabs = (props) => {
   // const {posts}=props;
   // console.log(posts);
   const [loading, setLoading] = React.useState(true);
+  const [data, setData] = React.useState([]);
   const [posts, setPost] = React.useState([]);
   const { user: authUser, token } = useAuthContext();
   const [changes, setChange] = React.useState(false);
@@ -345,63 +345,61 @@ const BasicTabs = (props) => {
   };
   const [type, settype] = React.useState(1);
 
-  // React.useEffect(() => {
-  //   var controller = new AbortController();
-  //   // getPosts();
-  //   console.log("i am working");
-  //   async function anyNameFunction() {
-  //     const apiposts = await getPosts(1);
-  //     setItem(apiposts);
-  //     console.log(items);
-  //   }
-  //   anyNameFunction();
-  //   return () => {
-  //     controller.abort();
-  //   };
-  // }, []);
+  const fetchData = async () => {
+    try {
+      // const response = axios({
+      //   method: "post",
+      //   url: `${BaseUrl}/comment-like/`,
+      //   data: formData,
+      //   headers: {
+      //     Accept: "application/json",
+      //     Authorization: `Bearer ${token}`,
+      //   },
+      // });
+
+      // response.then((data) => {
+      //   //  getPosts();
+      // });
+      return await new Promise((resolve, reject) => {
+        // setTimeout(() => {
+        //   let res = api.get("/content", { type: "all" });
+        //   return resolve(res);
+        // }, 10);
+        let res = api.get("/content", { type: "all" });
+        return resolve(res);
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const getData = () => {
+    const res = fetchData();
+    res.then((response) => {
+      setData(response.data.data);
+      setPost(response.data.data);
+    });
+    if (value === 2) {
+      setCreator(props.creators);
+    }
+    if (selectedCreator) {
+      setPost((prev) =>
+        data.filter((item) => item.creator.id === selectedCreator)
+      );
+    } else {
+      setPost(data);
+    }
+
+    setLoading(false);
+  };
 
   React.useEffect(() => {
-    const getData = async () => {
-      const res = await axios({
-        method: "get",
-        url: `${BaseUrl}/content`,
-        params: {
-          type: "all",
-        },
-        headers: {
-          Accept: "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      if (value === 2) {
-        setCreator(props.creators);
-      }
-      if (selectedCreator) {
-        setPost((prev) =>
-          res.data.data.filter((item) => item.creator.id === selectedCreator)
-        );
-      } else {
-        setPost(res.data.data);
-      }
-
-      setLoading(false);
-    };
     getData();
+
     return () => {
       setCreator([]);
     };
   }, [changes, value, selectedCreator]);
-
-  //  React.useEffect(() => {
-  //    setIsSetData(true);
-
-  //    async function anyNameFunction() {
-  //      if (keyword != "") {
-  //        await getData(keyword);
-  //      }
-  //    }
-  //    anyNameFunction();
-  //  }, [keyword]);
 
   const creatorChosen = (id) => {
     setSelectedCreator(id);

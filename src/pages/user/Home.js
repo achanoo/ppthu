@@ -16,7 +16,7 @@ import { Avatar, Typography, Divider } from "@mui/material";
 import { CustomButton } from "../../layout/CutomerButton";
 import TabContents from "../../components/TabContent";
 import { getFullUrl, BaseUrl } from "../../helpers/Constant";
-import axios from "axios";
+import api from "../../services/apifinal.service";
 
 const useStyle = makeStyles((theme) => ({
   root: {
@@ -69,6 +69,7 @@ const UserHome = () => {
   const theme = useTheme();
   const islaptop = useMediaQuery(theme.breakpoints.down("md"));
   const [creators, setCreator] = React.useState([]);
+  const [loading, setLoading] = React.useState(true);
   const goToEdit = () => {
     if (user.role === "creator") {
       history.push("/edit");
@@ -78,31 +79,25 @@ const UserHome = () => {
   };
 
   const getCreators = async () => {
-    await axios({
-      method: "get",
-      url: `${BaseUrl}/user/get-creators`,
-      headers: {
-        Accept: "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    })
+    setLoading(false);
+    await api
+      .get("/user/get-creators")
       .then((res) => {
-        if (res) {
-          if (res.data.data) {
-            setCreator(res.data.data);
-          }
-        }
+        console.log(res.data.data);
+        setCreator(res.data.data);
+        setLoading(false);
       })
       .catch((error) => console.log(error.message));
   };
 
   React.useEffect(() => {
     let controller = new AbortController();
-
+    console.log("heo wrold getCreator");
     async function anyfunction() {
       await getCreators();
     }
     anyfunction();
+    //getCreators();
 
     return () => {
       controller.abort();
@@ -121,7 +116,7 @@ const UserHome = () => {
             md={6}
             display={{ xs: "block", sm: "block" }}
             order={{ xs: 1, sm: 2 }}>
-            <TabContents creators={creators} />
+            {creators.length > 0 && <TabContents creators={creators} />}
           </Grid>
           <Grid
             item

@@ -24,6 +24,10 @@ const useStyles = makeStyles((theme) => ({
     gridColumnStart: 2,
     alignSelf: "center",
   },
+  imgWrapper: {
+    gridColumnStart: 3,
+    alignSelf: "center",
+  },
   wrapper: {
     paddingTop: "10vh",
     display: "grid",
@@ -58,9 +62,8 @@ const useStyles = makeStyles((theme) => ({
   sectionTwo: {},
   tabSection: {},
   titleName: {
-    fontWeight: "700",
-    fontSize: "1.625em",
-    marginBottom: "1em",
+    fontWeight: "800",
+    textTransform: "uppercase",
   },
 
   colorBg: {
@@ -74,11 +77,21 @@ const useStyles = makeStyles((theme) => ({
     height: "auto",
     objectFit: "cover",
   },
+  topicTitle: {
+    "&:hover": {
+      cursor: "pointer",
+      color: "#e91e63",
+    },
+  },
+  selectedTopic: {
+    color: "#e91e63",
+  },
 }));
 const TermsAndCondition = () => {
   const classes = useStyles();
   const { token } = useAuthContext();
   const [rows, setRows] = React.useState([]);
+  const [selected, setSelected] = React.useState(0);
 
   React.useEffect(() => {
     const controller = new AbortController();
@@ -108,6 +121,9 @@ const TermsAndCondition = () => {
       controller.abort();
     };
   }, []);
+  const changeTopic = (index) => {
+    setSelected(index);
+  };
   return (
     <Box>
       <Box className={classes.sectionOne}>
@@ -129,26 +145,53 @@ const TermsAndCondition = () => {
           </Typography>
         </Grid>
       </Box>
-      <Box className={classes.wrapper}>
-        <Box className={classes.container}>
-          <Grid container className={classes.sectionTwo}>
-            <Grid
-              item
-              display={{ xs: "none", sm: "none", md: "block", lg: "block" }}
-              sm={0}
-              sm={0}
-              md={3}>
-              <img className={classes.imgSection} src={talking} alt="" />
+      {rows.length > 0 && (
+        <Box className={classes.wrapper}>
+          <Box className={classes.container}>
+            <Grid container className={classes.sectionTwo}>
+              <Grid
+                item
+                display={{ xs: "none", sm: "none", md: "block", lg: "block" }}
+                sm={0}
+                sm={0}
+                md={3}>
+                <Typography
+                  variant="body1"
+                  className={classes.titleName}
+                  component={"div"}
+                  gutterBottom>
+                  Topics
+                </Typography>
+                {rows.map((item, index) => (
+                  <Box>
+                    <Typography
+                      variant="body1"
+                      component={"div"}
+                      onClick={() => changeTopic(index)}
+                      gutterBottom
+                      className={`${classes.topicTitle} ${
+                        index === selected ? classes.selectedTopic : ""
+                      }`}>
+                      {item.title}
+                    </Typography>
+                  </Box>
+                ))}
+              </Grid>
+              <Grid item xs={0} sm={0} md={1}></Grid>
+              <Grid item xs={12} sm={12} md={8}>
+                <Box>
+                  <Typography variant="h5" component={"div"} gutterBottom>
+                    {rows[selected].title}
+                  </Typography>
+                  <Typography variant="body1" component={"div"} gutterBottom>
+                    {rows[selected].content}
+                  </Typography>
+                </Box>
+              </Grid>
             </Grid>
-            <Grid item xs={0} sm={0} md={1}></Grid>
-            <Grid item xs={12} sm={12} md={8}>
-              {rows.map((item, index) => (
-                <Box>{item.content}</Box>
-              ))}
-            </Grid>
-          </Grid>
+          </Box>
         </Box>
-      </Box>
+      )}
     </Box>
   );
 };

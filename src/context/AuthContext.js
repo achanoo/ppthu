@@ -6,12 +6,15 @@ import { useHistory } from "react-router";
 import reducer from "../reducers/authReducers";
 
 import { BaseUrl } from "./../helpers/Constant";
+import api from "./../services/apifinal.service";
+import axio from "axios";
+import tokenService from "../services/token.service";
 
 const AuthContext = React.createContext();
 
 const initialStates = {
   isAuthenticated: false,
-  token: JSON.parse(localStorage.getItem("token")) || "",
+  token: tokenService.getLocalAccessToken() || "",
   loading: false,
   erors: false,
   user: JSON.parse(localStorage.getItem("user")) || {},
@@ -38,23 +41,35 @@ const AuthProvider = ({ children }) => {
 
   const loginbyAccount = async (formdata) => {
     //console.log(formdata)
-    try {
-      const response = await axios({
-        method: "post",
-        url: `${BaseUrl}/auth/login`,
-        data: formdata,
-      });
-      const data = response.data.data;
-      if (data.status === "Active") {
-        localStorage.setItem("token", JSON.stringify(data.access_token));
-        localStorage.setItem("user", JSON.stringify(data));
-        dispatch({ type: "LOGIN_SUCCESS", payload: data });
-        history.push("/home");
-      }
-    } catch (error) {
-      //dispatch({ type: GET_PRODUCTS_ERROR })
-      console.log("there is no error!");
-    }
+    // api
+    //   .post("/auth/login", {
+    //     email: formdata.email,
+    //     password: formdata.password,
+    //   })
+    //   .then((response) => (response) => {
+    //     console.log(response);
+    //     const data = response.data.data;
+    //     if (data.status === "Active") {
+    //       localStorage.setItem("refresh", 1);
+    //       localStorage.setItem("user", JSON.stringify(data));
+    //       dispatch({ type: "LOGIN_SUCCESS", payload: data });
+    //       history.push("/home");
+    //     }
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //     const resMessage =
+    //       (error.response &&
+    //         error.response.data &&
+    //         error.response.data.message) ||
+    //       error.message ||
+    //       error.toString();
+    //     console.log(resMessage);
+    //   });
+    api.post("/auth/login", formdata).then(
+      (res) => console.log(res),
+      (error) => console.log(error)
+    );
   };
 
   const logout = () => {
