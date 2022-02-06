@@ -191,14 +191,17 @@ const AuthProvider = ({ children }) => {
 
   const getRegions = async () => {
     try {
-      const response = await axios({
+      {
+        /* const response = await axios({
         method: "get",
         url: `${BaseUrl}/region`,
         headers: {
           Accept: "application/json",
           Authorization: `Bearer ${state.token}`,
         },
-      });
+      }); */
+      }
+      const response = await api.get("/region");
       if (response.status === 200) {
         dispatch({ type: "REGION_LOAD", payload: response.data.data });
       }
@@ -210,7 +213,8 @@ const AuthProvider = ({ children }) => {
   const updatetoCreator = async (data) => {
     dispatch({ type: "SET_LOADING" });
     try {
-      const response = await axios({
+      {
+        /* const response = await axios({
         method: "post",
         url: `${BaseUrl}/user/update`,
         data: data,
@@ -219,7 +223,9 @@ const AuthProvider = ({ children }) => {
           "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${state.token}`,
         },
-      });
+      }); */
+      }
+      const response = await api.post("/user/update", data);
       if (response.data.status) {
         let data = getUserData();
         console.log("it is working");

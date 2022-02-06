@@ -41,7 +41,7 @@ import MaleIcon from "@mui/icons-material/Male";
 import SelectOption from "./../../layout/SelectOption";
 import { useEffect } from "react";
 import { useAuthContext } from "../../context/AuthContext";
-import axios from "axios";
+import api from "../../services/apifinal.service";
 import TierUpdate from "../../components/TierUpdate";
 import {
   BaseUrl,
@@ -250,10 +250,8 @@ const EditProfile = () => {
   };
 
   const getData = () => {
-    axios
-      .get(`${BaseUrl}/user`, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
+    api
+      .get("/user")
       .then((res) => {
         const response = res.data.data;
         console.log(res);
