@@ -5,55 +5,28 @@ import {
   Typography,
   Box,
   OutlinedInput,
-  FormHelperText,
   InputAdornment,
   ButtonGroup,
   Button,
 } from "@mui/material";
 import moment from "moment";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemText from "@mui/material/ListItemText";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
-import RemoveCircleOutlineSharpIcon from "@mui/icons-material/RemoveCircleOutlineSharp";
-import styled from "styled-components";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import Grid from "@mui/material/Grid";
-import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import TextField from "@mui/material/TextField";
-import Radio from "@mui/material/Radio";
-import RadioGroup from "@mui/material/RadioGroup";
 import badge from "../assets/menu/badge.svg";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import JoditEditor from "jodit-react";
-import Link from "@mui/material/Link";
-import {
-  CheckCircle,
-  RadioButtonUnchecked,
-  SocialDistanceRounded,
-} from "@mui/icons-material";
 import "../assets/style.css";
 import Avatar from "@mui/material/Avatar";
 import { FiEdit3 } from "react-icons/fi";
 import { makeStyles } from "@mui/styles";
 import { CButton } from "../layout/CCButton";
 import { coverphoto } from "../assets/data";
-import TextareaAutosize from "@mui/material/TextareaAutosize";
 import FemaleIcon from "@mui/icons-material/Female";
 import MaleIcon from "@mui/icons-material/Male";
 import SelectOption from "./../layout/SelectOption";
 import { useHistory } from "react-router";
 import { useAuthContext } from "../context/AuthContext";
 import { useEffect } from "react";
-import axios from "axios";
-import {
-  BaseUrl,
-  getFullUrl,
-  RBaseUrl,
-  changeSocials,
-} from "../helpers/Constant";
+import { getFullUrl, RBaseUrl, changeSocials } from "../helpers/Constant";
 const useStyles = makeStyles((theme) => ({
   underline: {
     "&&&:before": {
@@ -70,13 +43,14 @@ const useStyles = makeStyles((theme) => ({
     placeItems: "center",
     [theme.breakpoints.only("xs")]: {
       display: "block",
+      padding: "20px",
     },
   },
   container: {
     width: "90vw",
     maxWidth: "700px",
     textAlign: "center",
-    height: "auto",
+    marginBottom: "40px",
     [theme.breakpoints.only("xs")]: {
       width: "100%",
     },

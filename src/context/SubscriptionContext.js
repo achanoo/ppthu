@@ -102,6 +102,15 @@ const SubscriptionProvider = ({ children }) => {
     }
   };
 
+  const getUserSubscriptions = async () => {
+    const response = await axios({
+      method: "get",
+      url: `${BaseUrl}/user/user-subscriptions`,
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data;
+  };
+
   const getCategories = async () => {
     dispatch({ type: "SET_LOADING" });
     if (typeof cancelToken != typeof undefined) {
@@ -148,6 +157,7 @@ const SubscriptionProvider = ({ children }) => {
         getSubscriptions,
         createSubscriptions,
         getCategories,
+        getUserSubscriptions,
         getEarningOverview,
       }}>
       {children}

@@ -1,12 +1,9 @@
 /** @format */
 
 import React from "react";
-
-import PropTypes from "prop-types";
 import {
   Grid,
   FormControlLabel,
-  FormControl,
   FormLabel,
   RadioGroup,
   Radio,
@@ -18,7 +15,6 @@ import LinearProgress from "@mui/material/LinearProgress";
 import axios from "axios";
 import { BaseUrl } from "../helpers/Constant";
 import { useAuthContext } from "../context/AuthContext";
-import set from "date-fns/set";
 
 function LinearProgressWithLabel({ value }) {
   return (

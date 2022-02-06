@@ -82,7 +82,12 @@ export default function AccountMenu() {
         }}
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}>
-        <MenuItem onClick={() => history.push("/creator-profile")}>
+        <MenuItem
+          onClick={() => {
+            user.role === "creator"
+              ? history.push(`/creator-profile/${user.profile_url}`)
+              : history.push(`/user-profile`);
+          }}>
           Personal Information
         </MenuItem>
         <MenuItem onClick={() => history.push("/rsmanager")}>
@@ -91,10 +96,20 @@ export default function AccountMenu() {
         <MenuItem onClick={() => history.push("/earnings-overview")}>
           My Earnings
         </MenuItem>
-        <MenuItem onClick={() => history.push("/user-profile")}>
+        <MenuItem onClick={() => history.push("/membership")}>
+          Manage Memberships
+        </MenuItem>
+
+        <MenuItem
+          style={{ display: "none" }}
+          onClick={() => {
+            user.role === "creator"
+              ? history.push(`/creator-profile/${user.profile_url}`)
+              : history.push(`/user-profile`);
+          }}>
           Setting
         </MenuItem>
-        <MenuItem>Help & FAQ</MenuItem>
+        <MenuItem onClick={() => history.push("/faq")}>Help & FAQ</MenuItem>
         <MenuItem onClick={() => logout()}>Logout</MenuItem>
       </Menu>
     </React.Fragment>

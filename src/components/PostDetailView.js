@@ -1,34 +1,15 @@
 /** @format */
 
 import * as React from "react";
-import PropTypes from "prop-types";
-import { Link, useParams, generatePath, useHistory } from "react-router-dom";
-import { styled, alpha } from "@mui/material/styles";
+import { useParams, useHistory } from "react-router-dom";
+import { styled } from "@mui/material/styles";
 import { makeStyles } from "@mui/styles";
-import styles from "./../assets/post.module.css";
 import Popover from "@mui/material/Popover";
-import Menu from "@mui/material/Menu";
 import Badge from "@mui/material/Badge";
-import MenuItem from "@mui/material/MenuItem";
 import TextareaAutosize from "@mui/material/TextareaAutosize";
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
-import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import Grid from "@mui/material/Grid";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
-import { CustomButton } from "./../layout/CutomerButton";
-import imgurl from "../assets/images/subscriptions.png";
-import {
-  Avatar,
-  Button,
-  Divider,
-  IconButton,
-  FormGroup,
-  FormControlLabel,
-  Checkbox,
-} from "@mui/material";
+import { Avatar, Button, Divider, IconButton } from "@mui/material";
 import IosShareIcon from "@mui/icons-material/IosShare";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteOutlinedIcon from "@mui/icons-material/FavoriteOutlined";
@@ -36,15 +17,11 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import ImageGrid from "./../components/Gridview";
-import { postPhoto } from "./../assets/data";
-import { BaseUrl, ImgUrl, customFetcher } from "../helpers/Constant";
 import { usePostContext } from "../context/PostContext";
-import CommentBox from "./CommentBox";
 import { useAuthContext } from "../context/AuthContext";
 import { getFullUrl } from "../helpers/Constant";
 import { Audio } from "./Audio";
 import LinkPreview from "./LinkPreview";
-import axios from "axios";
 import moment from "moment";
 import { SiOpenaccess } from "react-icons/si";
 import { MdOutlinePublic } from "react-icons/md";
@@ -140,9 +117,7 @@ const useStyles = makeStyles((theme) => ({
   //   overflow: "scroll",
   // },
   // comment start
-  commentSection: {
-    padding: "20px !important",
-  },
+
   commentInfo: {
     display: "flex",
     marginBottom: theme.spacing(2),
@@ -175,7 +150,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   commentSection: {
-    padding: "10px",
+    padding: "20px",
     textAlign: "start",
     flexGrow: "1",
     "& h4": {
@@ -229,10 +204,9 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
 const PostDetailModel = (props) => {
   const { id } = useParams();
   const history = useHistory();
-  const { user: authUser, token } = useAuthContext();
-  const [post, setPost] = React.useState({});
+  const { user: authUser } = useAuthContext();
+  // const [post, setPost] = React.useState({});
   const {
-    getPostByid,
     LikeHandle,
     RemoveLike,
     CommentCreate,
@@ -253,7 +227,7 @@ const PostDetailModel = (props) => {
   const [comment, setComment] = React.useState("");
   const [reply, setReply] = React.useState("");
 
-  const [urlData, setUrlData] = React.useState({});
+  // const [urlData, setUrlData] = React.useState({});
 
   const [limit, setLimit] = React.useState({
     comment: 2,
@@ -275,14 +249,14 @@ const PostDetailModel = (props) => {
 
   const classes = useStyles();
   const [more, setMore] = React.useState(true);
-  const showMore = (e) => {
+  /*const showMore = (e) => {
     e.preventDefault();
     setMore(!more);
-  };
+  };*/
 
   // for link pop up
   const [popanchorEl, setPopAnchorEl] = React.useState(null);
-  const [selectedPoll, setSelectedPoll] = React.useState(0);
+  // const [selectedPoll, setSelectedPoll] = React.useState(0);
 
   const handelPopLinkshare = (event) => {
     // console.log('helo');
@@ -294,7 +268,7 @@ const PostDetailModel = (props) => {
   };
 
   const openLinkShare = Boolean(popanchorEl);
-  const shareid = openLinkShare ? "simple-popper" : undefined;
+  // const shareid = openLinkShare ? "simple-popper" : undefined;
 
   // start here
   const {
@@ -318,14 +292,14 @@ const PostDetailModel = (props) => {
     },
   } = props.post;
   const { profile_image, user } = props.post.creator.user_info;
-  const { name, id: userId } = user;
+  const { name } = user;
 
   //  console.log(link);
   let newimgs = [];
-  let linkobj = { image: "", url: "", description: "", title: "" };
+  // let linkobj = { image: "", url: "", description: "", title: "" };
 
   const islike = likes.some(function (el) {
-    return el.user_info.user.id == authUser.id;
+    return el.user_info.user.id === authUser.id;
   });
 
   const deleteLike = (postid) => {
@@ -349,14 +323,14 @@ const PostDetailModel = (props) => {
 
   // action start
 
-  const inputHandle = (e) => {
+  /* const inputHandle = (e) => {
     const { name, value } = e.target;
     console.log(name, value);
     //   setCommentValue(prev => ({
     //     ...prev,
     //     [name]:value
     //  }))
-  };
+  };*/
   const handleArea = (e) => {
     const { name, value } = e.target;
     if (name === "comment") {
@@ -459,10 +433,10 @@ const PostDetailModel = (props) => {
     }));
   };
 
-  const handlePolloption = (pollid) => {
-    pollAction(pollid);
-    props.changeData();
-  };
+  // const handlePolloption = (pollid) => {
+  //   pollAction(pollid);
+  //   props.changeData();
+  // };
 
   const editPost = (postid) => {
     // console.log(postid);

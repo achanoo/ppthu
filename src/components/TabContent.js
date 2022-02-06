@@ -2,13 +2,10 @@
 
 import * as React from "react";
 import PropTypes from "prop-types";
-import { Link, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { styled, alpha } from "@mui/material/styles";
 import { makeStyles } from "@mui/styles";
-import styles from "./../assets/post.module.css";
 import Menu from "@mui/material/Menu";
-import Badge from "@mui/material/Badge";
-import Popover from "@mui/material/Popover";
 import MenuItem from "@mui/material/MenuItem";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
@@ -17,34 +14,12 @@ import Box from "@mui/material/Box";
 import { AiOutlineDownCircle } from "react-icons/ai";
 import { CustomButton } from "./../layout/CutomerButton";
 import imgurl from "../assets/images/subscriptions.png";
-import {
-  Avatar,
-  Button,
-  Divider,
-  formControlClasses,
-  IconButton,
-  TextareaAutosize,
-} from "@mui/material";
-import IosShareIcon from "@mui/icons-material/IosShare";
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import FavoriteOutlinedIcon from "@mui/icons-material/FavoriteOutlined";
-import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import ImageGrid from "./../components/Gridview";
-import { postPhoto } from "./../assets/data";
-import PostDetailModel from "./PostDetailView";
-import { usePostContext } from "../context/PostContext";
+import { Avatar } from "@mui/material";
 import { getFullUrl } from "./../helpers/Constant";
-import { Audio } from "./Audio";
-import LinkPreview from "./LinkPreview";
 import { useAuthContext } from "../context/AuthContext";
-import CommentBox from "./CommentBox";
 import { BaseUrl } from "./../helpers/Constant";
 import axios from "axios";
-import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
-import { bgcolor } from "@mui/system";
 import PostDetailView from "./../components/PostDetailView";
-import moment from "moment";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -223,9 +198,7 @@ const useStyles = makeStyles((theme) => ({
     overflow: "hidden",
   },
   // comment start
-  commentSection: {
-    padding: "20px !important",
-  },
+
   commentInfo: {
     display: "flex",
     justifyContent: "space-between",
@@ -260,7 +233,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   commentSection: {
-    padding: "10px",
+    padding: "20px",
     textAlign: "start",
     flexGrow: "1",
     "& h4": {
@@ -297,14 +270,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const StyledBadge = styled(Badge)(({ theme }) => ({
+/*const StyledBadge = styled(Badge)(({ theme }) => ({
   "& .MuiBadge-badge": {
     right: -3,
     top: 13,
     border: `2px solid ${theme.palette.background.paper}`,
     padding: "0 4px",
   },
-}));
+}));*/
 
 //1 for all, 2 for public and 3 all creator
 
@@ -313,7 +286,7 @@ const BasicTabs = (props) => {
   // console.log(posts);
   const [loading, setLoading] = React.useState(true);
   const [posts, setPost] = React.useState([]);
-  const { user: authUser, token } = useAuthContext();
+  const { token } = useAuthContext();
   const [changes, setChange] = React.useState(false);
   const [value, setValue] = React.useState(0);
   const [creators, setCreator] = React.useState([]);
@@ -390,7 +363,7 @@ const BasicTabs = (props) => {
     return () => {
       setCreator([]);
     };
-  }, [changes, value, selectedCreator]);
+  }, [changes, value, selectedCreator, type]);
 
   //  React.useEffect(() => {
   //    setIsSetData(true);

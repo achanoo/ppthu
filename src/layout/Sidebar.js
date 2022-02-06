@@ -56,7 +56,7 @@ export default function TemporaryDrawer({ props }) {
   const classes = useStyles();
   const [toggle, setToggle] = useState(false);
 
-  const { logout } = useAuthContext();
+  const { isAuthentiacted, user, logout } = useAuthContext();
 
   const closeSidebar = () => setToggle(!toggle);
 
@@ -128,7 +128,9 @@ export default function TemporaryDrawer({ props }) {
           button
           key="Personal Information"
           onClick={() => {
-            history.push("/creator-profile");
+            user.role === "creator"
+              ? history.push(`/creator-profile/${user.profile_url}`)
+              : history.push(`/user-profile`);
             closeSidebar();
           }}>
           <ListItemIcon>
@@ -155,7 +157,7 @@ export default function TemporaryDrawer({ props }) {
           button
           key="Manage Memberships"
           onClick={() => {
-            history.push("/rsmanager");
+            history.push("/membership");
             closeSidebar();
           }}>
           <ListItemIcon>
@@ -183,6 +185,44 @@ export default function TemporaryDrawer({ props }) {
         <Divider style={{ margin: "0px 18px" }} />
         <ListItem
           button
+          key="Relationship Manager"
+          style={{ display: user.role === "creator" ? "" : "none" }}
+          onClick={() => history.push("/rsmanager")}>
+          <ListItemIcon>
+            <Avatar
+              alt="Remy Sharp"
+              src={creditCard}
+              sx={{ width: 25, height: 25 }}
+            />
+          </ListItemIcon>
+          <ListItemText primary="Relationship Manager" />
+        </ListItem>
+
+        <Divider
+          style={{
+            margin: "0px 18px",
+            display: user.role === "creator" ? "" : "none",
+          }}
+        />
+
+        <ListItem
+          button
+          key=" My Earnings"
+          style={{ display: user.role === "creator" ? "" : "none" }}
+          onClick={() => history.push("/earnings-overview")}>
+          <ListItemIcon>
+            <Avatar
+              alt="Remy Sharp"
+              src={creditCard}
+              sx={{ width: 25, height: 25 }}
+            />
+          </ListItemIcon>
+          <ListItemText primary=" My Earnings" />
+        </ListItem>
+
+        <Divider style={{ margin: "0px 18px" }} />
+        <ListItem
+          button
           key="Become a creator"
           onClick={() => {
             history.push("/edit");
@@ -202,6 +242,7 @@ export default function TemporaryDrawer({ props }) {
         <ListItem
           button
           key="Settings"
+          style={{ display: "none" }}
           onClick={() => {
             history.push("/user-profile");
             closeSidebar();
@@ -213,7 +254,7 @@ export default function TemporaryDrawer({ props }) {
               sx={{ width: 25, height: 25 }}
             />
           </ListItemIcon>
-          <ListItemText primary="Settings" />
+          <ListItemText primary="Settings" st />
         </ListItem>
 
         <Divider style={{ margin: "0px 18px" }} />

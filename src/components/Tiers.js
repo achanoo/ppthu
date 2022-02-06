@@ -1,14 +1,9 @@
 /** @format */
 
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import { useSubscriptionContext } from "../context/SubscriptionContext";
 import Loading from "./../components/Loading";
-import {
-  Typography,
-  OutlinedInput,
-  FormHelperText,
-  InputAdornment,
-} from "@mui/material";
+import { Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import Card from "@mui/material/Card";
 import Avatar from "@mui/material/Avatar";
@@ -18,13 +13,11 @@ import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Editor from "./../components/Editor";
-import Link from "@mui/material/Link";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import "../assets/style.css";
-import { ClassNames } from "@emotion/react";
 import { useAuthContext } from "../context/AuthContext";
 
 const useStyles = makeStyles((theme) => ({
@@ -56,23 +49,15 @@ let initialdata = {
 const Tiers = () => {
   const classes = useStyles();
   const { user } = useAuthContext();
-  const {
-    setLevel,
-    setPrice,
-    setImage,
-    setDescription,
-    getSubscriptions,
-    subscriptions,
-    isloading,
-    createSubscriptions,
-  } = useSubscriptionContext();
+  const { getSubscriptions, subscriptions, isloading, createSubscriptions } =
+    useSubscriptionContext();
   // console.log(data)
   const [state, setState] = React.useState(initialdata);
-  const [open, setOpen] = React.useState(false);
-  const createPlan = React.useRef();
-  const editPlan = React.useRef();
+  // const [open, setOpen] = React.useState(false);
+  // const createPlan = React.useRef();
+  // const editPlan = React.useRef();
 
-  const editor = useRef(null);
+  // const editor = useRef(null);
   const [content, setContent] = useState("");
   const [fullWidth, setFullWidth] = React.useState(true);
   const [maxWidth, setMaxWidth] = React.useState("sm");

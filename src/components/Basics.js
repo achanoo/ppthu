@@ -5,7 +5,6 @@ import {
   Typography,
   Box,
   OutlinedInput,
-  FormHelperText,
   InputAdornment,
   ButtonGroup,
   Button,
@@ -16,44 +15,22 @@ import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import RemoveCircleOutlineSharpIcon from "@mui/icons-material/RemoveCircleOutlineSharp";
-import styled from "styled-components";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import Grid from "@mui/material/Grid";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import TextField from "@mui/material/TextField";
-import Radio from "@mui/material/Radio";
-import RadioGroup from "@mui/material/RadioGroup";
 import badge from "../assets/menu/badge.svg";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import JoditEditor from "jodit-react";
-import Link from "@mui/material/Link";
-import {
-  CheckCircle,
-  RadioButtonUnchecked,
-  SocialDistanceRounded,
-} from "@mui/icons-material";
 import "../assets/style.css";
 import Avatar from "@mui/material/Avatar";
 import { FiEdit3 } from "react-icons/fi";
 import { makeStyles } from "@mui/styles";
 import { CButton } from "../layout/CCButton";
 import { coverphoto } from "../assets/data";
-import TextareaAutosize from "@mui/material/TextareaAutosize";
 import FemaleIcon from "@mui/icons-material/Female";
 import MaleIcon from "@mui/icons-material/Male";
 import SelectOption from "./../layout/SelectOption";
-import { useHistory } from "react-router";
 import { useAuthContext } from "../context/AuthContext";
 import { useEffect } from "react";
-import axios from "axios";
-import {
-  BaseUrl,
-  getFullUrl,
-  RBaseUrl,
-  changeSocials,
-} from "../helpers/Constant";
+import { getFullUrl, RBaseUrl, changeSocials } from "../helpers/Constant";
 const useStyles = makeStyles((theme) => ({
   underline: {
     "&&&:before": {
@@ -64,18 +41,19 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   wrapper: {
-    minHeight: "100vh",
+    maxHeight: "100vh",
     display: "grid",
     placeItems: "center",
     [theme.breakpoints.only("xs")]: {
       display: "block",
+      padding: "0px",
     },
   },
   container: {
     width: "90vw",
     maxWidth: "700px",
     textAlign: "center",
-    height: "auto",
+
     [theme.breakpoints.only("xs")]: {
       width: "100%",
     },
@@ -265,14 +243,13 @@ const Basic = () => {
     regions,
     user: authUser,
     updatetoCreator,
-    loading,
     getUserData,
   } = useAuthContext();
-  const { role, name } = authUser;
+  const { role } = authUser;
   // console.log(role);
-  const [dense, setDense] = React.useState(false);
-  const [secondary, setSecondary] = React.useState(false);
-  const [userInfo, setUserInfo] = React.useState("");
+  // const [dense, setDense] =  React.useState(false);
+  // const [secondary, setSecondary] = React.useState(false);
+  // const [userInfo, setUserInfo] = React.useState("");
 
   const [errors, setErrors] = useState({
     cover: "",
@@ -291,17 +268,17 @@ const Basic = () => {
     urlKeyword: "",
   });
 
-  const [emailorphone, setEmailorphone] = React.useState({
-    isEmail: true,
-    isPhone: true,
-  });
+  // const [emailorphone, setEmailorphone] = React.useState({
+  //   isEmail: true,
+  //   isPhone: true,
+  // });
 
-  const history = useHistory();
+  // const history = useHistory();
   const classes = useStyles();
-  const editor = useRef(null);
+  // const editor = useRef(null);
   const cover = useRef(null);
   const profile = useRef(null);
-  const [content, setContent] = useState("");
+  // const [content, setContent] = useState("");
 
   const [state, setState] = useState(initalData);
   const [social, setSocial] = useState({
@@ -319,20 +296,20 @@ const Basic = () => {
     { id: 8, name: "others" },
   ];
 
-  const places = ["yangon", "mandalay", "sagaing"];
+  // const places = ["yangon", "mandalay", "sagaing"];
 
-  const config = {
-    readonly: false, // all options from https://xdsoft.net/jodit/doc/
-  };
+  // const config = {
+  //   readonly: false, // all options from https://xdsoft.net/jodit/doc/
+  // };
 
-  const NewgetValue = (value) => {
-    console.log(value);
-    // setState({ ...state, isError })
-  };
+  // const NewgetValue = (value) => {
+  //   console.log(value);
+  //   // setState({ ...state, isError })
+  // };
 
-  const goToHome = () => {
-    history.push("/creator-home");
-  };
+  // const goToHome = () => {
+  //   history.push("/creator-home");
+  // };
 
   const inputChange = (e) => {
     const { name, value, files } = e.target;
@@ -367,7 +344,7 @@ const Basic = () => {
 
   const addMore = () => {
     let acc = [];
-    let cc = [];
+    // let cc = [];
     let { socials } = state;
     acc.push(social.name);
     acc.push(social.link);
@@ -494,12 +471,12 @@ const Basic = () => {
     if (getData) {
       getRegions();
       let data = getUserData();
-      let { email, phone, role } = state;
-      let userphone = "";
-      let useremail = "";
-      let name = "";
-      {
-        /* data.then(r=>{
+      // let { email, phone, role } = state;
+      // let userphone = "";
+      // let useremail = "";
+      // let name = "";
+      /*{
+         data.then(r=>{
 
        if(r.data.hasOwnProperty("user_info")){
          userphone =r.data.user_info.user.phone_no;
@@ -542,8 +519,8 @@ const Basic = () => {
           
         }))
 
-     }) */
-      }
+     }) 
+      }*/
       data.then((r) => {
         let userdata = null;
         console.log(r);
@@ -667,7 +644,7 @@ const Basic = () => {
     <div className={classes.wrapper}>
       <div className={classes.container}>
         <Typography variant="h4" gutterBottom component="div">
-          Complete to Become a Creator
+          Complete to Become a Creator helo
         </Typography>
 
         <Box className={`${classes.firstinfo}`}>
@@ -764,6 +741,7 @@ const Basic = () => {
                   ? showimage(state.cover)
                   : getFullUrl(state.oldcover)
               }`}
+              alt="cover-img"
               style={{ width: "100%", height: "100%", objectFit: "cover" }}
             />
           </Box>
@@ -945,7 +923,7 @@ const Basic = () => {
             fullWidth
             name="email"
             value={state.email}
-            readOnly={emailorphone.isEmail}
+            readOnly={true}
             variant="standard"
             placeholder="example@gmail.com"
           />

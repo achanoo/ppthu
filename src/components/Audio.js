@@ -1,30 +1,32 @@
-import React, { useState, useRef, useEffect } from 'react'
+/** @format */
+
+import React, { useState, useRef } from "react";
 // import styles from '../assets/AudioPlayer.module.css'
 
-import styles from '../assets/CusAudioPlayer.module.css'
-import { FaBackward } from 'react-icons/fa'
-import { FaForward } from 'react-icons/fa'
-import { FaPlay } from 'react-icons/fa'
-import { FaPause } from 'react-icons/fa'
+import styles from "../assets/CusAudioPlayer.module.css";
+import { FaBackward } from "react-icons/fa";
+import { FaForward } from "react-icons/fa";
+import { FaPlay } from "react-icons/fa";
+import { FaPause } from "react-icons/fa";
 
 const Audio = ({ audio }) => {
   // console.log(ImgUrl+audio);
   // console.log(audio);
   // state
-  const [isPlaying, setIsPlaying] = useState(false)
-  const [duration, setDuration] = useState(0)
-  const [currentTime, setCurrentTime] = useState(0)
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [duration, setDuration] = useState(0);
+  const [currentTime, setCurrentTime] = useState(0);
 
   // references
-  const audioPlayer = useRef() // reference our audio component
-  const progressBar = useRef() // reference our progress bar
-  const animationRef = useRef() // reference the animation
+  const audioPlayer = useRef(); // reference our audio component
+  const progressBar = useRef(); // reference our progress bar
+  const animationRef = useRef(); // reference the animation
 
   const readyHandle = () => {
-    const seconds = Math.floor(audioPlayer.current.duration)
-    setDuration(seconds)
-    progressBar.current.max = seconds
-  }
+    const seconds = Math.floor(audioPlayer.current.duration);
+    setDuration(seconds);
+    progressBar.current.max = seconds;
+  };
 
   // useEffect(() => {
   //   const seconds = Math.floor(audioPlayer.current.duration)
@@ -33,53 +35,53 @@ const Audio = ({ audio }) => {
   // }, [audioPlayer?.current?.loadedmetadata, audioPlayer?.current?.readyState])
 
   const calculateTime = (secs) => {
-    const minutes = Math.floor(secs / 60)
-    const returnedMinutes = minutes < 10 ? `0${minutes}` : `${minutes}`
-    const seconds = Math.floor(secs % 60)
-    const returnedSeconds = seconds < 10 ? `0${seconds}` : `${seconds}`
-    return `${returnedMinutes}:${returnedSeconds}`
-  }
+    const minutes = Math.floor(secs / 60);
+    const returnedMinutes = minutes < 10 ? `0${minutes}` : `${minutes}`;
+    const seconds = Math.floor(secs % 60);
+    const returnedSeconds = seconds < 10 ? `0${seconds}` : `${seconds}`;
+    return `${returnedMinutes}:${returnedSeconds}`;
+  };
 
   const togglePlayPause = () => {
-    const prevValue = isPlaying
-    setIsPlaying(!prevValue)
+    const prevValue = isPlaying;
+    setIsPlaying(!prevValue);
     if (!prevValue) {
-      audioPlayer.current.play()
-      animationRef.current = requestAnimationFrame(whilePlaying)
+      audioPlayer.current.play();
+      animationRef.current = requestAnimationFrame(whilePlaying);
     } else {
-      audioPlayer.current.pause()
-      cancelAnimationFrame(animationRef.current)
+      audioPlayer.current.pause();
+      cancelAnimationFrame(animationRef.current);
     }
-  }
+  };
 
   const whilePlaying = () => {
-    progressBar.current.value = audioPlayer.current.currentTime
-    changePlayerCurrentTime()
-    animationRef.current = requestAnimationFrame(whilePlaying)
-  }
+    progressBar.current.value = audioPlayer.current.currentTime;
+    changePlayerCurrentTime();
+    animationRef.current = requestAnimationFrame(whilePlaying);
+  };
 
   const changeRange = () => {
-    audioPlayer.current.currentTime = progressBar.current.value
-    changePlayerCurrentTime()
-  }
+    audioPlayer.current.currentTime = progressBar.current.value;
+    changePlayerCurrentTime();
+  };
 
   const changePlayerCurrentTime = () => {
     progressBar.current.style.setProperty(
-      '--seek-before-width',
+      "--seek-before-width",
       `${(progressBar.current.value / duration) * 100}%`
-    )
-    setCurrentTime(progressBar.current.value)
-  }
+    );
+    setCurrentTime(progressBar.current.value);
+  };
 
   const backRange = () => {
-    progressBar.current.value = Number(progressBar.current.value - 15)
-    changeRange()
-  }
+    progressBar.current.value = Number(progressBar.current.value - 15);
+    changeRange();
+  };
 
   const forwardRange = () => {
-    progressBar.current.value = Number(progressBar.current.value + 15)
-    changeRange()
-  }
+    progressBar.current.value = Number(progressBar.current.value + 15);
+    changeRange();
+  };
 
   return (
     <div className={styles.audioContainer}>
@@ -87,10 +89,9 @@ const Audio = ({ audio }) => {
       <div className={styles.audioDiv}>
         <div className={styles.audioPlayer}>
           <audio
-             ref={audioPlayer}
+            ref={audioPlayer}
             src={audio}
-            onLoadedMetadata={readyHandle}
-          ></audio>
+            onLoadedMetadata={readyHandle}></audio>
           <div className={styles.audioOptions}>
             <button className={styles.forwardBackward} onClick={backRange}>
               <FaBackward />
@@ -112,9 +113,9 @@ const Audio = ({ audio }) => {
             {/* progress bar */}
             <div className={styles.range}>
               <input
-                type='range'
+                type="range"
                 className={styles.progressBar}
-                defaultValue='0'
+                defaultValue="0"
                 ref={progressBar}
                 onChange={changeRange}
               />
@@ -128,7 +129,7 @@ const Audio = ({ audio }) => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export { Audio }
+export { Audio };

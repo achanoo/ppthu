@@ -1,7 +1,6 @@
 /** @format */
 
 import React from "react";
-import { Link } from "react-router-dom";
 import {
   Card,
   CardMedia,
@@ -24,17 +23,12 @@ const LinkPreview = ({ link }) => {
   // console.log(link);
   React.useEffect(() => {
     customFetcher(link).then((data) => {
-    if (data !== '') {
-      setLinkData(data);
-    setLoading(false);
-    }
-    
-  });
-  }, [link])
-  
-
-
-  
+      if (data !== "") {
+        setLinkData(data);
+        setLoading(false);
+      }
+    });
+  }, [link]);
 
   if (loading) {
     return <h3>loading...</h3>;
@@ -60,7 +54,6 @@ const LinkPreview = ({ link }) => {
       </CardContent>
       <CardActions>
         <a href={url} target="_blank">
-          {" "}
           <Button size="small">Learn More</Button>
         </a>
       </CardActions>

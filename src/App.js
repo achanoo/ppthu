@@ -1,7 +1,7 @@
 /** @format */
 
 import React from "react";
-import { NavBar, ImageGrid } from "./components";
+import { NavBar } from "./components";
 import {
   Home,
   Footer,
@@ -19,24 +19,18 @@ import {
   StepTwo,
   EditProfile,
   UserProfile,
+  Membership,
   PostEdit,
+  Faq,
+  TermsAndCondition,
 } from "./pages/";
 
 import RSManager from "./pages/creator/RSManager";
 import EarningsOverview from "./pages/creator/EarningsOverview";
 import EarningsOverviewDetail from "./pages/creator/EarningsOverviewDetail";
 import CheckOutModel from "./components/CheckoutModel";
-import PrivateRoute from "./routes/PrivateRoute";
 import "./App.css";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link,
-  useHistory,
-} from "react-router-dom";
-
-import { RouterRounded } from "@mui/icons-material";
+import { Switch, Route } from "react-router-dom";
 
 function App() {
   return (
@@ -59,6 +53,7 @@ function App() {
           path="/earnings-overview-detail"
           component={EarningsOverviewDetail}
         />
+        <Route path="/membership" component={Membership} />
 
         <Route path="/home">
           <UserHome />
@@ -83,6 +78,12 @@ function App() {
         {/* <Route path='/creator-profile'>
           <CreatorProfile />
         </Route> */}
+        <Route path="/faq">
+          <Faq />
+        </Route>
+        <Route path="/policy/legal">
+          <TermsAndCondition />
+        </Route>
 
         <Route path="/creator-edit/">
           <EditProfile />

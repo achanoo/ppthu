@@ -16,7 +16,7 @@ export default function BasicSelect({
   const [category, setCategory] = React.useState("");
 
   const handleChange = (event) => {
-    const { name, value } = event.target;
+    const { value } = event.target;
     // console.log(value);
     setCategory(value);
     getCategory(value);
