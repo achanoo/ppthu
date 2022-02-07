@@ -1,12 +1,17 @@
 /** @format */
 
 import * as React from "react";
+import Box from "@mui/material/Box";
+import FormLabel from "@mui/material/FormLabel";
 import FormControl from "@mui/material/FormControl";
 import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
+import FormHelperText from "@mui/material/FormHelperText";
 import Checkbox from "@mui/material/Checkbox";
 import { useSubscriptionContext } from "./../context/SubscriptionContext";
 import { makeStyles } from "@mui/styles";
+
+import { subscriptPlan } from "./../assets/data.js";
 import { usePostContext } from "../context/PostContext";
 
 const useStyles = makeStyles((theme) => ({
@@ -19,8 +24,8 @@ const useStyles = makeStyles((theme) => ({
 
 export default function CheckboxesGroup({ tiers = "", ...props }) {
   const classes = useStyles();
-  const { subscriptions } = useSubscriptionContext();
-
+  const { subscriptions, isloading } = useSubscriptionContext();
+  const {} = usePostContext();
   //console.log(tiers);
   const fromatSubscriptions = (data) => {
     return subscriptions.map((sub) => {
@@ -44,7 +49,7 @@ export default function CheckboxesGroup({ tiers = "", ...props }) {
 
   React.useEffect(() => {
     if (tiers === "") {
-      tiers = null;
+      tiers = [];
     }
     setState((state) => {
       return { ...state, selected: tiers };
@@ -90,7 +95,7 @@ export default function CheckboxesGroup({ tiers = "", ...props }) {
         {/* <FormLabel component='legend'>Pick two</FormLabel> */}
         <FormGroup>
           {state.list.map((item) => {
-            const { name, id } = item;
+            const { name, id, ischecked } = item;
             return (
               <FormControlLabel
                 key={id}

@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   wrapper: {
-    maxHeight: "100vh",
+    minHeight: "100vh",
     display: "grid",
     placeItems: "center",
     [theme.breakpoints.only("xs")]: {

@@ -15,11 +15,14 @@ import {
   Divider,
   Collapse,
   Button,
+  Paper,
 } from "@mui/material";
+import DOMPurify from "dompurify";
 import moment from "moment";
 import CreditCardIcon from "@mui/icons-material/CreditCard";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { CButton } from "./../layout/CCButton";
+import { height } from "@mui/system";
 import { useAuthContext } from "../context/AuthContext";
 import axios from "axios";
 import { BaseUrl, getFullUrl } from "../helpers/Constant";
@@ -50,7 +53,9 @@ const useStyles = makeStyles((theme) => ({
   cardGroup: {
     textAlign: "left",
   },
-
+  card: {
+    padding: "20px",
+  },
   aligncenter: {
     display: "flex",
     justifyContent: "center",
@@ -67,7 +72,7 @@ const useStyles = makeStyles((theme) => ({
   },
   card: {
     // backgroundColor: "#333",
-    padding: "20px",
+    padding: "10px",
     "&>h4": {
       padding: "0px 20px",
     },
@@ -110,21 +115,21 @@ const useStyles = makeStyles((theme) => ({
 
 // input formula=> (valu.length + 1)*8
 
-// const tiercard = (props) => (
-//   <Paper sx={{ m: 1 }} elevation={4}>
-//     <Box component="svg" sx={{ width: 100, height: 100 }}>
-//       <h3>helow rold {props.name}</h3>
-//     </Box>
-//   </Paper>
-// );
+const tiercard = (props) => (
+  <Paper sx={{ m: 1 }} elevation={4}>
+    <Box component="svg" sx={{ width: 100, height: 100 }}>
+      <h3>helow rold {props.name}</h3>
+    </Box>
+  </Paper>
+);
 
 const CheckOutModel = () => {
   const classes = useStyles();
-  // const editor = useRef(null);
+  const editor = useRef(null);
   const history = useHistory();
   const { username } = useParams();
   const { searchCreator, token, searchByprofileUrl } = useAuthContext();
-  // const [content, setContent] = useState("");
+  const [content, setContent] = useState("");
   const [collapse, setCollapse] = useState(false);
   const query = new URLSearchParams(useLocation().search);
   // console.log(moment().add(1, "month"));
@@ -146,27 +151,27 @@ const CheckOutModel = () => {
 
   const planid = query.get("rid");
   console.log(searchCreator);
-  // const socialArray = [
-  //   "facebook",
-  //   "instagram",
-  //   "youtube",
-  //   "twitter",
-  //   "twitch",
-  //   "discord",
-  //   "tiktok",
-  //   "others",
-  // ];
+  const socialArray = [
+    "facebook",
+    "instagram",
+    "youtube",
+    "twitter",
+    "twitch",
+    "discord",
+    "tiktok",
+    "others",
+  ];
 
-  // const places = ["yangon", "mandalay", "sagaing"];
+  const places = ["yangon", "mandalay", "sagaing"];
 
-  // const config = {
-  //   readonly: false, // all options from https://xdsoft.net/jodit/doc/
-  // };
+  const config = {
+    readonly: false, // all options from https://xdsoft.net/jodit/doc/
+  };
 
-  // const NewgetValue = (value) => {
-  //   console.log(value);
-  //   // setState({ ...state, isError })
-  // };
+  const NewgetValue = (value) => {
+    console.log(value);
+    // setState({ ...state, isError })
+  };
 
   const handleCollapse = () => {
     // console.log("helo");
@@ -242,7 +247,7 @@ const CheckOutModel = () => {
         .catch((err) => setError(err.message));
     } else {
       const planObj = searchCreator.subscription_plans.find(
-        (i) => i.id === planid
+        (i) => i.id == planid
       );
       setData((prev) => ({
         ...prev,
@@ -422,14 +427,14 @@ const CheckOutModel = () => {
                     className={classes.divider}
                     variant="middle"
                   />
-                  {/* <Button
-                    className="d-none"
+                  <Button
+                    style={{ display: "none" }}
                     onClick={() =>
                       history.push(`/creator-profile/$
                       {username}`)
                     }>
                     Edit
-                  </Button> */}
+                  </Button>
                 </Box>
                 <Box className={classes.tierDesc}>
                   <Collapse orientation="vertical" in={collapse}>
@@ -437,7 +442,7 @@ const CheckOutModel = () => {
                     <Typography
                       className={classes.tiercontent}
                       dangerouslySetInnerHTML={{
-                        __html: `${data.plan.description}`,
+                        __html: DOMPurify.sanitize(data.plan.description),
                       }}></Typography>
                   </Collapse>
                 </Box>
