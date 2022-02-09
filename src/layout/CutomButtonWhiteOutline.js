@@ -13,4 +13,8 @@ export const CutomButtonWhiteOutline = styled('button')(({ theme }) => ({
   '&:hover': {
     cursor: 'pointer',
   },
+  [theme.breakpoints.down('md')]: {
+    height: '36px',
+    padding: '0 20px',
+  },
 }))
