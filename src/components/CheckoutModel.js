@@ -336,7 +336,7 @@ const CheckOutModel = () => {
                     }}
                   />
                   <FormHelperText id="outlined-weight-helper-text">
-                    {/*  amount */}
+                    {/*  amount wlcome too */}
                   </FormHelperText>
                 </FormControl>
                 <span
