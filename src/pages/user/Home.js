@@ -151,7 +151,7 @@ const UserHome = () => {
                 </Grid>
                 <Divider />
                 <Grid p={2}>
-                  <h3 m={0}>Supporting</h3>
+                  <h3>Supporting</h3>
                 </Grid>
                 <Divider />
                 <Grid p={2}>
