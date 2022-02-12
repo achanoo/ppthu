@@ -27,8 +27,8 @@ const Profile = () => {
         `${BaseUrl}/user/search`,
         {
           params: {
+            status: "1",
             s: username,
-            status: 1,
           },
         },
         {

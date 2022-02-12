@@ -2,10 +2,12 @@
 
 import React from "react";
 import moment from "moment";
-export const BaseUrl = " http://localhost:8000/api/v1";
+export const BaseUrl = "http://157.245.158.114/api/v1";
+// http://157.245.158.114/pantpoe/api/auth/login
 //export const single_product_url = `https://course-api.com/react-store-single-product?id=`
 
-export const ImgUrl = "http://localhost:8000/storage/";
+// export const ImgUrl = "http://localhost:8000/storage/";
+export const ImgUrl = "http://157.245.158.114/storage/";
 
 export const customFetcher = async (url = "") => {
   const response = await fetch(`https://rlp-proxy.herokuapp.com/v2?url=${url}`);
@@ -15,13 +17,14 @@ export const customFetcher = async (url = "") => {
 };
 
 export const getFullUrl = (path) => {
-  return `http://localhost:8000/storage/` + path;
+  return `http://157.245.158.114:81/storage/` + path;
 };
 
-export const RBaseUrl = "https://localhost:3000/creator-profile/";
+// export const RBaseUrl = "http://localhost:3000/creator-profile/";
+export const RBaseUrl = "http://157.245.158.114:81/creator-profile/";
 
 export const profileUrl = (keyword) => {
-  return `https://localhost:3000/creator-profile/${keyword}`;
+  return `http://157.245.158.114:81/creator-profile/${keyword}`;
 };
 
 export const changeSocials = (data) => {
