@@ -121,7 +121,7 @@ const UserHome = () => {
             sm={8}
             md={6}
             display={{ xs: "block", sm: "block" }}
-            order={{ xs: 1, sm: 2 }}>
+            order={{ xs: 1, sm: 1 }}>
             <TabContents creators={creators} />
           </Grid>
           <Grid
@@ -129,7 +129,7 @@ const UserHome = () => {
             xs={12}
             sm={4}
             md={3}
-            order={{ xs: 2, sm: 1 }}
+            order={{ xs: 2, sm: 2 }}
             display={{ xs: "none", sm: "block" }}>
             {/* supporting */}
 

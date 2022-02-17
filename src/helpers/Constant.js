@@ -17,14 +17,13 @@ export const customFetcher = async (url = "") => {
 };
 
 export const getFullUrl = (path) => {
-  return `http://157.245.158.114:81/storage/` + path;
+  return `http://157.245.158.114/storage/` + path;
 };
 
-// export const RBaseUrl = "http://localhost:3000/creator-profile/";
-export const RBaseUrl = "http://157.245.158.114:81/creator-profile/";
+export const RBaseUrl = "http://192.168.1.105:3000/creator-profile/";
 
 export const profileUrl = (keyword) => {
-  return `http://157.245.158.114:81/creator-profile/${keyword}`;
+  return `http://192.168.1.105:3000/creator-profile/${keyword}`;
 };
 
 export const changeSocials = (data) => {

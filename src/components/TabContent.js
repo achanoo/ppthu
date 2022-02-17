@@ -124,7 +124,7 @@ const useStyles = makeStyles((theme) => ({
   },
   creatorMenuTab: {
     [theme.breakpoints.down("sm")]: {
-      display: "none",
+      display: "block",
     },
   },
   allposts: {
@@ -138,7 +138,7 @@ const useStyles = makeStyles((theme) => ({
     padding: "0px !important",
     marginBottom: "16px",
     [theme.breakpoints.down("sm")]: {
-      minHeight: "300px",
+      minHeight: "500px",
     },
   },
   postCard: {
