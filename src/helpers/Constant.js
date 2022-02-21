@@ -10,10 +10,19 @@ export const BaseUrl = "http://157.245.158.114/api/v1";
 export const ImgUrl = "http://157.245.158.114/storage/";
 
 export const customFetcher = async (url = "") => {
-  const response = await fetch(`https://rlp-proxy.herokuapp.com/v2?url=${url}`);
-  const json = await response.json();
-
-  return json.metadata;
+  try {
+    const response = await fetch(
+      `https://rlp-proxy.herokuapp.com/v2?url=${url}`
+    );
+    const json = await response.json();
+    if (json.metadata === null) {
+      return "link is not invalid!";
+    } else {
+      return json.metadata;
+    }
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 export const getFullUrl = (path) => {

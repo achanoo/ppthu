@@ -19,7 +19,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function CheckboxesGroup({ tiers = "", ...props }) {
+export default function CheckboxesGroup({
+  tiers = "",
+  seefirst = "1",
+  ...props
+}) {
   const classes = useStyles();
   const { subscriptions } = useSubscriptionContext();
 
@@ -45,13 +49,13 @@ export default function CheckboxesGroup({ tiers = "", ...props }) {
   // console.log(state)
 
   React.useEffect(() => {
-    if (tiers === "") {
+    if (tiers === "" && seefirst !== 3) {
       tiers = [];
     }
     setState((state) => {
       return { ...state, selected: tiers };
     });
-  }, [tiers]);
+  }, [tiers, seefirst]);
 
   const handleChange = (id) => {
     const { list, selected } = state;

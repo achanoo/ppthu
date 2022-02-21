@@ -33,7 +33,7 @@ const LinkPreview = ({ link }) => {
   if (loading) {
     return <h3>loading...</h3>;
   }
-
+  console.log(linkdata);
   const { image, description, title, url } = linkdata;
 
   return (

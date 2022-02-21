@@ -299,7 +299,9 @@ const PostDetailModel = (props) => {
   // let linkobj = { image: "", url: "", description: "", title: "" };
 
   const islike = likes.some(function (el) {
-    return el.user_info.user.id === authUser.id;
+    let condi = el.user_info.user.id === authUser.id;
+    console.log(condi);
+    return condi;
   });
 
   const deleteLike = (postid) => {
@@ -615,7 +617,7 @@ const PostDetailModel = (props) => {
                   deleteLike(postid);
                   props.changeData();
                 }}>
-                <FavoriteOutlinedIcon fontSize="large" />
+                <FavoriteOutlinedIcon fontSize="large" sx={{ color: "red" }} />
               </IconButton>
             )}
 
