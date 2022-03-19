@@ -18,6 +18,7 @@ const initialStates = {
   subscriptions: [],
   regions: [],
   searchCreator: null,
+  errors: [],
 };
 
 const adminToken =
@@ -45,6 +46,7 @@ const AuthProvider = ({ children }) => {
         data: formdata,
       });
       const data = response.data.data;
+      console.log(data);
       if (data.status === "Active") {
         localStorage.setItem("token", JSON.stringify(data.access_token));
         localStorage.setItem("user", JSON.stringify(data));
@@ -52,8 +54,17 @@ const AuthProvider = ({ children }) => {
         history.push("/home");
       }
     } catch (error) {
-      //dispatch({ type: GET_PRODUCTS_ERROR })
-      console.log("there is no error!");
+      let data = "";
+      if (error.response.status === 400) {
+        data = error.response.data.errors;
+      }
+
+      if (error.response.status === 422) {
+        data = error.response.data.errors;
+      }
+
+      dispatch({ type: "LOGIN_FAILED", payload: data });
+      return data;
     }
   };
 
@@ -236,7 +247,7 @@ const AuthProvider = ({ children }) => {
       // dispatch({ type: 'NEWDATA_LOADED', payload: payload })
       // dispatch({ type: 'UNSET_LOADING' })
     } catch (error) {
-      console.log("there is error!");
+      dispatch({ type: "LOGIN_FAILED", payload: error });
     }
   };
 

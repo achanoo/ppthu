@@ -251,22 +251,7 @@ const Basic = () => {
   // const [secondary, setSecondary] = React.useState(false);
   // const [userInfo, setUserInfo] = React.useState("");
 
-  const [errors, setErrors] = useState({
-    cover: "",
-    profile: "",
-    regions: "",
-    address: "",
-    phone: "",
-    gender: "",
-    dob: "",
-    bio: "",
-    socials: "",
-    day: "",
-    month: "",
-    year: "",
-    email: "",
-    urlKeyword: "",
-  });
+  const [errors, setErrors] = useState({});
 
   // const [emailorphone, setEmailorphone] = React.useState({
   //   isEmail: true,
@@ -411,50 +396,51 @@ const Basic = () => {
     }
   };
 
-  console.log(errors);
-
   const hanldingSubmit = () => {
     // console.log('you click');
+
     checkValidation();
-    // console.log(regions.find(x => x.name === state.regions).id);
-    // console.log(moment({'year': state.year, 'month': state.month-1,'date':state.day}).format("YYYY-MM-DD HH:mm:ss"));
-    let dob = moment()
-      .add(state.day, "days")
-      .month(state.month - 1)
-      .year(state.year)
-      .format("YYYY-MM-DD HH:mm:ss");
-    let formData = new FormData();
-    formData.append("name", state.username);
-    formData.append("email", state.email);
-    formData.append("phone_2", state.phone);
-    formData.append("role_id", role === "creator" ? "" : 2);
-    formData.append(
-      "cover_photo",
-      state.cover === "" ? state.oldcover : state.cover
-    );
-    formData.append(
-      "profile_image",
-      state.profile === "" ? state.oldprofile : state.profile
-    );
-    formData.append("categories", JSON.stringify(state.categories));
-    formData.append("socials", JSON.stringify(state.socials));
-    formData.append("gender", state.gender);
-    formData.append("dob", dob);
-    formData.append("address", state.address);
-    formData.append(
-      "region_id",
-      regions.find((x) => x.name === state.regions).id
-    );
-    formData.append("bio", state.bio);
-    formData.append("profile_url", state.urlKeyword);
-    formData.append("content_status", state.content_status);
-
-    updatetoCreator(formData);
-
-    // setState(prev=>({
-    //   ...prev,
-    //   role:'creator'
-    // }))
+    if (Object.keys(errors).length > 0) {
+      return false;
+    } else {
+      let dob = moment()
+        .add(state.day, "days")
+        .month(state.month - 1)
+        .year(state.year)
+        .format("YYYY-MM-DD HH:mm:ss");
+      let formData = new FormData();
+      formData.append("name", state.username);
+      formData.append("email", state.email);
+      formData.append("phone_2", state.phone);
+      formData.append("role_id", role === "creator" ? "" : 2);
+      formData.append(
+        "cover_photo",
+        state.cover === "" ? state.oldcover : state.cover
+      );
+      formData.append(
+        "profile_image",
+        state.profile === "" ? state.oldprofile : state.profile
+      );
+      formData.append("categories", JSON.stringify(state.categories));
+      formData.append("socials", JSON.stringify(state.socials));
+      formData.append("gender", state.gender);
+      formData.append("dob", dob);
+      formData.append("address", state.address);
+      formData.append(
+        "region_id",
+        regions.find((x) => x.name === state.regions)
+          ? regions.find((x) => x.name === state.regions).id
+          : ""
+      );
+      formData.append("bio", state.bio);
+      formData.append("profile_url", state.urlKeyword);
+      formData.append("content_status", state.content_status);
+      try {
+        updatetoCreator(formData);
+      } catch (error) {
+        console.log(error);
+      }
+    }
   };
 
   useEffect(() => {

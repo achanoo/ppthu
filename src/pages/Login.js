@@ -126,7 +126,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 const Login = () => {
   const classes = useStyles();
-  const { loginbyAccount, defaultLogged } = useAuthContext();
+  const { loginbyAccount, defaultLogged, errors: authError } = useAuthContext();
 
   const [showMobile, setShowMobile] = React.useState(false);
   const [showphonePassword, setphonePassword] = React.useState(false);
@@ -146,11 +146,12 @@ const Login = () => {
   const [phone, setPhone] = useState("");
   const [phonePassword, setPhonePassword] = useState("");
   const [confirmCode, setConfirmCode] = useState("");
+  const [errorMsg, setErrorMsg] = useState({
+    message: "",
+    email: "he",
+    password: "hek",
+  });
 
-  // const handleGoogle = (data) => {
-  //   console.log(data.profileObj)
-  //   loginByGoogle(data.profileObj)
-  // }
   const handlePhoneDivOpen = () => {
     history.push("/login/phone");
   };
@@ -162,6 +163,7 @@ const Login = () => {
       password: apassword,
     };
     loginbyAccount(formData);
+
     // defaultLogged()
   };
 
@@ -195,20 +197,28 @@ const Login = () => {
       }
     }
   };
+
   return (
     <div className={classes.wrapper}>
       <h2>Log in</h2>
+      {authError && authError.message && (
+        <Typography variant={"h5"} color={"secondary.light"} component={"div"}>
+          {`${authError.message}! Try again!`}
+        </Typography>
+      )}
       <div className={`${classes.container} FaintBox `}>
         <form onSubmit={handleLogin}>
           <Box className={classes.cusFormControl}>
             <label htmlFor="email">Email</label>
             <TextField
               id="email"
+              error={authError && authError.email && true}
               type="email"
               name={aemail}
               className="input-field"
               fullWidth
               onChange={(e) => setEmail(e.target.value)}
+              helperText={authError && authError.email && authError.email}
             />
           </Box>
 
@@ -216,11 +226,13 @@ const Login = () => {
             <label htmlFor="password">Password</label>
             <TextField
               id="password"
+              error={authError && authError.password && true}
               type="password"
               className="input-field"
               name={apassword}
               fullWidth
               onChange={(e) => setPassword(e.target.value)}
+              helperText={authError && authError.password && authError.password}
             />
           </Box>
 

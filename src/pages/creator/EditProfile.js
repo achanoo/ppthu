@@ -363,7 +363,7 @@ const EditProfile = () => {
     formData.append("categories", JSON.stringify(data.categories));
     formData.append("socials", JSON.stringify(data.socials));
     formData.append("gender", data.gender);
-    formData.append("region_id", data.user_info.region.id);
+    formData.append("region_id", data.user_info.region.id ?? null);
     formData.append("dob", dob);
     formData.append("address", data.user_info.address);
     formData.append("bio", data.user_info.bio);
