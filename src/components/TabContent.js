@@ -1,6 +1,7 @@
 /** @format */
 
 import * as React from "react";
+import Pusher from "pusher-js";
 import PropTypes from "prop-types";
 import { useHistory } from "react-router-dom";
 import { styled, alpha } from "@mui/material/styles";
@@ -381,9 +382,24 @@ const BasicTabs = (props) => {
     handleClose();
   };
 
+  React.useEffect(() => {
+    Pusher.logToConsole = true;
+    const pusher = new Pusher("cbae929ae26fb6b1d072", {
+      cluster: "ap1",
+      encrypted: false,
+    });
+    const channel = pusher.subscribe("comment-channel");
+    console.log(channel);
+    channel.bind("pusher:subscription_succeeded", (data) => {
+      console.log(data);
+      console.log("now hello world");
+    });
+  });
+
   if (loading) {
     return <h2>Loading</h2>;
   }
+
   return (
     <Box sx={{ width: "100%" }}>
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>

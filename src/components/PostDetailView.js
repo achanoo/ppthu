@@ -1,6 +1,8 @@
 /** @format */
 
 import * as React from "react";
+
+import { echo } from "../server/server";
 import { useParams, useHistory } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 import { makeStyles } from "@mui/styles";
@@ -473,6 +475,19 @@ const PostDetailModel = (props) => {
       y: "a year",
       yy: "%d yr",
     },
+  });
+
+  React.useEffect(() => {
+    echo
+      .channel("comment-channel")
+      .listen(".newComment", (data) => {
+        console.log("rumman");
+        console.log(data);
+      })
+      .subscribed((e) => {
+        console.log(e);
+      })
+      .error((e) => console.log(e, "error"));
   });
 
   return (

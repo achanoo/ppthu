@@ -25,6 +25,7 @@ import "react-phone-input-2/lib/style.css";
 import { useHistory } from "react-router-dom";
 import { useAuthContext } from "../context/AuthContext";
 import axios from "axios";
+import AlertMessage from "../components/Alert";
 
 //modal import
 
@@ -126,7 +127,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 const Login = () => {
   const classes = useStyles();
-  const { loginbyAccount, defaultLogged, errors: authError } = useAuthContext();
+  const {
+    loginbyAccount,
+    failed_status,
+    errors: authError,
+    success_status,
+  } = useAuthContext();
 
   const [showMobile, setShowMobile] = React.useState(false);
   const [showphonePassword, setphonePassword] = React.useState(false);
@@ -201,11 +207,16 @@ const Login = () => {
   return (
     <div className={classes.wrapper}>
       <h2>Log in</h2>
-      {authError && authError.message && (
-        <Typography variant={"h5"} color={"secondary.light"} component={"div"}>
-          {`${authError.message}! Try again!`}
-        </Typography>
+      {failed_status && (
+        <div className={classes.container}>
+          <AlertMessage
+            alert="true"
+            type="error"
+            msg={`${authError.message} ,Please Try again!`}
+          />
+        </div>
       )}
+
       <div className={`${classes.container} FaintBox `}>
         <form onSubmit={handleLogin}>
           <Box className={classes.cusFormControl}>

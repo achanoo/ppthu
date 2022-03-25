@@ -7,7 +7,7 @@ import FormHelperText from "@mui/material/FormHelperText";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 const NOOP = () => {};
-export default function SelectLabels({ onChange = "", ...props }) {
+export default function SelectLabels({ onChange = "", error, ...props }) {
   const { data, name, inputChange } = props;
   const [value, setValue] = React.useState("none");
 
@@ -26,6 +26,7 @@ export default function SelectLabels({ onChange = "", ...props }) {
       <FormControl sx={{ m: 1, minWidth: 120 }} fullWidth={props.fullWidth}>
         <Select
           value={value}
+          error={error}
           onChange={handleChange}
           displayEmpty
           inputProps={{ "aria-label": "Without label" }}

@@ -20,6 +20,10 @@ const auth_reducers = (state, action) => {
     return { ...state, bearToken: "heo" };
   }
 
+  if (action.type === "Alert_RESET") {
+    return { ...state, failed_status: false, success_status: false };
+  }
+
   if (action.type === "LOGIN_SUCCESS") {
     const { access_token: token } = action.payload;
 
@@ -28,6 +32,7 @@ const auth_reducers = (state, action) => {
       isAuthenticated: true,
       token: token,
       user: action.payload,
+      success_status: true,
     };
   }
 
@@ -35,6 +40,8 @@ const auth_reducers = (state, action) => {
     return {
       ...state,
       errors: action.payload,
+      failed_status: true,
+      success_status: false,
     };
   }
 
@@ -56,7 +63,22 @@ const auth_reducers = (state, action) => {
       user.profile_url = action.payload.profile_url;
     }
 
-    return { ...state, user };
+    return {
+      ...state,
+      user,
+      errors: [],
+      failed_status: false,
+      success_status: true,
+    };
+  }
+
+  if (action.type === "FAILED_ACTION") {
+    return {
+      ...state,
+      errors: action.payload,
+      failed_status: true,
+      success_status: false,
+    };
   }
 
   if (action.type === "SET_SEARCH_RESULT") {

@@ -9,6 +9,7 @@ import {
   ButtonGroup,
   Button,
 } from "@mui/material";
+import AlertMessage from "./../components/Alert";
 import moment from "moment";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import IconButton from "@mui/material/IconButton";
@@ -241,29 +242,15 @@ const Basic = () => {
     user: authUser,
     getUserData,
     updateUserProfile,
+    errors,
+    failed_status,
+    success_status,
   } = useAuthContext();
   const { role, name } = authUser;
   // console.log(role);
   const [dense, setDense] = React.useState(false);
   const [secondary, setSecondary] = React.useState(false);
   const [userInfo, setUserInfo] = React.useState("");
-
-  const [errors, setErrors] = useState({
-    cover: "",
-    profile: "",
-    regions: "",
-    address: "",
-    phone: "",
-    gender: "",
-    dob: "",
-    bio: "",
-    socials: "",
-    day: "",
-    month: "",
-    year: "",
-    email: "",
-    urlKeyword: "",
-  });
 
   const [emailorphone, setEmailorphone] = React.useState({
     isEmail: true,
@@ -375,44 +362,7 @@ const Basic = () => {
     }));
   };
 
-  // const  getUserinfo=async()=>{
-  //   try{
-
-  //    const response=await axios(
-  //       {
-  //         method: 'get',
-  //         url: `${BaseUrl}/user`,
-  //         headers: {
-  //           Accept: 'application/json',
-  //           'Content-Type': 'multipart/form-data',
-  //           Authorization: `Bearer ${authUser.access_token}`,
-  //         },
-  //       });
-
-  //       return response.data;
-
-  //   }catch(error){
-  //     return error.response;
-  //   }
-  // }
-
-  const checkValidation = () => {
-    for (const property in state) {
-      // console.log(`${property}: ${state[property]}`);
-      if (state[property].length <= 0 || state[property] === "none") {
-        setErrors((prev) => ({
-          ...prev,
-          [property]: `${property} is required`,
-        }));
-      }
-    }
-  };
-
   const hanldingSubmit = () => {
-    // console.log('you click');
-    // checkValidation();
-    // console.log(regions.find(x => x.name === state.regions).id);
-    // console.log(moment({'year': state.year, 'month': state.month-1,'date':state.day}).format("YYYY-MM-DD HH:mm:ss"));
     let dob = moment()
       .add(state.day, "days")
       .month(state.month - 1)
@@ -438,7 +388,9 @@ const Basic = () => {
     formData.append("address", state.address);
     formData.append(
       "region_id",
-      regions.find((x) => x.name === state.regions).id
+      (state.regions !== "none" &&
+        regions.find((x) => x.name === state.regions).id) ||
+        ""
     );
     formData.append("bio", state.bio);
     formData.append("profile_url", state.urlKeyword);
@@ -456,7 +408,6 @@ const Basic = () => {
   }, [authUser.role]);
 
   useEffect(() => {
-    console.log("i am working as state");
     let getData = true;
     if (getData) {
       getRegions();
@@ -500,6 +451,17 @@ const Basic = () => {
         <Typography variant="h4" gutterBottom component="div">
           Personal Information
         </Typography>
+        {failed_status && (
+          <AlertMessage
+            alert={true}
+            type="error"
+            msg={"Something went wrong! Change Infromation and then Try again!"}
+          />
+        )}
+
+        {success_status && (
+          <AlertMessage alert={true} type="success" msg={"Success!"} />
+        )}
 
         <Box className={`${classes.firstinfo}`}>
           <Box
@@ -710,7 +672,13 @@ const Basic = () => {
         {/* region start */}
         <Box className={classes.cusFormControl}>
           <Box className={classes.cusOptions}>
-            <h5 className="input-label"> Regions </h5>
+            <h5 className="input-label">
+              {" "}
+              Regions{" "}
+              {errors && errors.region_id && (
+                <span className="error-msg">is required</span>
+              )}
+            </h5>
             {/* <Button>Add</Button> */}
           </Box>
           <SelectOption

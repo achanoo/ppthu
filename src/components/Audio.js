@@ -9,7 +9,7 @@ import { FaForward } from "react-icons/fa";
 import { FaPlay } from "react-icons/fa";
 import { FaPause } from "react-icons/fa";
 
-const Audio = ({ audio }) => {
+export const Audio = ({ audio }) => {
   // console.log(ImgUrl+audio);
   // console.log(audio);
   // state
@@ -131,5 +131,3 @@ const Audio = ({ audio }) => {
     </div>
   );
 };
-
-export { Audio };

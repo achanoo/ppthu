@@ -1,6 +1,6 @@
 /** @format */
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useLayoutEffect } from "react";
 import {
   Typography,
   Box,
@@ -9,6 +9,7 @@ import {
   ButtonGroup,
   Button,
 } from "@mui/material";
+import AlertMessage from "./../components/Alert";
 import moment from "moment";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
@@ -244,19 +245,11 @@ const Basic = () => {
     user: authUser,
     updatetoCreator,
     getUserData,
+    errors,
+    failed_status,
+    success_status,
   } = useAuthContext();
   const { role } = authUser;
-  // console.log(role);
-  // const [dense, setDense] =  React.useState(false);
-  // const [secondary, setSecondary] = React.useState(false);
-  // const [userInfo, setUserInfo] = React.useState("");
-
-  const [errors, setErrors] = useState({});
-
-  // const [emailorphone, setEmailorphone] = React.useState({
-  //   isEmail: true,
-  //   isPhone: true,
-  // });
 
   // const history = useHistory();
   const classes = useStyles();
@@ -280,21 +273,6 @@ const Basic = () => {
     { id: 7, name: "tiktok" },
     { id: 8, name: "others" },
   ];
-
-  // const places = ["yangon", "mandalay", "sagaing"];
-
-  // const config = {
-  //   readonly: false, // all options from https://xdsoft.net/jodit/doc/
-  // };
-
-  // const NewgetValue = (value) => {
-  //   console.log(value);
-  //   // setState({ ...state, isError })
-  // };
-
-  // const goToHome = () => {
-  //   history.push("/creator-home");
-  // };
 
   const inputChange = (e) => {
     const { name, value, files } = e.target;
@@ -384,62 +362,59 @@ const Basic = () => {
   //   }
   // }
 
-  const checkValidation = () => {
-    for (const property in state) {
-      // console.log(`${property}: ${state[property]}`);
-      if (state[property].length <= 0 || state[property] === "none") {
-        setErrors((prev) => ({
-          ...prev,
-          [property]: `${property} is required`,
-        }));
-      }
-    }
-  };
+  // const checkValidation = () => {
+  //   for (const property in state) {
+  //     // console.log(`${property}: ${state[property]}`);
+  //     if (state[property].length <= 0 || state[property] === "none") {
+  //       setErrors((prev) => ({
+  //         ...prev,
+  //         [property]: `${property} is required`,
+  //       }));
+  //     }
+  //   }
+  // };
 
   const hanldingSubmit = () => {
     // console.log('you click');
 
-    checkValidation();
-    if (Object.keys(errors).length > 0) {
-      return false;
-    } else {
-      let dob = moment()
-        .add(state.day, "days")
-        .month(state.month - 1)
-        .year(state.year)
-        .format("YYYY-MM-DD HH:mm:ss");
-      let formData = new FormData();
-      formData.append("name", state.username);
-      formData.append("email", state.email);
-      formData.append("phone_2", state.phone);
-      formData.append("role_id", role === "creator" ? "" : 2);
-      formData.append(
-        "cover_photo",
-        state.cover === "" ? state.oldcover : state.cover
-      );
-      formData.append(
-        "profile_image",
-        state.profile === "" ? state.oldprofile : state.profile
-      );
-      formData.append("categories", JSON.stringify(state.categories));
-      formData.append("socials", JSON.stringify(state.socials));
-      formData.append("gender", state.gender);
-      formData.append("dob", dob);
-      formData.append("address", state.address);
-      formData.append(
-        "region_id",
-        regions.find((x) => x.name === state.regions)
-          ? regions.find((x) => x.name === state.regions).id
-          : ""
-      );
-      formData.append("bio", state.bio);
-      formData.append("profile_url", state.urlKeyword);
-      formData.append("content_status", state.content_status);
-      try {
-        updatetoCreator(formData);
-      } catch (error) {
-        console.log(error);
-      }
+    // checkValidation();
+
+    let dob = moment()
+      .add(state.day, "days")
+      .month(state.month - 1)
+      .year(state.year)
+      .format("YYYY-MM-DD HH:mm:ss");
+    let formData = new FormData();
+    formData.append("name", state.username);
+    formData.append("email", state.email);
+    formData.append("phone_2", state.phone);
+    formData.append("role_id", role === "creator" ? "" : 2);
+    formData.append(
+      "cover_photo",
+      state.cover === "" ? state.oldcover : state.cover
+    );
+    formData.append(
+      "profile_image",
+      state.profile === "" ? state.oldprofile : state.profile
+    );
+    formData.append("categories", JSON.stringify(state.categories));
+    formData.append("socials", JSON.stringify(state.socials));
+    formData.append("gender", state.gender);
+    formData.append("dob", dob);
+    formData.append("address", state.address);
+    formData.append(
+      "region_id",
+      regions.find((x) => x.name === state.regions)
+        ? regions.find((x) => x.name === state.regions).id
+        : ""
+    );
+    formData.append("bio", state.bio);
+    formData.append("profile_url", state.urlKeyword);
+    formData.append("content_status", state.content_status);
+    try {
+      updatetoCreator(formData);
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -451,187 +426,138 @@ const Basic = () => {
     }));
   }, [authUser.role]);
 
-  useEffect(() => {
-    console.log("i am working as state");
-    let getData = true;
-    if (getData) {
-      getRegions();
-      let data = getUserData();
-      // let { email, phone, role } = state;
-      // let userphone = "";
-      // let useremail = "";
-      // let name = "";
-      /*{
-         data.then(r=>{
+  useLayoutEffect(() => {
+    getRegions();
+    let data = getUserData();
 
-       if(r.data.hasOwnProperty("user_info")){
-         userphone =r.data.user_info.user.phone_no;
-        useremail =r.data.user_info.user.email;
-         name=r.data.user_info.user.name;
-         
-       }else{
-
-           userphone =r.data.user.phone_no;
-          useremail =r.data.user.email;
-         name=r.data.user.name;
-        
-       }
-       
-        
-
-        if (userphone === null || typeof userphone === 'object'|| typeof userphone === 'undefined') { 
-          setEmailorphone(prev=>({
-            ...prev,
-            isPhone:false
-          }))
-        } else{
-          phone=userphone
-        }
-
-        if (useremail === null || typeof useremail === 'object' || typeof useremail === 'undefined') { 
-          setEmailorphone(prev=>({
-            ...prev,
-            isEmail:false
-          }))
-        } else{
-          email=useremail
-        }
-
-        setState(prev=>({
+    data.then((r) => {
+      let userdata = null;
+      console.log(r);
+      if (r.data.hasOwnProperty("user_info")) {
+        userdata = r.data;
+        setState((prev) => ({
           ...prev,
-          username:name,
-          phone:phone,
-          email:email,
-          
-        }))
+          username:
+            userdata.user_info.user.name === null
+              ? ""
+              : userdata.user_info.user.name,
+          oldcover:
+            userdata.user_info.cover_photo === null
+              ? ""
+              : userdata.user_info.cover_photo,
+          oldprofile:
+            userdata.user_info.profile_image === null
+              ? ""
+              : userdata.user_info.profile_image,
+          regions:
+            userdata.user_info.region === null
+              ? ""
+              : userdata.user_info.region.name,
+          address:
+            userdata.user_info.address === null
+              ? ""
+              : userdata.user_info.address,
+          phone:
+            userdata.user_info.user.phone_no === null
+              ? ""
+              : userdata.user_info.user.phone_no,
+          gender:
+            userdata.user_info.gender === null ? "" : userdata.user_info.gender,
+          dob: userdata.user_info.dob === null ? "" : userdata.user_info.dob,
+          bio: userdata.user_info.bio === null ? "" : userdata.user_info.bio,
+          socials: changeSocials(userdata.user_info.socials),
+          day:
+            userdata.user_info.dob === null
+              ? ""
+              : moment(userdata.user_info.dob).get("date"),
+          month:
+            userdata.user_info.dob === null
+              ? ""
+              : moment(userdata.user_info.dob).get("month"),
+          year:
+            userdata.user_info.dob === null
+              ? ""
+              : moment(userdata.user_info.dob).get("year"),
+          email:
+            userdata.user_info.user.email === null
+              ? ""
+              : userdata.user_info.user.email,
+          urlKeyword:
+            userdata.user_info.profile_url === null
+              ? ""
+              : userdata.user_info.profile_url,
+        }));
+      } else {
+        userdata = r.data;
+        setState((prev) => ({
+          ...prev,
+          username: userdata.user.name,
+          oldcover: userdata.cover_photo === null ? "" : userdata.cover_photo,
+          oldprofile:
+            userdata.profile_image === null ? "" : userdata.profile_image,
+          regions: userdata.region === null ? "none" : userdata.region.name,
+          address: userdata.address === null ? "" : userdata.address,
+          phone: userdata.user.phone_no === null ? "" : userdata.user.phone_no,
+          gender: userdata.gender === null ? "" : userdata.gender,
+          dob: userdata.dob === null ? "none" : userdata.dob,
+          bio: userdata.bio === null ? "none" : userdata.bio,
+          socials: changeSocials(userdata.socials),
+          day: userdata.dob === null ? "" : moment(userdata.dob).get("date"),
+          month: userdata.dob === null ? "" : moment(userdata.dob).get("month"),
+          year: userdata.dob === null ? "" : moment(userdata.dob).get("year"),
+          email: userdata.user.email === null ? "" : userdata.user.email,
+          urlKeyword: userdata.profile_url === null ? "" : userdata.profile_url,
+        }));
+      }
 
-     }) 
-      }*/
-      data.then((r) => {
-        let userdata = null;
-        console.log(r);
-        if (r.data.hasOwnProperty("user_info")) {
-          userdata = r.data;
-          setState((prev) => ({
-            ...prev,
-            username:
-              userdata.user_info.user.name === null
-                ? ""
-                : userdata.user_info.user.name,
-            oldcover:
-              userdata.user_info.cover_photo === null
-                ? ""
-                : userdata.user_info.cover_photo,
-            oldprofile:
-              userdata.user_info.profile_image === null
-                ? ""
-                : userdata.user_info.profile_image,
-            regions:
-              userdata.user_info.region === null
-                ? ""
-                : userdata.user_info.region.name,
-            address:
-              userdata.user_info.address === null
-                ? ""
-                : userdata.user_info.address,
-            phone:
-              userdata.user_info.user.phone_no === null
-                ? ""
-                : userdata.user_info.user.phone_no,
-            gender:
-              userdata.user_info.gender === null
-                ? ""
-                : userdata.user_info.gender,
-            dob: userdata.user_info.dob === null ? "" : userdata.user_info.dob,
-            bio: userdata.user_info.bio === null ? "" : userdata.user_info.bio,
-            socials: changeSocials(userdata.user_info.socials),
-            day:
-              userdata.user_info.dob === null
-                ? ""
-                : moment(userdata.user_info.dob).get("date"),
-            month:
-              userdata.user_info.dob === null
-                ? ""
-                : moment(userdata.user_info.dob).get("month"),
-            year:
-              userdata.user_info.dob === null
-                ? ""
-                : moment(userdata.user_info.dob).get("year"),
-            email:
-              userdata.user_info.user.email === null
-                ? ""
-                : userdata.user_info.user.email,
-            urlKeyword:
-              userdata.user_info.profile_url === null
-                ? ""
-                : userdata.user_info.profile_url,
-          }));
-        } else {
-          userdata = r.data;
-          setState((prev) => ({
-            ...prev,
-            username: userdata.user.name,
-            oldcover: userdata.cover_photo === null ? "" : userdata.cover_photo,
-            oldprofile:
-              userdata.profile_image === null ? "" : userdata.profile_image,
-            regions: userdata.region === null ? "none" : userdata.region.name,
-            address: userdata.address === null ? "" : userdata.address,
-            phone:
-              userdata.user.phone_no === null ? "" : userdata.user.phone_no,
-            gender: userdata.gender === null ? "" : userdata.gender,
-            dob: userdata.dob === null ? "none" : userdata.dob,
-            bio: userdata.bio === null ? "none" : userdata.bio,
-            socials: changeSocials(userdata.socials),
-            day: userdata.dob === null ? "" : moment(userdata.dob).get("date"),
-            month:
-              userdata.dob === null ? "" : moment(userdata.dob).get("month"),
-            year: userdata.dob === null ? "" : moment(userdata.dob).get("year"),
-            email: userdata.user.email === null ? "" : userdata.user.email,
-            urlKeyword:
-              userdata.profile_url === null ? "" : userdata.profile_url,
-          }));
-        }
-
-        // setState((prev) => ({
-        //   ...prev,
-        //   username: userdata.user_info.user.name,
-        //   oldcover: userdata.user_info.cover_photo,
-        //   oldprofile: userdata.user_info.profile_image,
-        //   regions: userdata.user_info.region.name,
-        //   address: userdata.user_info.address,
-        //   phone: userdata.user_info.user.phone_no,
-        //   gender: userdata.user_info.gender,
-        //   dob: userdata.user_info.dob,
-        //   bio: userdata.user_info.bio,
-        //   socials: changeSocials(userdata.user_info.socials),
-        //   day: moment(userdata.user_info.dob).get("date"),
-        //   month: moment(userdata.user_info.dob).get("month"),
-        //   year: moment(userdata.user_info.dob).get("year"),
-        //   email: userdata.user_info.user.email,
-        //   role: "",
-        //   urlKeyword: userdata.user_info.profile_url,
-        // }));
-      });
-    }
-
-    return (getData = false);
+      // setState((prev) => ({
+      //   ...prev,
+      //   username: userdata.user_info.user.name,
+      //   oldcover: userdata.user_info.cover_photo,
+      //   oldprofile: userdata.user_info.profile_image,
+      //   regions: userdata.user_info.region.name,
+      //   address: userdata.user_info.address,
+      //   phone: userdata.user_info.user.phone_no,
+      //   gender: userdata.user_info.gender,
+      //   dob: userdata.user_info.dob,
+      //   bio: userdata.user_info.bio,
+      //   socials: changeSocials(userdata.user_info.socials),
+      //   day: moment(userdata.user_info.dob).get("date"),
+      //   month: moment(userdata.user_info.dob).get("month"),
+      //   year: moment(userdata.user_info.dob).get("year"),
+      //   email: userdata.user_info.user.email,
+      //   role: "",
+      //   urlKeyword: userdata.user_info.profile_url,
+      // }));
+    });
   }, []);
-
-  // useEffect(()=>{
-  //   //console.log('me too');
-  //   getRegions();
-  // },[])
-
-  // if(loading){
-  //   return <h5>Loading....</h5>
-  // }
 
   return (
     <div className={classes.wrapper}>
       <div className={classes.container}>
-        <Typography variant="h4" gutterBottom component="div">
-          Complete to Become a Creator helo
-        </Typography>
+        {role === "user" && (
+          <Typography variant="h4" gutterBottom component="div">
+            Complete to Become a Creator helo
+          </Typography>
+        )}
+
+        {role === "creator" && (
+          <Typography variant="h4" gutterBottom component="div">
+            Creator Infromation
+          </Typography>
+        )}
+
+        {failed_status && (
+          <AlertMessage
+            alert={true}
+            type="error"
+            msg={"Something went wrong! Change Infromation and then Try again!"}
+          />
+        )}
+
+        {success_status && (
+          <AlertMessage alert={true} type="success" msg={"Success!"} />
+        )}
 
         <Box className={`${classes.firstinfo}`}>
           <Box
@@ -943,10 +869,17 @@ const Basic = () => {
         {/* region start */}
         <Box className={classes.cusFormControl}>
           <Box className={classes.cusOptions}>
-            <h5 className="input-label"> Regions </h5>
+            <h5 className="input-label">
+              {" "}
+              Regions{" "}
+              {errors && errors.region_id && (
+                <span className="error-msg">is required</span>
+              )}{" "}
+            </h5>
             {/* <Button>Add</Button> */}
           </Box>
           <SelectOption
+            error={errors && errors.region_id ? true : false}
             fullWidth={false}
             data={regions}
             onChange={state.regions}

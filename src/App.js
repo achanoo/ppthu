@@ -1,6 +1,8 @@
 /** @format */
 
-import React from "react";
+import React, { useEffect } from "react";
+import Echo from "laravel-echo";
+
 import { NavBar } from "./components";
 import {
   Home,
@@ -33,6 +35,21 @@ import "./App.css";
 import { Switch, Route } from "react-router-dom";
 
 function App() {
+  const listen = () => {
+    window.Echo = new Echo({
+      broadcaster: "pusher",
+      key: "cbae929ae26fb6b1d072",
+      cluster: "ap1",
+      encrypted: true,
+    });
+
+    window.Echo.channel("comment-channel").listen("newComment", function (e) {
+      console.log(e);
+    });
+  };
+  useEffect(() => {
+    listen();
+  });
   return (
     <>
       <NavBar />

@@ -13,12 +13,14 @@ const initialStates = {
   isAuthenticated: false,
   token: JSON.parse(localStorage.getItem("token")) || "",
   loading: false,
-  erors: false,
   user: JSON.parse(localStorage.getItem("user")) || {},
   subscriptions: [],
   regions: [],
   searchCreator: null,
   errors: [],
+  failed_status: false,
+  success_status: false,
+  msg: "",
 };
 
 const adminToken =
@@ -36,6 +38,12 @@ const AuthProvider = ({ children }) => {
   useEffect(() => {
     checkLogin();
   }, []);
+
+  const resetAlert = () => {
+    dispatch({
+      type: "Alert_RESET",
+    });
+  };
 
   const loginbyAccount = async (formdata) => {
     //console.log(formdata)
@@ -247,7 +255,11 @@ const AuthProvider = ({ children }) => {
       // dispatch({ type: 'NEWDATA_LOADED', payload: payload })
       // dispatch({ type: 'UNSET_LOADING' })
     } catch (error) {
-      dispatch({ type: "LOGIN_FAILED", payload: error });
+      if (error.response.status === 422) {
+        let data = error.response.data.errors;
+        console.log(data);
+        dispatch({ type: "FAILED_ACTION", payload: data });
+      }
     }
   };
 
@@ -280,7 +292,14 @@ const AuthProvider = ({ children }) => {
           // getUserData();
         }
       })
-      .catch((error) => console.log(error.message));
+      .catch((error) => {
+        let data = "";
+
+        if (error.response.status === 422) {
+          data = error.response.data.errors;
+        }
+        dispatch({ type: "FAILED_ACTION", payload: data });
+      });
   };
 
   const searchByprofileUrl = (data) => {
@@ -316,6 +335,7 @@ const AuthProvider = ({ children }) => {
         getUserData,
         searchByprofileUrl,
         updateUserProfile,
+        resetAlert,
       }}>
       {children}
     </AuthContext.Provider>
