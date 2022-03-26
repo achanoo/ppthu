@@ -382,7 +382,7 @@ const BasicTabs = (props) => {
     handleClose();
   };
 
-  React.useEffect(() => {
+  /*  React.useEffect(() => {
     Pusher.logToConsole = true;
     const pusher = new Pusher("cbae929ae26fb6b1d072", {
       cluster: "ap1",
@@ -394,7 +394,7 @@ const BasicTabs = (props) => {
       console.log(data);
       console.log("now hello world");
     });
-  });
+  }); */
 
   if (loading) {
     return <h2>Loading</h2>;

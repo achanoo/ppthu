@@ -478,16 +478,16 @@ const PostDetailModel = (props) => {
   });
 
   React.useEffect(() => {
-    echo
-      .channel("comment-channel")
-      .listen(".newComment", (data) => {
-        console.log("rumman");
-        console.log(data);
-      })
-      .subscribed((e) => {
-        console.log(e);
-      })
-      .error((e) => console.log(e, "error"));
+    // echo
+    //   .channel("comment-channel")
+    //   .listen(".newComment", (data) => {
+    //     console.log("rumman");
+    //     console.log(data);
+    //   })
+    //   .subscribed((e) => {
+    //     console.log(e);
+    //   })
+    //   .error((e) => console.log(e, "error"));
   });
 
   return (
