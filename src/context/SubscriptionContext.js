@@ -162,8 +162,8 @@ const SubscriptionProvider = ({ children }) => {
         getSubscriptions,
         createSubscriptions,
         getCategories,
-        getEarningOverview,
         getUserSubscriptions,
+        getEarningOverview,
         terminateSubscription,
       }}>
       {children}

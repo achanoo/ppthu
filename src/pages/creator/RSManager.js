@@ -1,4 +1,3 @@
-/** @format */
 
 import React from "react";
 import {
@@ -889,7 +888,12 @@ const RSManager = () => {
                       Message
                     </CustomButton>
                   </Grid>
-                  <Grid item xs={6} sm={6} md={6} style={{ textAlign: "end" }}>
+                  <Grid
+                    item
+                    xs={6}
+                    sm={6}
+                    md={6}
+                    style={{ textAlign: "end", display: "none" }}>
                     <CustomButton
                       size="small"
                       btnactive="active"

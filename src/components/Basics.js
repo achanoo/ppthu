@@ -1,59 +1,37 @@
 /** @format */
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useLayoutEffect } from "react";
 import {
   Typography,
   Box,
   OutlinedInput,
-  FormHelperText,
   InputAdornment,
   ButtonGroup,
   Button,
 } from "@mui/material";
+import AlertMessage from "./../components/Alert";
 import moment from "moment";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import RemoveCircleOutlineSharpIcon from "@mui/icons-material/RemoveCircleOutlineSharp";
-import styled from "styled-components";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import Grid from "@mui/material/Grid";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import TextField from "@mui/material/TextField";
-import Radio from "@mui/material/Radio";
-import RadioGroup from "@mui/material/RadioGroup";
 import badge from "../assets/menu/badge.svg";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import JoditEditor from "jodit-react";
-import Link from "@mui/material/Link";
-import {
-  CheckCircle,
-  RadioButtonUnchecked,
-  SocialDistanceRounded,
-} from "@mui/icons-material";
 import "../assets/style.css";
 import Avatar from "@mui/material/Avatar";
 import { FiEdit3 } from "react-icons/fi";
 import { makeStyles } from "@mui/styles";
 import { CButton } from "../layout/CCButton";
 import { coverphoto } from "../assets/data";
-import TextareaAutosize from "@mui/material/TextareaAutosize";
 import FemaleIcon from "@mui/icons-material/Female";
 import MaleIcon from "@mui/icons-material/Male";
 import SelectOption from "./../layout/SelectOption";
-import { useHistory } from "react-router";
 import { useAuthContext } from "../context/AuthContext";
 import { useEffect } from "react";
-import axios from "axios";
-import {
-  BaseUrl,
-  getFullUrl,
-  RBaseUrl,
-  changeSocials,
-} from "../helpers/Constant";
+import { getFullUrl, RBaseUrl, changeSocials } from "../helpers/Constant";
 const useStyles = makeStyles((theme) => ({
   underline: {
     "&&&:before": {
@@ -69,13 +47,14 @@ const useStyles = makeStyles((theme) => ({
     placeItems: "center",
     [theme.breakpoints.only("xs")]: {
       display: "block",
+      padding: "0px",
     },
   },
   container: {
     width: "90vw",
     maxWidth: "700px",
     textAlign: "center",
-    height: "auto",
+
     [theme.breakpoints.only("xs")]: {
       width: "100%",
     },
@@ -265,43 +244,19 @@ const Basic = () => {
     regions,
     user: authUser,
     updatetoCreator,
-    loading,
     getUserData,
+    errors,
+    failed_status,
+    success_status,
   } = useAuthContext();
-  const { role, name } = authUser;
-  // console.log(role);
-  const [dense, setDense] = React.useState(false);
-  const [secondary, setSecondary] = React.useState(false);
-  const [userInfo, setUserInfo] = React.useState("");
+  const { role } = authUser;
 
-  const [errors, setErrors] = useState({
-    cover: "",
-    profile: "",
-    regions: "",
-    address: "",
-    phone: "",
-    gender: "",
-    dob: "",
-    bio: "",
-    socials: "",
-    day: "",
-    month: "",
-    year: "",
-    email: "",
-    urlKeyword: "",
-  });
-
-  const [emailorphone, setEmailorphone] = React.useState({
-    isEmail: true,
-    isPhone: true,
-  });
-
-  const history = useHistory();
+  // const history = useHistory();
   const classes = useStyles();
-  const editor = useRef(null);
+  // const editor = useRef(null);
   const cover = useRef(null);
   const profile = useRef(null);
-  const [content, setContent] = useState("");
+  // const [content, setContent] = useState("");
 
   const [state, setState] = useState(initalData);
   const [social, setSocial] = useState({
@@ -318,21 +273,6 @@ const Basic = () => {
     { id: 7, name: "tiktok" },
     { id: 8, name: "others" },
   ];
-
-  const places = ["yangon", "mandalay", "sagaing"];
-
-  const config = {
-    readonly: false, // all options from https://xdsoft.net/jodit/doc/
-  };
-
-  const NewgetValue = (value) => {
-    console.log(value);
-    // setState({ ...state, isError })
-  };
-
-  const goToHome = () => {
-    history.push("/creator-home");
-  };
 
   const inputChange = (e) => {
     const { name, value, files } = e.target;
@@ -367,7 +307,7 @@ const Basic = () => {
 
   const addMore = () => {
     let acc = [];
-    let cc = [];
+    // let cc = [];
     let { socials } = state;
     acc.push(social.name);
     acc.push(social.link);
@@ -422,25 +362,23 @@ const Basic = () => {
   //   }
   // }
 
-  const checkValidation = () => {
-    for (const property in state) {
-      // console.log(`${property}: ${state[property]}`);
-      if (state[property].length <= 0 || state[property] === "none") {
-        setErrors((prev) => ({
-          ...prev,
-          [property]: `${property} is required`,
-        }));
-      }
-    }
-  };
-
-  console.log(errors);
+  // const checkValidation = () => {
+  //   for (const property in state) {
+  //     // console.log(`${property}: ${state[property]}`);
+  //     if (state[property].length <= 0 || state[property] === "none") {
+  //       setErrors((prev) => ({
+  //         ...prev,
+  //         [property]: `${property} is required`,
+  //       }));
+  //     }
+  //   }
+  // };
 
   const hanldingSubmit = () => {
     // console.log('you click');
-    checkValidation();
-    // console.log(regions.find(x => x.name === state.regions).id);
-    // console.log(moment({'year': state.year, 'month': state.month-1,'date':state.day}).format("YYYY-MM-DD HH:mm:ss"));
+
+    // checkValidation();
+
     let dob = moment()
       .add(state.day, "days")
       .month(state.month - 1)
@@ -466,18 +404,18 @@ const Basic = () => {
     formData.append("address", state.address);
     formData.append(
       "region_id",
-      regions.find((x) => x.name === state.regions).id
+      regions.find((x) => x.name === state.regions)
+        ? regions.find((x) => x.name === state.regions).id
+        : ""
     );
     formData.append("bio", state.bio);
     formData.append("profile_url", state.urlKeyword);
     formData.append("content_status", state.content_status);
-
-    updatetoCreator(formData);
-
-    // setState(prev=>({
-    //   ...prev,
-    //   role:'creator'
-    // }))
+    try {
+      updatetoCreator(formData);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {
@@ -488,187 +426,138 @@ const Basic = () => {
     }));
   }, [authUser.role]);
 
-  useEffect(() => {
-    console.log("i am working as state");
-    let getData = true;
-    if (getData) {
-      getRegions();
-      let data = getUserData();
-      let { email, phone, role } = state;
-      let userphone = "";
-      let useremail = "";
-      let name = "";
-      {
-        /* data.then(r=>{
+  useLayoutEffect(() => {
+    getRegions();
+    let data = getUserData();
 
-       if(r.data.hasOwnProperty("user_info")){
-         userphone =r.data.user_info.user.phone_no;
-        useremail =r.data.user_info.user.email;
-         name=r.data.user_info.user.name;
-         
-       }else{
-
-           userphone =r.data.user.phone_no;
-          useremail =r.data.user.email;
-         name=r.data.user.name;
-        
-       }
-       
-        
-
-        if (userphone === null || typeof userphone === 'object'|| typeof userphone === 'undefined') { 
-          setEmailorphone(prev=>({
-            ...prev,
-            isPhone:false
-          }))
-        } else{
-          phone=userphone
-        }
-
-        if (useremail === null || typeof useremail === 'object' || typeof useremail === 'undefined') { 
-          setEmailorphone(prev=>({
-            ...prev,
-            isEmail:false
-          }))
-        } else{
-          email=useremail
-        }
-
-        setState(prev=>({
+    data.then((r) => {
+      let userdata = null;
+      console.log(r);
+      if (r.data.hasOwnProperty("user_info")) {
+        userdata = r.data;
+        setState((prev) => ({
           ...prev,
-          username:name,
-          phone:phone,
-          email:email,
-          
-        }))
-
-     }) */
+          username:
+            userdata.user_info.user.name === null
+              ? ""
+              : userdata.user_info.user.name,
+          oldcover:
+            userdata.user_info.cover_photo === null
+              ? ""
+              : userdata.user_info.cover_photo,
+          oldprofile:
+            userdata.user_info.profile_image === null
+              ? ""
+              : userdata.user_info.profile_image,
+          regions:
+            userdata.user_info.region === null
+              ? ""
+              : userdata.user_info.region.name,
+          address:
+            userdata.user_info.address === null
+              ? ""
+              : userdata.user_info.address,
+          phone:
+            userdata.user_info.user.phone_no === null
+              ? ""
+              : userdata.user_info.user.phone_no,
+          gender:
+            userdata.user_info.gender === null ? "" : userdata.user_info.gender,
+          dob: userdata.user_info.dob === null ? "" : userdata.user_info.dob,
+          bio: userdata.user_info.bio === null ? "" : userdata.user_info.bio,
+          socials: changeSocials(userdata.user_info.socials),
+          day:
+            userdata.user_info.dob === null
+              ? ""
+              : moment(userdata.user_info.dob).get("date"),
+          month:
+            userdata.user_info.dob === null
+              ? ""
+              : moment(userdata.user_info.dob).get("month"),
+          year:
+            userdata.user_info.dob === null
+              ? ""
+              : moment(userdata.user_info.dob).get("year"),
+          email:
+            userdata.user_info.user.email === null
+              ? ""
+              : userdata.user_info.user.email,
+          urlKeyword:
+            userdata.user_info.profile_url === null
+              ? ""
+              : userdata.user_info.profile_url,
+        }));
+      } else {
+        userdata = r.data;
+        setState((prev) => ({
+          ...prev,
+          username: userdata.user.name,
+          oldcover: userdata.cover_photo === null ? "" : userdata.cover_photo,
+          oldprofile:
+            userdata.profile_image === null ? "" : userdata.profile_image,
+          regions: userdata.region === null ? "none" : userdata.region.name,
+          address: userdata.address === null ? "" : userdata.address,
+          phone: userdata.user.phone_no === null ? "" : userdata.user.phone_no,
+          gender: userdata.gender === null ? "" : userdata.gender,
+          dob: userdata.dob === null ? "none" : userdata.dob,
+          bio: userdata.bio === null ? "none" : userdata.bio,
+          socials: changeSocials(userdata.socials),
+          day: userdata.dob === null ? "" : moment(userdata.dob).get("date"),
+          month: userdata.dob === null ? "" : moment(userdata.dob).get("month"),
+          year: userdata.dob === null ? "" : moment(userdata.dob).get("year"),
+          email: userdata.user.email === null ? "" : userdata.user.email,
+          urlKeyword: userdata.profile_url === null ? "" : userdata.profile_url,
+        }));
       }
-      data.then((r) => {
-        let userdata = null;
-        console.log(r);
-        if (r.data.hasOwnProperty("user_info")) {
-          userdata = r.data;
-          setState((prev) => ({
-            ...prev,
-            username:
-              userdata.user_info.user.name === null
-                ? ""
-                : userdata.user_info.user.name,
-            oldcover:
-              userdata.user_info.cover_photo === null
-                ? ""
-                : userdata.user_info.cover_photo,
-            oldprofile:
-              userdata.user_info.profile_image === null
-                ? ""
-                : userdata.user_info.profile_image,
-            regions:
-              userdata.user_info.region === null
-                ? ""
-                : userdata.user_info.region.name,
-            address:
-              userdata.user_info.address === null
-                ? ""
-                : userdata.user_info.address,
-            phone:
-              userdata.user_info.user.phone_no === null
-                ? ""
-                : userdata.user_info.user.phone_no,
-            gender:
-              userdata.user_info.gender === null
-                ? ""
-                : userdata.user_info.gender,
-            dob: userdata.user_info.dob === null ? "" : userdata.user_info.dob,
-            bio: userdata.user_info.bio === null ? "" : userdata.user_info.bio,
-            socials: changeSocials(userdata.user_info.socials),
-            day:
-              userdata.user_info.dob === null
-                ? ""
-                : moment(userdata.user_info.dob).get("date"),
-            month:
-              userdata.user_info.dob === null
-                ? ""
-                : moment(userdata.user_info.dob).get("month"),
-            year:
-              userdata.user_info.dob === null
-                ? ""
-                : moment(userdata.user_info.dob).get("year"),
-            email:
-              userdata.user_info.user.email === null
-                ? ""
-                : userdata.user_info.user.email,
-            urlKeyword:
-              userdata.user_info.profile_url === null
-                ? ""
-                : userdata.user_info.profile_url,
-          }));
-        } else {
-          userdata = r.data;
-          setState((prev) => ({
-            ...prev,
-            username: userdata.user.name,
-            oldcover: userdata.cover_photo === null ? "" : userdata.cover_photo,
-            oldprofile:
-              userdata.profile_image === null ? "" : userdata.profile_image,
-            regions: userdata.region === null ? "none" : userdata.region.name,
-            address: userdata.address === null ? "" : userdata.address,
-            phone:
-              userdata.user.phone_no === null ? "" : userdata.user.phone_no,
-            gender: userdata.gender === null ? "" : userdata.gender,
-            dob: userdata.dob === null ? "none" : userdata.dob,
-            bio: userdata.bio === null ? "none" : userdata.bio,
-            socials: changeSocials(userdata.socials),
-            day: userdata.dob === null ? "" : moment(userdata.dob).get("date"),
-            month:
-              userdata.dob === null ? "" : moment(userdata.dob).get("month"),
-            year: userdata.dob === null ? "" : moment(userdata.dob).get("year"),
-            email: userdata.user.email === null ? "" : userdata.user.email,
-            urlKeyword:
-              userdata.profile_url === null ? "" : userdata.profile_url,
-          }));
-        }
 
-        // setState((prev) => ({
-        //   ...prev,
-        //   username: userdata.user_info.user.name,
-        //   oldcover: userdata.user_info.cover_photo,
-        //   oldprofile: userdata.user_info.profile_image,
-        //   regions: userdata.user_info.region.name,
-        //   address: userdata.user_info.address,
-        //   phone: userdata.user_info.user.phone_no,
-        //   gender: userdata.user_info.gender,
-        //   dob: userdata.user_info.dob,
-        //   bio: userdata.user_info.bio,
-        //   socials: changeSocials(userdata.user_info.socials),
-        //   day: moment(userdata.user_info.dob).get("date"),
-        //   month: moment(userdata.user_info.dob).get("month"),
-        //   year: moment(userdata.user_info.dob).get("year"),
-        //   email: userdata.user_info.user.email,
-        //   role: "",
-        //   urlKeyword: userdata.user_info.profile_url,
-        // }));
-      });
-    }
-
-    return (getData = false);
+      // setState((prev) => ({
+      //   ...prev,
+      //   username: userdata.user_info.user.name,
+      //   oldcover: userdata.user_info.cover_photo,
+      //   oldprofile: userdata.user_info.profile_image,
+      //   regions: userdata.user_info.region.name,
+      //   address: userdata.user_info.address,
+      //   phone: userdata.user_info.user.phone_no,
+      //   gender: userdata.user_info.gender,
+      //   dob: userdata.user_info.dob,
+      //   bio: userdata.user_info.bio,
+      //   socials: changeSocials(userdata.user_info.socials),
+      //   day: moment(userdata.user_info.dob).get("date"),
+      //   month: moment(userdata.user_info.dob).get("month"),
+      //   year: moment(userdata.user_info.dob).get("year"),
+      //   email: userdata.user_info.user.email,
+      //   role: "",
+      //   urlKeyword: userdata.user_info.profile_url,
+      // }));
+    });
   }, []);
-
-  // useEffect(()=>{
-  //   //console.log('me too');
-  //   getRegions();
-  // },[])
-
-  // if(loading){
-  //   return <h5>Loading....</h5>
-  // }
 
   return (
     <div className={classes.wrapper}>
       <div className={classes.container}>
-        <Typography variant="h4" gutterBottom component="div">
-          Complete to Become a Creator
-        </Typography>
+        {role === "user" && (
+          <Typography variant="h4" gutterBottom component="div">
+            Complete to Become a Creator helo
+          </Typography>
+        )}
+
+        {role === "creator" && (
+          <Typography variant="h4" gutterBottom component="div">
+            Creator Infromation
+          </Typography>
+        )}
+
+        {failed_status && (
+          <AlertMessage
+            alert={true}
+            type="error"
+            msg={"Something went wrong! Change Infromation and then Try again!"}
+          />
+        )}
+
+        {success_status && (
+          <AlertMessage alert={true} type="success" msg={"Success!"} />
+        )}
 
         <Box className={`${classes.firstinfo}`}>
           <Box
@@ -764,6 +653,7 @@ const Basic = () => {
                   ? showimage(state.cover)
                   : getFullUrl(state.oldcover)
               }`}
+              alt="cover-img"
               style={{ width: "100%", height: "100%", objectFit: "cover" }}
             />
           </Box>
@@ -945,7 +835,7 @@ const Basic = () => {
             fullWidth
             name="email"
             value={state.email}
-            readOnly={emailorphone.isEmail}
+            readOnly={true}
             variant="standard"
             placeholder="example@gmail.com"
           />
@@ -979,10 +869,17 @@ const Basic = () => {
         {/* region start */}
         <Box className={classes.cusFormControl}>
           <Box className={classes.cusOptions}>
-            <h5 className="input-label"> Regions </h5>
+            <h5 className="input-label">
+              {" "}
+              Regions{" "}
+              {errors && errors.region_id && (
+                <span className="error-msg">is required</span>
+              )}{" "}
+            </h5>
             {/* <Button>Add</Button> */}
           </Box>
           <SelectOption
+            error={errors && errors.region_id ? true : false}
             fullWidth={false}
             data={regions}
             onChange={state.regions}

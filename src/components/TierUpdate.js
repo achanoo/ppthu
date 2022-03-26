@@ -48,7 +48,6 @@ const initialData = {
 const TierUpdate = ({ data }) => {
   const classes = useStyles();
   const photo = useRef(null);
-  const editor = useRef(null);
   const { token } = useAuthContext();
 
   const NewgetValue = (value) => {

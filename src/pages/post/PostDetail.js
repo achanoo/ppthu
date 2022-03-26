@@ -18,6 +18,7 @@ import PostDetailView from "../../components/PostDetailView";
 import { useAuthContext } from "../../context/AuthContext";
 import { BaseUrl } from "./../../helpers/Constant";
 import api from "./../../services/apifinal.service";
+import axios from "axios";
 
 const useStyle = makeStyles((theme) => ({
   root: {

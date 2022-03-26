@@ -1,24 +1,14 @@
 /** @format */
 
 import * as React from "react";
-import { Link, useHistory } from "react-router-dom";
-import { styled, alpha } from "@mui/material/styles";
+import { useHistory } from "react-router-dom";
 import AppBar from "@mui/material/AppBar";
 import Avatar from "@mui/material/Avatar";
 import logo from "../assets/images/logo.png";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
-import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
-import InputBase from "@mui/material/InputBase";
-import MenuIcon from "@mui/icons-material/Menu";
-import SearchIcon from "@mui/icons-material/Search";
-
-import { CustomButton } from "../layout/CutomerButton";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import MenuButton from "../layout/MenuItem";
 
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -33,7 +23,7 @@ import IconBar from "./../components/IconBar";
 import SearchInput from "../layout/SearchInput";
 import { CButton } from "../layout/CCButton";
 
-const Search = styled("div")(({ theme }) => ({
+/*const Search = styled("div")(({ theme }) => ({
   position: "relative",
   borderRadius: "50px",
   backgroundColor: alpha(theme.palette.common.black, 0.1),
@@ -93,7 +83,7 @@ const CreatePantpoe = styled("div")(({ theme }) => ({
       fontSize: "0.725rem",
     },
   },
-}));
+}));*/
 
 export default function SearchAppBar() {
   const theme = useTheme();

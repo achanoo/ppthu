@@ -87,24 +87,17 @@ export default function Membership() {
   };
 
   React.useEffect(() => {
-    const controller = new AbortController();
-    async function anyfunction() {
-      await getUserSubscriptions()
-        .then((res) => {
-          if (res.success) {
-            setState((prev) => ({
-              ...prev,
-              tiers: res.data,
-            }));
-          }
-        })
-        .catch((error) => console.log(error.getMessage()));
-    }
-    anyfunction();
-    return () => {
-      controller.abort();
-    };
-  }, []);
+    getUserSubscriptions()
+      .then((res) => {
+        if (res.success) {
+          setState((prev) => ({
+            ...prev,
+            tiers: res.data,
+          }));
+        }
+      })
+      .catch((error) => console.log(error.getMessage()));
+  }, [getUserSubscriptions]);
 
   return (
     <Box className={classes.wrapper}>

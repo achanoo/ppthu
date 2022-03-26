@@ -1,5 +1,3 @@
-/** @format */
-
 import React from "react";
 import { Box } from "@mui/system";
 import { makeStyles } from "@mui/styles";
@@ -109,6 +107,7 @@ const PriceLabel = makeLabel("Ks", "#333");
 const EarningsOverview = () => {
   const { token } = useAuthContext();
   const classes = useStyles();
+  const [reload, setReload] = React.useState(false);
   const { getEarningOverview, getSubscriptions, subscriptions } =
     useSubscriptionContext();
   const { getUserData } = useAuthContext();
@@ -271,7 +270,7 @@ const EarningsOverview = () => {
     return () => {
       controller.abort();
     };
-  }, []);
+  }, [reload]);
 
   const addBankInfo = async () => {
     let formData = new FormData();
@@ -293,6 +292,8 @@ const EarningsOverview = () => {
 
   const updateBankinfo = async () => {
     let formData = new FormData();
+    const { bank_info } = state;
+
     formData.append("payment_type_id", state.paymentType);
     formData.append("account_no", state.bankAccount);
     formData.append("account_name", state.bankAccountName);
@@ -306,7 +307,9 @@ const EarningsOverview = () => {
         Accept: "application/json",
       },
     })
-      .then((res) => console.log(res))
+      .then((res) => {
+        setReload(!reload);
+      })
       .catch((error) => console.log(error));
   };
 
@@ -343,7 +346,12 @@ const EarningsOverview = () => {
                 </Typography>
               </Grid>
 
-              <Grid item xs={6} sm={6} md={3} style={{ textAlign: "end" }}>
+              <Grid
+                item
+                xs={6}
+                sm={6}
+                md={3}
+                style={{ textAlign: "end", display: "none" }}>
                 <CustomButtonNormal
                   size="small"
                   className={classes.customButtonWhite}
@@ -408,7 +416,13 @@ const EarningsOverview = () => {
                 </Typography>
               </Grid>
 
-              <Grid item xs={12} sm={12} md={4} className={classes.alignEnd}>
+              <Grid
+                item
+                xs={12}
+                sm={12}
+                md={4}
+                style={{ display: "none" }}
+                className={classes.alignEnd}>
                 <CustomButtonNormal
                   size="small"
                   className={classes.customButton}
@@ -554,28 +568,13 @@ const EarningsOverview = () => {
                       <Grid container>
                         <Grid
                           item
-                          xs={6}
-                          sm={6}
-                          md={6}
-                          display={"none"}
-                          justifyContent="center"
-                          alignItems="center"
-                          style={{ textAlign: "start" }}>
-                          <CutomButtonWhiteOutline
-                            size="small"
-                            className={classes.customButtonWhite}>
-                            Request OTP
-                          </CutomButtonWhiteOutline>
-                        </Grid>
-                        <Grid
-                          item
                           xs={12}
                           sm={12}
                           md={12}
                           justifyContent="flex-end"
                           alignItems="center"
                           style={{ textAlign: "end" }}>
-                          {state.selectedBank_info === "" && (
+                          {state.selectedBank_info.length === "" && (
                             <CustomButtonNormal
                               onClick={addBankInfo}
                               size="small"

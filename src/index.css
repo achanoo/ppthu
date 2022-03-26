@@ -167,3 +167,7 @@ grid-container {
 .imgDiv:hover img {
     opacity: 0.4;
 }
+
+.error-msg {
+    color: red;
+}

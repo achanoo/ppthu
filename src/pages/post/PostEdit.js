@@ -446,10 +446,10 @@ const PostEdit = () => {
 
                   {state.oldpollOption.length > 0 && (
                     <div className={classes.pollDiv}>
-                      {state.pollOption.map((item, i) => {
+                      {state.oldpollOption.map((item, i) => {
                         return (
                           <Box key={i} className={classes.pollFormControl}>
-                            <Checkbox {...label} />
+                            <Checkbox {...label} disabled={true} />
                             <TextField
                               readOnly
                               id="outlined-basic"

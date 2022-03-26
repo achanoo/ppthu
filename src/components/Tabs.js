@@ -1,69 +1,66 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import Tabs from '@mui/material/Tabs'
-import Tab from '@mui/material/Tab'
-import Typography from '@mui/material/Typography'
-import Box from '@mui/material/Box'
-import Toolbar from '@mui/material/Toolbar'
-import '../assets/style.css'
-import Basic from './Basics'
-import Tiers from './Tiers'
-import GettingPaid from './GettingPaid'
-import PageSetting from './PageSetting'
+/** @format */
+
+import React from "react";
+import PropTypes from "prop-types";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
+import Box from "@mui/material/Box";
+import Toolbar from "@mui/material/Toolbar";
+import "../assets/style.css";
+import Basic from "./Basics";
+import Tiers from "./Tiers";
 
 function TabPanel(props) {
-  const { children, value, index, ...other } = props
+  const { children, value, index, ...other } = props;
 
   return (
     <div
-      role='tabpanel'
+      role="tabpanel"
       hidden={value !== index}
       id={`simple-tabpanel-${index}`}
       aria-labelledby={`simple-tab-${index}`}
-      {...other}
-    >
+      {...other}>
       {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
     </div>
-  )
+  );
 }
 
 TabPanel.propTypes = {
   children: PropTypes.node,
   index: PropTypes.number.isRequired,
   value: PropTypes.number.isRequired,
-}
+};
 
 function a11yProps(index) {
   return {
     id: `simple-tab-${index}`,
-    'aria-controls': `simple-tabpanel-${index}`,
-  }
+    "aria-controls": `simple-tabpanel-${index}`,
+  };
 }
 
 export default function BasicTabs() {
-  const [value, setValue] = React.useState(0)
+  const [value, setValue] = React.useState(0);
 
   const handleChange = (event, newValue) => {
-    setValue(newValue)
-  }
+    setValue(newValue);
+  };
 
   return (
-    <Toolbar sx={{ padding: '1%' }}>
-      <Box sx={{ width: '100%' }}>
-        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+    <Toolbar sx={{ padding: "1%" }}>
+      <Box sx={{ width: "100%" }}>
+        <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
           <Tabs
             value={value}
             onChange={handleChange}
-            aria-label='basic tabs example'
-            variant='fullWidth'
-            centered
-          >
+            aria-label="basic tabs example"
+            variant="fullWidth"
+            centered>
             <Tab
-              label='Basics'
+              label="Basics"
               {...a11yProps(0)}
-              style={{ fontVariant: 'normal' }}
+              style={{ fontVariant: "normal" }}
             />
-            <Tab label='Tiers' {...a11yProps(1)} />
+            <Tab label="Tiers" {...a11yProps(1)} />
             {/* <Tab label='Getting Paid' {...a11yProps(2)} />
             <Tab label='Page Settings' {...a11yProps(3)} />
             <Tab label='Preview' {...a11yProps(4)} /> */}
@@ -84,5 +81,5 @@ export default function BasicTabs() {
         </TabPanel> */}
       </Box>
     </Toolbar>
-  )
+  );
 }

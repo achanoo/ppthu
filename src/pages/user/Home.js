@@ -61,6 +61,7 @@ const useStyle = makeStyles((theme) => ({
     marginTop: "8px",
   },
 }));
+
 //first user view/ not creator view
 const UserHome = () => {
   const { token, user } = useAuthContext();
@@ -146,7 +147,7 @@ const UserHome = () => {
                 </Grid>
                 <Divider />
                 <Grid p={2}>
-                  <h3 m={0}>Supporting</h3>
+                  <h3>Supporting</h3>
                 </Grid>
                 <Divider />
                 <Grid p={2}>
@@ -163,13 +164,13 @@ const UserHome = () => {
                         alignItems={"center"}>
                         <Typography
                           variant="body1"
-                          component={"div"}
+                          component="div"
                           gutterBottom={false}>
                           {item.creator.user_info.user.name}
                         </Typography>
                         <Typography
                           variant="caption"
-                          component={"div"}
+                          component="div"
                           gutterBottom={false}>
                           ({item.creator.user_info.profile_url})
                         </Typography>

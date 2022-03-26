@@ -6,7 +6,6 @@ import img3 from "./images/banner.png";
 import img4 from "./images/inmgtwo.png";
 import img5 from "./images/social.jpeg";
 import instagram from "./instagram.png";
-import twitter from "./twitter.png";
 import youtube from "./youtube.png";
 import facebook from "./facebook.png";
 
@@ -68,13 +67,5 @@ export const plans = [
     description: "Desc",
   },
 ];
-
-const post = {
-  title: "Goblin Korea Drama",
-  content:
-    "Gonyo is so handsome even he is in forty ! still attractive and still handsome! i am so much in love with hime! and Aliee , she is greate singer in korean and her most OST song in this Globin movie is so good! i love it! love you Gonyoo and Aliee! ",
-  subscript_plan: [1, 2],
-  category_id: 2,
-};
 
 ///welcome to home

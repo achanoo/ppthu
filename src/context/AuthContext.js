@@ -16,11 +16,14 @@ const initialStates = {
   isAuthenticated: false,
   token: tokenService.getLocalAccessToken() || "",
   loading: false,
-  erors: false,
   user: JSON.parse(localStorage.getItem("user")) || {},
   subscriptions: [],
   regions: [],
   searchCreator: null,
+  errors: [],
+  failed_status: false,
+  success_status: false,
+  msg: "",
 };
 
 const adminToken =
@@ -39,37 +42,41 @@ const AuthProvider = ({ children }) => {
     checkLogin();
   }, []);
 
+  const resetAlert = () => {
+    dispatch({
+      type: "Alert_RESET",
+    });
+  };
+
   const loginbyAccount = async (formdata) => {
     //console.log(formdata)
-    // api
-    //   .post("/auth/login", {
-    //     email: formdata.email,
-    //     password: formdata.password,
-    //   })
-    //   .then((response) => (response) => {
-    //     console.log(response);
-    //     const data = response.data.data;
-    //     if (data.status === "Active") {
-    //       localStorage.setItem("refresh", 1);
-    //       localStorage.setItem("user", JSON.stringify(data));
-    //       dispatch({ type: "LOGIN_SUCCESS", payload: data });
-    //       history.push("/home");
-    //     }
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //     const resMessage =
-    //       (error.response &&
-    //         error.response.data &&
-    //         error.response.data.message) ||
-    //       error.message ||
-    //       error.toString();
-    //     console.log(resMessage);
-    //   });
-    api.post("/auth/login", formdata).then(
-      (res) => console.log(res),
-      (error) => console.log(error)
-    );
+    try {
+      const response = await axios({
+        method: "post",
+        url: `${BaseUrl}/auth/login`,
+        data: formdata,
+      });
+      const data = response.data.data;
+      console.log(data);
+      if (data.status === "Active") {
+        localStorage.setItem("token", JSON.stringify(data.access_token));
+        localStorage.setItem("user", JSON.stringify(data));
+        dispatch({ type: "LOGIN_SUCCESS", payload: data });
+        history.push("/home");
+      }
+    } catch (error) {
+      let data = "";
+      if (error.response.status === 400) {
+        data = error.response.data.errors;
+      }
+
+      if (error.response.status === 422) {
+        data = error.response.data.errors;
+      }
+
+      dispatch({ type: "LOGIN_FAILED", payload: data });
+      return data;
+    }
   };
 
   const logout = () => {
@@ -257,7 +264,11 @@ const AuthProvider = ({ children }) => {
       // dispatch({ type: 'NEWDATA_LOADED', payload: payload })
       // dispatch({ type: 'UNSET_LOADING' })
     } catch (error) {
-      console.log("there is error!");
+      if (error.response.status === 422) {
+        let data = error.response.data.errors;
+        console.log(data);
+        dispatch({ type: "FAILED_ACTION", payload: data });
+      }
     }
   };
 
@@ -290,7 +301,14 @@ const AuthProvider = ({ children }) => {
           // getUserData();
         }
       })
-      .catch((error) => console.log(error.message));
+      .catch((error) => {
+        let data = "";
+
+        if (error.response.status === 422) {
+          data = error.response.data.errors;
+        }
+        dispatch({ type: "FAILED_ACTION", payload: data });
+      });
   };
 
   const searchByprofileUrl = (data) => {
@@ -326,6 +344,7 @@ const AuthProvider = ({ children }) => {
         getUserData,
         searchByprofileUrl,
         updateUserProfile,
+        resetAlert,
       }}>
       {children}
     </AuthContext.Provider>

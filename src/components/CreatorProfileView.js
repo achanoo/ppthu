@@ -1,9 +1,10 @@
 /** @format */
 
 import React from "react";
-import { useHistory, useParams, Link } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { makeStyles } from "@mui/styles";
-import { coverphoto, profilephoto, socialIcons } from "../assets/data.js";
+import { coverphoto, socialIcons } from "../assets/data.js";
+import DOMPurify from "dompurify";
 import {
   Box,
   Avatar,
@@ -12,21 +13,13 @@ import {
   IconButton,
   Button,
 } from "@mui/material";
-import { grid } from "@mui/system";
 import Tooltip from "@mui/material/Tooltip";
 import { CButton } from "./../layout/CCButton";
-import { Repeat } from "@mui/icons-material";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import DOMPurify from "dompurify";
-import { BsFacebook } from "react-icons/bs";
-import { FaInstagramSquare, FaYoutubeSquare, FaWifi } from "react-icons/fa";
-import { AiFillTwitterCircle, AiOutlineWifi } from "react-icons/ai";
+import { FaWifi } from "react-icons/fa";
 import { BiChat } from "react-icons/bi";
 import { RiHeartsLine } from "react-icons/ri";
 import CircleIcon from "@mui/icons-material/Circle";
-import heart from "./../assets/heart.png";
-import axios from "axios";
-import { useAuthContext } from "../context/AuthContext.js";
 import { getFullUrl, profileUrl } from "../helpers/Constant.js";
 
 const useStyles = makeStyles((theme) => ({
@@ -263,11 +256,11 @@ const CreatorProfileView = ({ user }) => {
   const history = useHistory();
   const classes = useStyles();
   // const { joinPlan } = useAuthContext();
-  const [more, setMore] = React.useState(true);
-  const showMore = (e) => {
-    e.preventDefault();
-    setMore(!more);
-  };
+  // const [more, setMore] = React.useState(true);
+  // const showMore = (e) => {
+  //   e.preventDefault();
+  //   setMore(!more);
+  // };
 
   //start for share tooltip
   const [open, setOpen] = React.useState(false);
@@ -295,7 +288,7 @@ const CreatorProfileView = ({ user }) => {
   };
 
   const socialLinkSetup = (link) => {
-    let linkdata = "";
+    // let linkdata = "";
 
     console.log(link);
     const data = socials.filter((i) => i.name === link);

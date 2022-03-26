@@ -15,13 +15,16 @@ import { SubscriptionProvider } from "./context/SubscriptionContext";
 const theme1 = createTheme({
   palette: {
     primary: {
-      main: "#000",
+      light: "#757ce8",
+      main: "#3f50b5",
+      dark: "#002884",
+      contrastText: "#fff",
     },
     secondary: {
-      main: "#A00",
-    },
-    success: {
-      main: "#A400",
+      light: "#f50057",
+      main: "#f44336",
+      dark: "#ba000d",
+      contrastText: "#000",
     },
   },
   background: {

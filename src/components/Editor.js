@@ -1,6 +1,6 @@
 /** @format */
 
-import React, { useRef, useState, useMemo } from "react";
+import React, { useRef, useMemo } from "react";
 import JoditEditor from "jodit-react";
 
 const Editor = ({ oldvalue = "", ...props }) => {

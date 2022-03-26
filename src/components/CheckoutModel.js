@@ -283,7 +283,9 @@ const CheckOutModel = () => {
       <div className={classes.container}>
         <Typography variant="h5" gutterBottom component="div" paddingBottom={4}>
           <span>Complete your monthly payment to </span>
-          <Link to="/creator-profile" className={classes.creatorName}>
+          <Link
+            to={`/creator-profile/${username}`}
+            className={classes.creatorName}>
             {`${username}`}
           </Link>
         </Typography>
@@ -334,7 +336,7 @@ const CheckOutModel = () => {
                     }}
                   />
                   <FormHelperText id="outlined-weight-helper-text">
-                    {/*  amount */}
+                    {/*  amount wlcome too */}
                   </FormHelperText>
                 </FormControl>
                 <span
@@ -426,6 +428,7 @@ const CheckOutModel = () => {
                     variant="middle"
                   />
                   <Button
+                    style={{ display: "none" }}
                     onClick={() =>
                       history.push(`/creator-profile/$
                       {username}`)

@@ -1,7 +1,9 @@
 /** @format */
 
-import React from "react";
-import { NavBar, ImageGrid } from "./components";
+import React, { useEffect } from "react";
+import Echo from "laravel-echo";
+
+import { NavBar } from "./components";
 import {
   Home,
   Footer,
@@ -19,8 +21,8 @@ import {
   StepTwo,
   EditProfile,
   UserProfile,
-  PostEdit,
   Membership,
+  PostEdit,
   Faq,
   TermsAndCondition,
 } from "./pages/";
@@ -29,19 +31,25 @@ import RSManager from "./pages/creator/RSManager";
 import EarningsOverview from "./pages/creator/EarningsOverview";
 import EarningsOverviewDetail from "./pages/creator/EarningsOverviewDetail";
 import CheckOutModel from "./components/CheckoutModel";
-import PrivateRoute from "./routes/PrivateRoute";
 import "./App.css";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link,
-  useHistory,
-} from "react-router-dom";
-
-import { RouterRounded } from "@mui/icons-material";
+import { Switch, Route } from "react-router-dom";
 
 function App() {
+  const listen = () => {
+    window.Echo = new Echo({
+      broadcaster: "pusher",
+      key: "cbae929ae26fb6b1d072",
+      cluster: "ap1",
+      encrypted: true,
+    });
+
+    window.Echo.channel("comment-channel").listen("newComment", function (e) {
+      console.log(e);
+    });
+  };
+  useEffect(() => {
+    listen();
+  });
   return (
     <>
       <NavBar />
@@ -63,6 +71,7 @@ function App() {
           path="/earnings-overview-detail"
           component={EarningsOverviewDetail}
         />
+        <Route path="/membership" component={Membership} />
 
         <Route path="/home">
           <UserHome />
@@ -87,6 +96,12 @@ function App() {
         {/* <Route path='/creator-profile'>
           <CreatorProfile />
         </Route> */}
+        <Route path="/faq">
+          <Faq />
+        </Route>
+        <Route path="/policy/legal">
+          <TermsAndCondition />
+        </Route>
 
         <Route path="/creator-edit/">
           <EditProfile />

@@ -179,6 +179,7 @@ const PostCreate = () => {
   const [textCounting, setTextCounting] = useState(540);
   const inputChange = (e) => {
     const { name, value } = e.target;
+    console.log(name);
     if (name !== "link") {
       setState((prev) => ({
         ...prev,
@@ -455,7 +456,10 @@ const PostCreate = () => {
                 <h4 variant="h6" className={classes.SubTitle}>
                   Select which tiers have access
                 </h4>
-                <SelectSubscriptions getTiers={getTiers} />
+                <SelectSubscriptions
+                  getTiers={getTiers}
+                  seefirst={state.seefirst}
+                />
                 <Divider className={classes.divider} />
 
                 {/* text teaser start */}
