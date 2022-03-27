@@ -249,7 +249,7 @@ const Basic = () => {
   // console.log(role);
   // const [dense, setDense] =  React.useState(false);
   // const [secondary, setSecondary] = React.useState(false);
-  // const [userInfo, setUserInfo] = React.useState("");
+  //const [userInfo, setUserInfo] = React.useState();
 
   const [errors, setErrors] = useState({
     cover: "",
@@ -629,7 +629,7 @@ const Basic = () => {
     }
 
     return (getData = false);
-  }, []);
+  }, [getRegions, getUserData]);
 
   // useEffect(()=>{
   //   //console.log('me too');

@@ -365,20 +365,13 @@ const BasicTabs = (props) => {
     };
   }, [changes, value, selectedCreator, type]);
 
-  //  React.useEffect(() => {
-  //    setIsSetData(true);
-
-  //    async function anyNameFunction() {
-  //      if (keyword != "") {
-  //        await getData(keyword);
-  //      }
-  //    }
-  //    anyNameFunction();
-  //  }, [keyword]);
-
   const creatorChosen = (id) => {
     setSelectedCreator(id);
     handleClose();
+  };
+
+  const postliked = () => {
+    alert("this is liked by child to parent");
   };
 
   if (loading) {

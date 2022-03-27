@@ -1,34 +1,36 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
-import './index.css'
-import App from './App'
-import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom'
-import CssBaseline from '@mui/material/CssBaseline'
-import { styled, createTheme, ThemeProvider } from '@mui/material/styles'
-import { AuthProvider } from './context/AuthContext'
+/** @format */
 
-import { PostProvider } from './context/PostContext'
-import { SubscriptionProvider } from './context/SubscriptionContext'
+import React from "react";
+import ReactDOM from "react-dom";
+import "./index.css";
+import App from "./App";
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import CssBaseline from "@mui/material/CssBaseline";
+import { styled, createTheme, ThemeProvider } from "@mui/material/styles";
+import { AuthProvider } from "./context/AuthContext";
+
+import { PostProvider } from "./context/PostContext";
+import { SubscriptionProvider } from "./context/SubscriptionContext";
 
 const theme1 = createTheme({
   palette: {
     primary: {
-      main: '#000',
+      main: "#000",
     },
     secondary: {
-      main:'#A00'
+      main: "#A00",
     },
     success: {
-      main: '#A400',
+      main: "#A400",
     },
   },
   background: {
-    default: '#fff',
+    default: "#fff",
   },
   typography: {
-    fontFamily: 'Roboto,sans-serif',
+    fontFamily: "Roboto,sans-serif",
     button: {
-      textTransform: 'none',
+      textTransform: "none",
     },
   },
   // overrides: {
@@ -38,19 +40,15 @@ const theme1 = createTheme({
   //     },
   //   },
   // },
-})
+});
 
 ReactDOM.render(
   <Router>
     <AuthProvider>
-      <SubscriptionProvider>
-        <PostProvider>
-          <ThemeProvider theme={theme1}>
-            <App />
-          </ThemeProvider>
-        </PostProvider>
-      </SubscriptionProvider>
+      <ThemeProvider theme={theme1}>
+        <App />
+      </ThemeProvider>
     </AuthProvider>
   </Router>,
-  document.getElementById('root')
-)
+  document.getElementById("root")
+);

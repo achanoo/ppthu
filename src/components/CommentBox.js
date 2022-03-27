@@ -37,7 +37,7 @@ const CommentBox = ({ result = "", ...props }) => {
       />
       <Button
         style={{ float: "right", marginTop: "10px" }}
-        onClick={submitHandling(postid)}
+        onClick={()=> 'heo'}
         type="submit"
         variant="outlined"
         className="comments-button"
