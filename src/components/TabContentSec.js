@@ -8,6 +8,7 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import { AiOutlineDownCircle } from "react-icons/ai";
 import { useAuthContext } from "../context/AuthContext";
+import { useBlogContext } from "../context/PostBlogContext";
 import axios from "axios";
 import Post from "./Post";
 
@@ -31,7 +32,7 @@ function TabPanel(props: TabPanelProps) {
       {...other}>
       {value === index && (
         <Box sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
+          <div>{children}</div>
         </Box>
       )}
     </div>
@@ -48,45 +49,17 @@ function a11yProps(index: number) {
 export default function PostTabs() {
   const [value, setValue] = React.useState(0);
   const [type, setType] = React.useState(1);
-  const { token } = useAuthContext();
-  const [loading, setLoading] = React.useState(false);
-  const [posts, setPosts] = React.useState([]);
+  const { sendGetRequest, loading, setLoading, posts } = useBlogContext();
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
 
-  const sendGetRequest = async () => {
-    try {
-      const res = await axios({
-        method: "get",
-        url: `${BaseUrl}/content`,
-        params: {
-          type: "all",
-        },
-        headers: {
-          Accept: "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const response = res.data;
-      if (response.success) {
-        setPosts(res.data?.data);
-      } else {
-        const errms = response.data.message;
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const loadPosts = async () => {
-    setLoading(true);
-    sendGetRequest();
-    setLoading(false);
-  };
-
-  React.useEffect(() => loadPosts(), []);
+  // const loadPosts = async () => {
+  //   setLoading(true);
+  //   sendGetRequest();
+  //   setLoading(false);
+  // };
 
   if (loading) {
     return "loading";

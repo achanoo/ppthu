@@ -17,7 +17,7 @@ import { CustomButton } from "../../layout/CutomerButton";
 import TabContents from "../../components/TabContentSec";
 import { getFullUrl, BaseUrl } from "../../helpers/Constant";
 import axios from "axios";
-import { PostProvider } from "../../context/PostContext";
+import { PostBlogProvider } from "../../context/PostBlogContext";
 
 const useStyle = makeStyles((theme) => ({
   root: {
@@ -123,9 +123,9 @@ const UserHome = () => {
             md={6}
             display={{ xs: "block", sm: "block" }}
             order={{ xs: 1, sm: 2 }}>
-            <PostProvider>
+            <PostBlogProvider>
               <TabContents />
-            </PostProvider>
+            </PostBlogProvider>
           </Grid>
           <Grid
             item

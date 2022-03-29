@@ -1,8 +1,10 @@
 import React from 'react';
 import {MainReply,ReplyInfo,ReplyDetail,Counting} from '../styled/styles.js';
-import {Avatar,IconButton} from '@mui/material'
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import {Avatar,IconButton,Badge} from '@mui/material'
+import I from "@mui/icons-material/FavoriteBorder";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 import moment from 'moment';
 
 const Reply = ({id,item}) => {
@@ -18,13 +20,20 @@ const Reply = ({id,item}) => {
 			        <p>
 			          {item?.comment}
 			        </p>
-			        <IconButton aria-label='Example'>
-			          <FavoriteBorderIcon fontSize='small' />{' '}
-			          <Counting>3</Counting>
-			        </IconButton>
-			        <IconButton aria-label='Example'>
-			          <ChatBubbleOutlineIcon fontSize='small' />
-			        </IconButton>
+			        <IconButton
+	                    aria-label="Example"
+	                    onClick={() =>
+	                      console.log('edit reply')
+	                    }>
+	                    <EditIcon fontSize="small" />
+	                </IconButton>
+			        <IconButton
+	                    aria-label="Example"
+	                    onClick={() => {
+	                      console.log('delete reply')
+	                    }}>
+	                    <DeleteIcon fontSize="small" />
+	                </IconButton>
 			      </ReplyDetail>
 			</ReplyInfo>
 		</MainReply>

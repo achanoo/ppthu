@@ -1,8 +1,10 @@
 import React from 'react'
-import { Avatar ,IconButton} from "@mui/material";
+import { Avatar ,IconButton,Badge} from "@mui/material";
 import {CommentContent,Content,CommentDetail} from '../styled/styles.js';
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 import moment from 'moment';
 import Reply from './Reply';
 
@@ -21,12 +23,27 @@ const Comment = ({id,comment,item}) => {
 	                    {item?.comment}
 	                  </p>
 	                  <IconButton aria-label='Example'>
-	                    <FavoriteBorderIcon fontSize='small' />
+		                  <Badge badgeContent={item?.comment_like_counts} color="error">
+				            <FavoriteBorderIcon />
+				          </Badge>  
 	                  </IconButton>
 	                  <IconButton aria-label='Example'>
 	                    <ChatBubbleOutlineIcon fontSize='small' />
 	                  </IconButton>
-
+				      <IconButton
+	                    aria-label="Example"
+	                    onClick={() =>
+	                      console.log('edit reply')
+	                    }>
+	                    <EditIcon fontSize="small" />
+	                  </IconButton>
+			          <IconButton
+	                    aria-label="Example"
+	                    onClick={() => {
+	                      console.log('delete reply')
+	                    }}>
+	                    <DeleteIcon fontSize="small" />
+	                  </IconButton>
 					</CommentDetail>
 				</Content>
 				<div className='commentTime'>

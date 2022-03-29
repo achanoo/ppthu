@@ -10,7 +10,7 @@ import Badge from "@mui/material/Badge";
 import TextareaAutosize from "@mui/material/TextareaAutosize";
 import Box from "@mui/material/Box";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
-import { Avatar, Button, Divider, IconButton,Typography } from "@mui/material";
+import { Avatar, Button, Divider, IconButton, Typography } from "@mui/material";
 import IosShareIcon from "@mui/icons-material/IosShare";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteOutlinedIcon from "@mui/icons-material/FavoriteOutlined";
@@ -28,10 +28,11 @@ import { SiOpenaccess } from "react-icons/si";
 import { MdOutlinePublic } from "react-icons/md";
 import { HiUserGroup } from "react-icons/hi";
 import axios from "axios";
-import Comment from './Comment';
-import CommentBox from './CommentBox';
+import Comment from "./Comment";
+import CommentBox from "./CommentBox";
 
 import PollOption from "./PollOption";
+import { useBlogContext } from "../context/PostBlogContext";
 const useStyles = makeStyles((theme) => ({
   root: {
     "& .MuiBox-root": {
@@ -206,9 +207,9 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
     padding: "0 4px",
   },
 }));
-const Post = ({ id, post, postPage ,...props}) => {
+const Post = ({ id, post, postPage, ...props }) => {
   const classes = useStyles();
-  const {likeHandle,reloading} = props;
+  const { reloading, setReloading } = useBlogContext();
   const [more, setMore] = React.useState(true);
   const [likes, setLikes] = React.useState([]);
   const [liked, setLiked] = React.useState(false);
@@ -237,30 +238,50 @@ const Post = ({ id, post, postPage ,...props}) => {
   };
 
   const postLiked = async () => {
-   
-    if(liked){
-       const likeObj = likes.filter((like)=>like.user_info.user.id === user?.id );
-      likeHandle({id:likeObj[0]?.id,status:liked});
-    }else{
-      likeHandle({id:id,status:liked});
+    let response = null;
+    try {
+      if (liked) {
+        let like_obj = likes.filter(
+          (item) => item?.user_info.user.id === user.id
+        );
+        console.log(like_obj);
+        response = axios({
+          method: "DELETE",
+          url: `${BaseUrl}/like/${like_obj[0].id}`,
+          headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+      } else {
+        response = axios({
+          method: "post",
+          url: `${BaseUrl}/like/`,
+          data: { content_id: id },
+          headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+      }
+      response.then((data) => {
+        console.log(data);
+      });
+    } catch (error) {
+      console.log(error);
     }
+    setReloading(!reloading);
+  };
 
-    reloading();
-    
-  }; 
-
-   React.useEffect(() => setLikes(post?.likes), [id,post]);
+  React.useEffect(() => setLikes(post?.likes), [id, post, reloading]);
 
   React.useEffect(
     () =>
-       setLiked(
+      setLiked(
         likes.findIndex((like) => like.user_info.user.id === user?.id) !== -1
-      )
-      ,
+      ),
     [likes]
-  ); 
-
-   
+  );
 
   return (
     <div className={classes.allposts}>
@@ -311,7 +332,6 @@ const Post = ({ id, post, postPage ,...props}) => {
           )}
 
           {/*  link */}
-          
 
           <span>
             {moment(post?.created_at, ["YYYY", moment.ISO_8601]).format(
@@ -336,7 +356,9 @@ const Post = ({ id, post, postPage ,...props}) => {
                     height: more ? "80px" : "100%",
                     transition: "ease-in",
                   }}>
-                  <Typography component="div" vairant="title1" >{post?.content}</Typography>
+                  <Typography component="div" vairant="title1">
+                    {post?.content}
+                  </Typography>
                 </div>
               </div>
 
@@ -370,7 +392,7 @@ const Post = ({ id, post, postPage ,...props}) => {
         <Box className={classes.btnOptions}>
           <Box className={classes.tools}>
             {liked ? (
-              <IconButton aria-label="Example"  onClick={postLiked}>
+              <IconButton aria-label="Example" onClick={postLiked}>
                 <FavoriteOutlinedIcon fontSize="large" sx={{ color: "red" }} />
               </IconButton>
             ) : (
@@ -414,14 +436,12 @@ const Post = ({ id, post, postPage ,...props}) => {
             of {post?.comments.length}
           </span>
         </Box>
-        
-          {post?.comments.map(item => {
-            const {id,comment} = item;
-            return <Comment key={id} id={id} comment={comment} item={item}/>
-          })}
-          <CommentBox />
-        
 
+        {post?.comments.map((item) => {
+          const { id, comment } = item;
+          return <Comment key={id} id={id} comment={comment} item={item} />;
+        })}
+        <CommentBox id={id} />
       </div>
     </div>
   );
