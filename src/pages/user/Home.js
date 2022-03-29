@@ -14,9 +14,11 @@ import CardContent from "@mui/material/CardContent";
 import CardActions from "@mui/material/CardActions";
 import { Avatar, Typography, Divider } from "@mui/material";
 import { CustomButton } from "../../layout/CutomerButton";
-import TabContents from "../../components/TabContent";
+import TabContents from "../../components/TabContentSec";
 import { getFullUrl, BaseUrl } from "../../helpers/Constant";
 import api from "../../services/apifinal.service";
+import axios from "axios";
+import { PostBlogProvider } from "../../context/PostBlogContext";
 
 const useStyle = makeStyles((theme) => ({
   root: {
@@ -118,6 +120,9 @@ const UserHome = () => {
             display={{ xs: "block", sm: "block" }}
             order={{ xs: 1, sm: 2 }}>
             {creators.length > 0 && <TabContents creators={creators} />}
+            <PostBlogProvider>
+              <TabContents />
+            </PostBlogProvider>
           </Grid>
           <Grid
             item

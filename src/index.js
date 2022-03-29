@@ -15,16 +15,13 @@ import { SubscriptionProvider } from "./context/SubscriptionContext";
 const theme1 = createTheme({
   palette: {
     primary: {
-      light: "#757ce8",
-      main: "#3f50b5",
-      dark: "#002884",
-      contrastText: "#fff",
+      main: "#000",
     },
     secondary: {
-      light: "#f50057",
-      main: "#f44336",
-      dark: "#ba000d",
-      contrastText: "#000",
+      main: "#A00",
+    },
+    success: {
+      main: "#A400",
     },
   },
   background: {
@@ -48,13 +45,9 @@ const theme1 = createTheme({
 ReactDOM.render(
   <Router>
     <AuthProvider>
-      <SubscriptionProvider>
-        <PostProvider>
-          <ThemeProvider theme={theme1}>
-            <App />
-          </ThemeProvider>
-        </PostProvider>
-      </SubscriptionProvider>
+      <ThemeProvider theme={theme1}>
+        <App />
+      </ThemeProvider>
     </AuthProvider>
   </Router>,
   document.getElementById("root")

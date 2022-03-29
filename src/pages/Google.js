@@ -11,24 +11,20 @@ export default function Google(props) {
   const onResponse = (googleResponse) => {
     console.log("helo");
     console.log(googleResponse);
-    try {
-      if (googleResponse) {
-        const res = googleResponse.profileObj;
-        console.log(res);
-        const formData = {
-          email: res.email,
-          token: res.googleId,
-          provider: "Google",
-          name: res.name,
-          image: res.imageUrl,
-        };
-        //console.log(formData)
-        loginByPovider(formData);
-      } else {
-        console.log("none");
-      }
-    } catch (error) {
-      console.log(error);
+    if (googleResponse) {
+      const res = googleResponse.profileObj;
+      console.log(res);
+      const formData = {
+        email: res?.email,
+        token: res?.googleId,
+        provider: "Google",
+        name: res?.name,
+        image: res?.imageUrl,
+      };
+      //console.log(formData)
+      loginByPovider(formData);
+    } else {
+      console.log("none");
     }
   };
   return (

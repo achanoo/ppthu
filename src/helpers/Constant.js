@@ -24,6 +24,7 @@ export const getFullUrl = (path) => {
   return `http://localhost:8000/storage/` + path;
 };
 export const FrontEndBaseUrl = "https://localhost:3000/";
+
 export const RBaseUrl = "https://localhost:3000/creator-profile/";
 
 export const profileUrl = (keyword) => {

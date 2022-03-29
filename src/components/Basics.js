@@ -341,44 +341,7 @@ const Basic = () => {
     }));
   };
 
-  // const  getUserinfo=async()=>{
-  //   try{
-
-  //    const response=await axios(
-  //       {
-  //         method: 'get',
-  //         url: `${BaseUrl}/user`,
-  //         headers: {
-  //           Accept: 'application/json',
-  //           'Content-Type': 'multipart/form-data',
-  //           Authorization: `Bearer ${authUser.access_token}`,
-  //         },
-  //       });
-
-  //       return response.data;
-
-  //   }catch(error){
-  //     return error.response;
-  //   }
-  // }
-
-  // const checkValidation = () => {
-  //   for (const property in state) {
-  //     // console.log(`${property}: ${state[property]}`);
-  //     if (state[property].length <= 0 || state[property] === "none") {
-  //       setErrors((prev) => ({
-  //         ...prev,
-  //         [property]: `${property} is required`,
-  //       }));
-  //     }
-  //   }
-  // };
-
   const hanldingSubmit = () => {
-    // console.log('you click');
-
-    // checkValidation();
-
     let dob = moment()
       .add(state.day, "days")
       .month(state.month - 1)
@@ -509,28 +472,8 @@ const Basic = () => {
           urlKeyword: userdata.profile_url === null ? "" : userdata.profile_url,
         }));
       }
-
-      // setState((prev) => ({
-      //   ...prev,
-      //   username: userdata.user_info.user.name,
-      //   oldcover: userdata.user_info.cover_photo,
-      //   oldprofile: userdata.user_info.profile_image,
-      //   regions: userdata.user_info.region.name,
-      //   address: userdata.user_info.address,
-      //   phone: userdata.user_info.user.phone_no,
-      //   gender: userdata.user_info.gender,
-      //   dob: userdata.user_info.dob,
-      //   bio: userdata.user_info.bio,
-      //   socials: changeSocials(userdata.user_info.socials),
-      //   day: moment(userdata.user_info.dob).get("date"),
-      //   month: moment(userdata.user_info.dob).get("month"),
-      //   year: moment(userdata.user_info.dob).get("year"),
-      //   email: userdata.user_info.user.email,
-      //   role: "",
-      //   urlKeyword: userdata.user_info.profile_url,
-      // }));
     });
-  }, []);
+  }, [getRegions, getUserData]);
 
   return (
     <div className={classes.wrapper}>
