@@ -2,8 +2,10 @@
 
 import React, { useState } from "react";
 import { useHistory } from "react-router";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import Loading from "./../../components/Loading";
 import MultipleSelectCheckmarks from "./../../components/CheckboxSelect";
+import LinearProgress from "@mui/material/LinearProgress";
 import SelectSubscriptions from "./../../components/Subscript";
 import { Grid, Box, Typography, TextField, Divider } from "@mui/material";
 import Radio from "@mui/material/Radio";
@@ -171,6 +173,8 @@ const PostCreate = () => {
     postCreated,
     RemoveData,
     error,
+    progress,
+    isSuccess,
   } = usePostContext();
 
   const classes = useStyles();
@@ -250,7 +254,7 @@ const PostCreate = () => {
     // setFiles(e.target.files[0]);
   };
 
-  const createdPost = () => {
+  const createdPost = async () => {
     let formData = new FormData();
     formData.append("title", state.title);
     formData.append("content", state.content);
@@ -262,7 +266,7 @@ const PostCreate = () => {
     formData.append("type", state.seefirst);
     formData.append("link", state.link);
     formData.append("poll_options", JSON.stringify(state.pollOption));
-    postCreated(formData);
+    return await postCreated(formData);
     // history.push('/home')
   };
 
@@ -297,6 +301,7 @@ const PostCreate = () => {
               md={8}
               className={` ${classes.item} FaintBox ${classes.PostCreateDiv}`}>
               {/* post creating start */}
+
               <Box className={classes.TitleTab}>
                 <Typography
                   variant="subtitle1"
@@ -392,6 +397,17 @@ const PostCreate = () => {
                     </React.Fragment>
                   )}
                 </Box>
+                {isSuccess && (
+                  <Box color="success.main" display="flex">
+                    <CheckCircleIcon color="success" />
+                    <Typography>Success</Typography>
+                  </Box>
+                )}
+                {!isSuccess && progress != 0 && (
+                  <>
+                    <LinearProgress variant="determinate" value={progress} />
+                  </>
+                )}
                 {/* preview start here */}
                 <OptionTabs
                   getPollOption={getPollOption}

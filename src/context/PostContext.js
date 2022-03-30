@@ -33,6 +33,8 @@ const PostProvider = ({ children }) => {
   const { isAuthenticated, token } = useAuthContext();
   const [cancelTokenSource, setCancelTokenSource] = React.useState();
   const [error, setError] = React.useState({});
+  const [isSuccess, setIsSuccess] = React.useState(false);
+  const [progress, setProgress] = React.useState(0);
   const [state, dispatch] = React.useReducer(reducer, initialStates);
   const handleInputImage = (data) => {
     console.log(data);
@@ -114,7 +116,20 @@ const PostProvider = ({ children }) => {
           "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${token}`,
         },
+
+        onUploadProgress: (progressEvent) => {
+          const progress = (progressEvent.loaded / progressEvent.total) * 50;
+          setProgress(progress);
+        },
+        onDownloadProgress: (progressEvent) => {
+          const progress =
+            50 + (progressEvent.loaded / progressEvent.total) * 50;
+          console.log(progress);
+          setProgress(progress);
+        },
       });
+
+      setIsSuccess(true);
 
       response
         .then((data) => {
@@ -171,207 +186,6 @@ const PostProvider = ({ children }) => {
     } catch (err) {
       console.log("helowrod");
       console.log(err);
-    }
-  };
-
-  const LikeHandle = (id) => {
-    console.log("like");
-    console.log(id);
-    try {
-      const response = axios({
-        method: "post",
-        url: `${BaseUrl}/like/`,
-        data: { content_id: id },
-        headers: {
-          Accept: "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      response.then((data) => {
-        //  getPosts();
-      });
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const CommentLikeHandle = (id) => {
-    let formData = new FormData();
-    formData.append("comment_id", id);
-    try {
-      const response = axios({
-        method: "post",
-        url: `${BaseUrl}/comment-like/`,
-        data: formData,
-        headers: {
-          Accept: "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      response.then((data) => {
-        //  getPosts();
-      });
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const RemoveLike = (id) => {
-    try {
-      const response = axios({
-        method: "DELETE",
-        url: `${BaseUrl}/like/${id}`,
-        headers: {
-          Accept: "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      response.then((data) => {
-        //  getPosts();
-      });
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const RemoveCommentLikeHandle = (id) => {
-    try {
-      const response = axios({
-        method: "DELETE",
-        url: `${BaseUrl}/comment-like/${id}`,
-        headers: {
-          Accept: "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      response.then((data) => {
-        //  getPosts();
-      });
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  //giving comment
-
-  const CommentCreate = (formData) => {
-    try {
-      const response = axios({
-        method: "post",
-        url: `${BaseUrl}/comment/`,
-        data: formData,
-        headers: {
-          Accept: "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      response.then((data) => {
-        // getPosts();
-      });
-    } catch (response) {
-      console.log(response);
-    }
-  };
-
-  const CommentUpdate = (formData, id) => {
-    try {
-      const response = axios({
-        method: "post",
-        url: `${BaseUrl}/comment/${id}`,
-        data: formData,
-        headers: {
-          Accept: "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      response.then((data) => {
-        //  getPosts();
-      });
-    } catch (response) {
-      console.log(response);
-    }
-  };
-
-  const CommentDelete = (id) => {
-    try {
-      const response = axios({
-        method: "DELETE",
-        url: `${BaseUrl}/comment/${id}`,
-        headers: {
-          Accept: "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      response.then((data) => {
-        //  getPosts();
-      });
-    } catch (response) {
-      console.log(response);
-    }
-  };
-
-  const ReplyCreate = (formData) => {
-    try {
-      axios({
-        method: "post",
-        url: `${BaseUrl}/comment-reply/`,
-        data: formData,
-        headers: {
-          Accept: "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      }).then((res) => {
-        console.log("now you r here");
-        //getPosts();
-      });
-    } catch (response) {
-      console.log(response);
-    }
-  };
-
-  const ReplyUpdate = (formData, id) => {
-    try {
-      const response = axios({
-        method: "post",
-        url: `${BaseUrl}/comment-reply/${id}`,
-        data: formData,
-        headers: {
-          Accept: "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      response.then((data) => {
-        //  getPosts();
-      });
-    } catch (response) {
-      console.log(response);
-    }
-  };
-
-  const ReplyDelete = (id) => {
-    try {
-      const response = axios({
-        method: "DELETE",
-        url: `${BaseUrl}/comment-reply/${id}`,
-        headers: {
-          Accept: "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      response.then((data) => {
-        //  getPosts();
-      });
-    } catch (response) {
-      console.log(response);
     }
   };
 
@@ -463,21 +277,15 @@ const PostProvider = ({ children }) => {
         removeAudio,
         postCreated,
         postUpdated,
-        LikeHandle,
-        CommentLikeHandle,
-        RemoveLike,
         getPosts,
         getPostByid,
-        CommentCreate,
-        ReplyCreate,
-        CommentDelete,
-        CommentUpdate,
-        ReplyDelete,
-        ReplyUpdate,
-        RemoveCommentLikeHandle,
         handleEditInputImage,
         RemoveData,
         pollAction,
+        isSuccess,
+        setIsSuccess,
+        progress,
+        setProgress,
         error,
       }}>
       {children}

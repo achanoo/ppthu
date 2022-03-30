@@ -49,7 +49,7 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: "4px",
     textAlign: "center",
     padding: "0px !important",
-    marginBottom: "16px",
+    marginBottom: "30px",
     [theme.breakpoints.down("sm")]: {
       minHeight: "300px",
     },
@@ -157,6 +157,7 @@ const useStyles = makeStyles((theme) => ({
   },
   commentSection: {
     padding: "20px",
+    paddingBottom: "52px",
     textAlign: "start",
     flexGrow: "1",
     "& h4": {
@@ -209,11 +210,43 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
 }));
 const Post = ({ id, post, postPage, ...props }) => {
   const classes = useStyles();
+  const history = useHistory();
   const { reloading, setReloading } = useBlogContext();
   const [more, setMore] = React.useState(true);
   const [likes, setLikes] = React.useState([]);
   const [liked, setLiked] = React.useState(false);
   const { user, token } = useAuthContext();
+  const [editPost, SetEditPost] = React.useState(false);
+
+  //link
+  // for link pop up
+  const [popanchorEl, setPopAnchorEl] = React.useState(null);
+  // const [selectedPoll, setSelectedPoll] = React.useState(0);
+
+  const handelPopLinkshare = (event) => {
+    // console.log('helo');
+    setPopAnchorEl(popanchorEl ? null : event.currentTarget);
+    navigator.clipboard.writeText(event.target.value);
+  };
+
+  const handlePopClose = () => {
+    setPopAnchorEl(null);
+  };
+
+  const openLinkShare = Boolean(popanchorEl);
+  // const shareid = openLinkShare ? "simple-popper" : undefined;
+
+  // ============
+
+  // image
+  let newimgs = [];
+  if (post?.image === null && typeof post?.image === "object") {
+    newimgs = [];
+  } else {
+    const images = JSON.parse(post?.image);
+    newimgs = images.map((img) => getFullUrl(img));
+  }
+  // ========
 
   const [limit, setLimit] = React.useState({
     comment: 2,
@@ -235,6 +268,11 @@ const Post = ({ id, post, postPage, ...props }) => {
       ...prev,
       comment: prev.comment + 5,
     }));
+  };
+
+  const editPostHandle = (postid) => {
+    // console.log(postid);
+    history.push("/post-edit/" + id);
   };
 
   const postLiked = async () => {
@@ -273,7 +311,10 @@ const Post = ({ id, post, postPage, ...props }) => {
     setReloading(!reloading);
   };
 
-  React.useEffect(() => setLikes(post?.likes), [id, post, reloading]);
+  React.useEffect(() => {
+    SetEditPost(user.id === post?.creator.user_info.user.id ? true : false);
+    setLikes(post?.likes);
+  }, [id, post, reloading]);
 
   React.useEffect(
     () =>
@@ -308,6 +349,14 @@ const Post = ({ id, post, postPage, ...props }) => {
         {/* post info */}
         <Box className={classes.postInfo}>
           {/* image */}
+          {newimgs.length > 0 && (
+            <Box className={classes.uploadFile}>
+              {/* file upload are include */}
+
+              <ImageGrid images={newimgs} />
+              {/* file upload are include end */}
+            </Box>
+          )}
 
           {/*  audio */}
           {post?.audio && (
@@ -332,6 +381,13 @@ const Post = ({ id, post, postPage, ...props }) => {
           )}
 
           {/*  link */}
+          {post?.link !== "undefined" && (
+            <Box className={classes.uploadFile}>
+              {/* file upload are include */}
+              <LinkPreview link={post.link} />
+              {/* file upload are include end */}
+            </Box>
+          )}
 
           <span>
             {moment(post?.created_at, ["YYYY", moment.ISO_8601]).format(
@@ -401,23 +457,40 @@ const Post = ({ id, post, postPage, ...props }) => {
               </IconButton>
             )}
 
-            <IconButton
-              aria-label="Example"
-              onClick={() => console.log("i am share")}>
+            <IconButton aria-label="Example" onClick={handelPopLinkshare}>
               <IosShareIcon fontSize="large" />
             </IconButton>
+            <Popover
+              id={id}
+              open={openLinkShare}
+              anchorEl={popanchorEl}
+              onClose={handlePopClose}
+              anchorOrigin={{
+                vertical: "top",
+                horizontal: "right",
+              }}>
+              <Box
+                sx={{
+                  border: "1px solid rgb(229,227,221)",
+                  p: 1,
+                  bgcolor: "background.paper",
+                  borderRadius: "4px",
+                }}>
+                {`https://localhost:3000/post-detail/${id}`}
+              </Box>
+            </Popover>
 
-            <IconButton
-              aria-label="Example"
-              onClick={() => console.log("i am edit")}>
-              <EditIcon fontSize="large" />
-            </IconButton>
+            {editPost && (
+              <IconButton aria-label="Example" onClick={editPostHandle}>
+                <EditIcon fontSize="large" />
+              </IconButton>
+            )}
 
             <IconButton aria-label="Example">
               <MoreHorizIcon fontSize="large" />
             </IconButton>
           </Box>
-          <p>{"heo"} Likes</p>
+          <p>{post?.like_counts} Likes</p>
         </Box>
       </div>
       <Divider />
@@ -437,10 +510,13 @@ const Post = ({ id, post, postPage, ...props }) => {
           </span>
         </Box>
 
-        {post?.comments.map((item) => {
-          const { id, comment } = item;
-          return <Comment key={id} id={id} comment={comment} item={item} />;
-        })}
+        {post?.comments
+          .slice(0, finalLimit)
+          .reverse()
+          .map((item) => {
+            const { id, comment } = item;
+            return <Comment key={id} id={id} comment={comment} item={item} />;
+          })}
         <CommentBox id={id} />
       </div>
     </div>

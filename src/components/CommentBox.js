@@ -40,6 +40,7 @@ const CommentBox = ({ result = "", ...props }) => {
       },
     });
     setReloading(!reloading);
+    setValue("");
   };
   return (
     <form style={{ marginRight: "8px" }} onSubmit={handleSubmit}>

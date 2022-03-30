@@ -629,7 +629,7 @@ const Basic = () => {
     }
 
     return (getData = false);
-  }, [getRegions, getUserData]);
+  }, []);
 
   // useEffect(()=>{
   //   //console.log('me too');
