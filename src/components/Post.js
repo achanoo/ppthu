@@ -334,9 +334,12 @@ const Post = ({ id, post, postPage, ...props }) => {
             alt="avatar"
           />
           <Box>
-            <span classes={postStyle.creatorName}>
+            <Typography
+              variant="h6"
+              style={{ fontWeight: "800" }}
+              component="h2">
               {post?.creator.user_info.user.name}
-            </span>
+            </Typography>
             <span>
               {moment(post?.created_at).fromNow(true)} .
               {post?.type === 3 && <SiOpenaccess />}

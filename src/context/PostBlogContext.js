@@ -4,21 +4,45 @@ import React, { createContext } from "react";
 import axios from "axios";
 import { BaseUrl } from "../helpers/Constant";
 import { useAuthContext } from "./AuthContext";
-const PostBlogContext = createContext();
+import Pusher from "pusher-js";
+import { ListTwoTone } from "@mui/icons-material";
 
+const PostBlogContext = createContext();
 const PostBlogProvider = ({ children }) => {
   const [posts, setPosts] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
   const [reloading, setReloading] = React.useState(false);
   const { token } = useAuthContext();
 
-  const sendGetRequest = async () => {
+  const listen = () => {
+    axios({
+      method: "get",
+      url: `${BaseUrl}/comments`,
+      headers: {
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    Pusher.logToConsole = true;
+
+    var pusher = new Pusher("7aa300d222231cc7d92f", {
+      cluster: "ap1",
+      encrypted: true,
+    });
+
+    var channel = pusher.subscribe("comment-channel");
+    channel.bind("newComment", function (data) {
+      alert(JSON.stringify(data));
+    });
+  };
+
+  const sendGetRequest = async (data = "all") => {
     try {
       const res = await axios({
         method: "get",
         url: `${BaseUrl}/content`,
         params: {
-          type: "all",
+          type: data,
         },
         headers: {
           Accept: "application/json",
@@ -29,7 +53,7 @@ const PostBlogProvider = ({ children }) => {
       if (response.success) {
         setPosts(res.data?.data);
       } else {
-        const errms = response.data.message;
+        const errors = response.data.message;
       }
     } catch (error) {
       console.log(error);
@@ -40,6 +64,7 @@ const PostBlogProvider = ({ children }) => {
     setReloading(!reloading);
   };
 
+  React.useEffect(() => listen());
   React.useEffect(() => sendGetRequest(), [reloading]);
 
   return (

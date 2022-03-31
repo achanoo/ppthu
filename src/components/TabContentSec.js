@@ -84,15 +84,25 @@ export default function PostTabs() {
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
-        {posts.map((post) => (
-          <Post key={post.id} id={post.id} post={post} />
-        ))}
+        {posts
+          .filter((post) => post?.type === 1)
+          .map((post) => (
+            <Post key={post.id} id={post.id} post={post} />
+          ))}
       </TabPanel>
       <TabPanel value={value} index={1}>
-        pantpoe
+        {posts
+          .filter((post) => post?.type === 2)
+          .map((post) => (
+            <Post key={post.id} id={post.id} post={post} />
+          ))}
       </TabPanel>
       <TabPanel value={value} index={2}>
-        cretor only
+        {posts
+          .filter((post) => post?.type === 3)
+          .map((post) => (
+            <Post key={post.id} id={post.id} post={post} />
+          ))}
       </TabPanel>
     </Box>
   );
