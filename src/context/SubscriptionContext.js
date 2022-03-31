@@ -1,135 +1,150 @@
-import React from 'react'
-import axios from 'axios'
-import { useHistory } from 'react-router'
-import { BaseUrl } from '../helpers/Constant'
-import reducer from '../reducers/subscriptionReducers'
-import { useAuthContext } from './AuthContext'
-import { plans } from './../assets/data'
+/** @format */
 
-let cancelToken
+import React from "react";
+import axios from "axios";
+import { useHistory } from "react-router";
+import { BaseUrl } from "../helpers/Constant";
+import reducer from "../reducers/subscriptionReducers";
+import { useAuthContext } from "./AuthContext";
+import { plans } from "./../assets/data";
 
-const SubscriptionContext = React.createContext()
+let cancelToken;
+
+const SubscriptionContext = React.createContext();
 const initialStates = {
   subscriptions: [],
   isloading: false,
   categories: [],
-}
+};
 
 const SubscriptionProvider = ({ children }) => {
-  const { isAuthenticated, token } = useAuthContext()
+  const { isAuthenticated, token } = useAuthContext();
 
-  const [state, dispatch] = React.useReducer(reducer, initialStates)
-  const [level, setLevel] = React.useState('')
-  const [price, setPrice] = React.useState('')
-  const [image, setImage] = React.useState('')
-  const [description, setDescription] = React.useState('')
+  const [state, dispatch] = React.useReducer(reducer, initialStates);
+  const [level, setLevel] = React.useState("");
+  const [price, setPrice] = React.useState("");
+  const [image, setImage] = React.useState("");
+  const [description, setDescription] = React.useState("");
   // console.log(children)
-  React.useEffect(() => {
-    dispatch({ type: 'SET_LOADING' })
-    dispatch({ type: 'DATA_LOADED', payload: plans })
-    dispatch({ type: 'UNSET_LOADING' })
-    // getCategories()
-    // getSubscriptions()
-  }, [])
+  // React.useEffect(() => {
+  //  // dispatch({ type: 'SET_LOADING' })
+  //  // dispatch({ type: 'DATA_LOADED', payload: plans })
+  // //  dispatch({ type: 'UNSET_LOADING' })
+  //   // getCategories()
+  //   // getSubscriptions()
+  // }, [])
 
   const getSubscriptions = async () => {
-    dispatch({ type: 'SET_LOADING' })
+    dispatch({ type: "SET_LOADING" });
     if (typeof cancelToken != typeof undefined) {
-      cancelToken.cancel('cancel the previous req')
+      cancelToken.cancel("cancel the previous req");
     }
     try {
-      cancelToken = axios.CancelToken.source()
+      cancelToken = axios.CancelToken.source();
       const response = await axios(
         {
-          method: 'get',
+          method: "get",
           url: `${BaseUrl}/subscription-plan`,
           headers: { Authorization: `Bearer ${token}` },
         },
         { cancelToken: cancelToken.token }
-      )
+      );
+
       //dispatch({ type: 'UNSET_LOADING' })
       if (response.data.data) {
-        const payload = response.data.data
-        dispatch({ type: 'DATA_LOADED', payload: payload })
-        dispatch({ type: 'UNSET_LOADING' })
+        console.log(response.data.data);
+        const payload = response.data.data;
+        dispatch({ type: "DATA_LOADED", payload: payload });
+        dispatch({ type: "UNSET_LOADING" });
       }
     } catch (error) {
-      console.log('there is error!')
+      console.log("there is error!");
     }
-  }
+  };
 
-  const createSubscriptions = async () => {
-    const formData = new FormData()
-    formData.append('level', level)
-    formData.append('price', price)
-    formData.append('image', image)
-    formData.append('description', description)
+  const createSubscriptions = async (data) => {
+    //console.log(data);
 
     //console.log(formData)
 
-    dispatch({ type: 'SET_LOADING' })
+    dispatch({ type: "SET_LOADING" });
     try {
       const response = await axios({
-        method: 'post',
+        method: "post",
         url: `${BaseUrl}/subscription-plan`,
-        data: formData,
+        data: data,
         headers: {
-          Accept: 'application/json',
-          'Content-Type': 'multipart/form-data',
+          Accept: "application/json",
+          "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${token}`,
         },
-      })
+      });
       if (response.data.data) {
-        const payload = response.data.data
-        dispatch({ type: 'NEWDATA_LOADED', payload: payload })
-        dispatch({ type: 'UNSET_LOADING' })
+        const payload = response.data.data;
+        dispatch({ type: "NEWDATA_LOADED", payload: payload });
+        dispatch({ type: "UNSET_LOADING" });
       }
 
-      // axios
-      //   .post(`${BaseUrl}/subscription-plan`, formData, {
-      //     headers: {
-      //       Accept: 'application/json',
-      //       'Content-Type': 'multipart/form-data',
-      //       Authorization: `Bearer ${token}`,
-      //     },
-      //   })
-      //   .then((res) => res.json())
-      //   .then((res) => {
-      //     console.log(res)
-      //   })
+      //   // axios
+      //   //   .post(`${BaseUrl}/subscription-plan`, formData, {
+      //   //     headers: {
+      //   //       Accept: 'application/json',
+      //   //       'Content-Type': 'multipart/form-data',
+      //   //       Authorization: `Bearer ${token}`,
+      //   //     },
+      //   //   })
+      //   //   .then((res) => res.json())
+      //   //   .then((res) => {
+      //   //     console.log(res)
+      //   //   })
     } catch (error) {
-      console.log('there is error!')
+      console.log("there is error!");
     }
-  }
+  };
+
+  const getUserSubscriptions = async () => {
+    const response = await axios({
+      method: "get",
+      url: `${BaseUrl}/user/user-subscriptions`,
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data;
+  };
 
   const getCategories = async () => {
-    dispatch({ type: 'SET_LOADING' })
+    dispatch({ type: "SET_LOADING" });
     if (typeof cancelToken != typeof undefined) {
-      cancelToken.cancel('cancel the previous req')
+      cancelToken.cancel("cancel the previous req");
     }
     try {
-      cancelToken = axios.CancelToken.source()
+      cancelToken = axios.CancelToken.source();
       const response = await axios(
         {
-          method: 'get',
+          method: "get",
           url: `${BaseUrl}/category`,
           headers: { Authorization: `Bearer ${token}` },
         },
         { cancelToken: cancelToken.token }
-      )
+      );
 
-      const payload = response.data.categories
-      console.log(payload)
-      dispatch({ type: 'DATA_LOADED_CATEGORY', payload: payload })
-      dispatch({ type: 'UNSET_LOADING' })
+      const payload = response.data.categories;
+      // console.log(payload)
+      dispatch({ type: "DATA_LOADED_CATEGORY", payload: payload });
+      dispatch({ type: "UNSET_LOADING" });
     } catch (error) {
-      console.log('there is error!')
+      console.log("there is error!");
     }
-  }
+  };
 
-  React.useEffect(() => {
-    console.log('now every smile')
-  }, [])
+  const getEarningOverview = async (type) => {
+    const response = await axios({
+      method: "get",
+      url: `${BaseUrl}/creator/earnings`,
+      params: { status: type },
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response;
+  };
 
   return (
     <SubscriptionContext.Provider
@@ -141,14 +156,16 @@ const SubscriptionProvider = ({ children }) => {
         setDescription,
         getSubscriptions,
         createSubscriptions,
-      }}
-    >
+        getCategories,
+        getUserSubscriptions,
+        getEarningOverview,
+      }}>
       {children}
     </SubscriptionContext.Provider>
-  )
-}
+  );
+};
 export const useSubscriptionContext = () => {
-  return React.useContext(SubscriptionContext)
-}
+  return React.useContext(SubscriptionContext);
+};
 
-export { SubscriptionProvider }
+export { SubscriptionProvider };

@@ -125,6 +125,7 @@ export default function BasicTabs(props) {
               ref={image}
               onChange={handleImageChange}
               accept='image/*'
+              name='image[]'
               multiple={true}
             />
             <CButton onClick={() => image.current.click()}>

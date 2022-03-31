@@ -1,9 +1,11 @@
-import React, { useState } from 'react'
-import styled from 'styled-components'
-import { useHistory } from 'react-router-dom'
-import { makeStyles } from '@mui/styles'
+/** @format */
+
+import React, { useState } from "react";
+import styled from "styled-components";
+import { useHistory } from "react-router-dom";
+import { makeStyles } from "@mui/styles";
 //form input
-import FormControl, { useFormControl } from '@mui/material/FormControl'
+import FormControl, { useFormControl } from "@mui/material/FormControl";
 import {
   OutlinedInput,
   FormHelperText,
@@ -11,138 +13,137 @@ import {
   Typography,
   InputAdornment,
   TextField,
-} from '@mui/material'
+} from "@mui/material";
 
-import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
+import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 // dialog start
-import Button from '@mui/material/Button'
-import Dialog from '@mui/material/Dialog'
-import DialogActions from '@mui/material/DialogActions'
-import DialogContent from '@mui/material/DialogContent'
-import DialogContentText from '@mui/material/DialogContentText'
-import DialogTitle from '@mui/material/DialogTitle'
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
 //custom Button import
-import { CButton } from './../../layout/CCButton'
-import { useAuthContext } from '../../context/AuthContext'
+import { CButton } from "./../../layout/CCButton";
+import { useAuthContext } from "../../context/AuthContext";
 
 const useStyles = makeStyles((theme) => ({
   wrapper: {
-    minHeight: '100vh',
-    display: 'grid',
-    marginTop: '5vh',
-    placeItems: 'center',
-    padding: '10px',
-    [theme.breakpoints.only('xs')]: {
-      display: 'block',
-      padding: '10px',
+    minHeight: "100vh",
+    display: "grid",
+    gridTemplateRows: "repeat(3, 200px)",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: "10px",
+    [theme.breakpoints.only("xs")]: {
+      display: "grid",
+      padding: "10px",
     },
-    '& h2': {
-      textAlign: 'center',
+    "& h2": {
+      textAlign: "center",
     },
   },
   container: {
-    width: '90vw',
-    maxWidth: '700px',
-    textAlign: 'start',
-    height: 'auto',
-    padding: '20px',
+    width: "90vw",
+    maxWidth: "700px",
+    textAlign: "start",
+    padding: "20px",
 
-    [theme.breakpoints.only('xs')]: {
-      padding: '5px',
+    [theme.breakpoints.only("xs")]: {
+      padding: "5px",
     },
   },
-}))
+}));
 
 function gettingCode(phonenumber) {
-  return '902336'
+  return "902336";
 }
 
 function MyFormHelperText() {
-  const { focused } = useFormControl() || {}
+  const { focused } = useFormControl() || {};
 
   const helperText = React.useMemo(() => {
     if (focused) {
-      return 'This field is being focused'
+      return "This field is being focused";
     }
 
-    return 'Helper text'
-  }, [focused])
+    return "Helper text";
+  }, [focused]);
 
-  return <FormHelperText>{helperText}</FormHelperText>
+  return <FormHelperText>{helperText}</FormHelperText>;
 }
 
 const CodeVerify = (props) => {
-  const classes = useStyles()
-  const history = useHistory()
-  const { phone, smscode, nextToPasswordCreate } = props
+  const classes = useStyles();
+  const history = useHistory();
+  const { phone, smscode, nextToPasswordCreate } = props;
 
-  const [code, setSMScode] = useState(smscode)
-  const [phonenum, setPhonenum] = useState(phone)
-  console.log(code)
-  const [errors, setErrors] = useState({ helperText: '', error: false })
-  const [verifyCode, setVerifyCode] = useState('')
-  const [openVerification, setOpenVerification] = React.useState(false)
+  const [code, setSMScode] = useState(smscode);
+  const [phonenum, setPhonenum] = useState(phone);
+  console.log(code);
+  const [errors, setErrors] = useState({ helperText: "", error: false });
+  const [verifyCode, setVerifyCode] = useState("");
+  const [openVerification, setOpenVerification] = React.useState(false);
 
   const handlVerifyCode = (e) => {
-    setVerifyCode(e.target.value)
-  }
+    setVerifyCode(e.target.value);
+  };
 
   const handleSubmit = () => {
     if (verifyCode === code) {
       // console.log('verify is correct')
-      nextToPasswordCreate(true)
+      nextToPasswordCreate(true);
     }
     //setOpenVerification(true)
-  }
+  };
 
-  const handleCloseVerification = () => setOpenVerification(false)
-  const handleCancelVerification = () => setOpenVerification(false)
+  const handleCloseVerification = () => setOpenVerification(false);
+  const handleCancelVerification = () => setOpenVerification(false);
   const handleVerification = () => {
-    console.log('heelo world')
+    console.log("heelo world");
     //
-  }
+  };
 
   const ResendingCode = (e) => {
-    e.preventDefault()
-    setOpenVerification(true)
-  }
+    e.preventDefault();
+    setOpenVerification(true);
+  };
   const Resending = () => {
-    setSMScode(gettingCode(phone))
-    setOpenVerification(false)
-  }
+    setSMScode(gettingCode(phone));
+    setOpenVerification(false);
+  };
   const ChangeLogin = () => {
-    history.push('/login')
-  }
+    history.push("/login");
+  };
   return (
-    <>
+    <React.Fragment>
       <div className={classes.wrapper}>
         <h2>Sing Up</h2>
         <div className={`${classes.container} FaintBox `}>
-          <FormControl variant='standard' error={errors.error} fullWidth>
-            <label htmlFor='verifyCode' style={{ textAlign: 'start' }}>
-              <Typography variant='subtitle2' gutterBottom>
-                Enter to Verify {phone ? phone : ' +95 9 00000000'}
+          <FormControl variant="standard" error={errors.error} fullWidth>
+            <label htmlFor="verifyCode" style={{ textAlign: "start" }}>
+              <Typography variant="subtitle2" gutterBottom>
+                Enter to Verify {phone ? phone : " +95 9 00000000"}
               </Typography>
             </label>
             <OutlinedInput
-              id='verifyCode'
+              id="verifyCode"
               value={verifyCode}
               onChange={handlVerifyCode}
-              aria-describedby='component-error-text'
-              inputProps={{ maxLength: 6, minLength: 6, type: 'number' }}
+              aria-describedby="component-error-text"
+              inputProps={{ maxLength: 6, minLength: 6, type: "number" }}
             />
-            <FormHelperText id='component-error-text'>
+            <FormHelperText id="component-error-text">
               {errors.helperText}
             </FormHelperText>
             <a
               onClick={ResendingCode}
               style={{
-                dispaly: 'inline-flex',
-                alignSelf: 'flex-end',
-                textDecoration: 'underline',
-                color: '#0582dd',
-              }}
-            >
+                dispaly: "inline-flex",
+                alignSelf: "flex-end",
+                textDecoration: "underline",
+                color: "#0582dd",
+              }}>
               Didn't receive a text?
             </a>
             <CButton onClick={handleSubmit}>Continue</CButton>
@@ -159,228 +160,224 @@ const CodeVerify = (props) => {
               Resend SMS
             </CButton>
             <CButton
-              bgcolor='#eeeeee'
-              textcolor='#0f0f0f'
+              bgcolor="#eeeeee"
+              textcolor="#0f0f0f"
               fullWidth
-              onClick={ChangeLogin}
-            >
+              onClick={ChangeLogin}>
               Use email instead
             </CButton>
           </div>
         </DialogContent>
       </Dialog>
-    </>
-  )
-}
+    </React.Fragment>
+  );
+};
 
 const CreatePassword = (props) => {
-  const classes = useStyles()
-  const { registerByPhone } = useAuthContext()
+  const classes = useStyles();
+  const { registerByPhone } = useAuthContext();
   const [state, setState] = React.useState({
     phone: props.phone,
-    password: '',
-    confirmPassword: '',
+    password: "",
+    confirmPassword: "",
     isError: {
-      password: '',
-      confirmPassword: '',
+      password: "",
+      confirmPassword: "",
     },
-  })
+  });
 
   const formValueChange = (e) => {
-    const { name, value } = e.target
+    const { name, value } = e.target;
     // console.log(name)
-    const { isError, password, confirmPassword } = state
+    const { isError, password, confirmPassword } = state;
 
-    if (name === 'password') {
+    if (name === "password") {
       if (confirmPassword.length > 0) {
         isError.confirmPassword =
-          value == confirmPassword ? '' : 'ConfirmPassword is not match!'
+          value == confirmPassword ? "" : "ConfirmPassword is not match!";
       } else {
         isError.password =
-          value.length < 8 ? '"Atleast 6 characaters required"' : ''
+          value.length < 8 ? '"Atleast 6 characaters required"' : "";
       }
     }
 
-    if (name === 'confirmPassword') {
+    if (name === "confirmPassword") {
       isError.confirmPassword =
-        value == password ? '' : 'ConfirmPassword is not match!'
+        value == password ? "" : "ConfirmPassword is not match!";
     }
 
     setState({
       ...state,
       isError,
       [name]: value,
-    })
-  }
+    });
+  };
 
   const RegisterByPhone = () => {
     const formData = {
       phone_no: state.phone,
       password: state.password,
-      role_id: '3',
-    }
-    registerByPhone(formData)
-  }
+      role_id: "3",
+    };
+    registerByPhone(formData);
+  };
   return (
     <>
       <div className={classes.wrapper}>
         <h2>Sing Up</h2>
         <div className={`${classes.container} FaintBox `}>
-          <Typography className='textCenter' variant='subtitle2'>
+          <Typography className="textCenter" variant="subtitle2">
             Create Your Own Password
           </Typography>
 
           <FormControl
-            variant='standard'
+            variant="standard"
             error={state.isError.password.length > 0 ? true : false}
-            fullWidth
-          >
-            <label htmlFor='PhoneNumber' style={{ textAlign: 'start' }}>
-              <Typography variant='subtitle2' gutterBottom>
+            fullWidth>
+            <label htmlFor="PhoneNumber" style={{ textAlign: "start" }}>
+              <Typography variant="subtitle2" gutterBottom>
                 Password
               </Typography>
             </label>
             <OutlinedInput
-              id='standard-adornment-amount'
+              id="standard-adornment-amount"
               value={state.password}
               onChange={formValueChange}
-              aria-describedby='component-error-text'
+              aria-describedby="component-error-text"
               inputProps={{
                 maxLength: 10,
                 minLength: 7,
-                type: 'password',
-                name: 'password',
+                type: "password",
+                name: "password",
               }}
             />
-            <FormHelperText id='component-error-text'>
-              {state.isError.password.length > 0 ? state.isError.password : ''}
+            <FormHelperText id="component-error-text">
+              {state.isError.password.length > 0 ? state.isError.password : ""}
             </FormHelperText>
           </FormControl>
 
           <FormControl
-            variant='standard'
+            variant="standard"
             error={state.isError.confirmPassword.length > 0 ? true : false}
-            fullWidth
-          >
-            <label htmlFor='confirmPassword' style={{ textAlign: 'start' }}>
-              <Typography variant='subtitle2' gutterBottom>
+            fullWidth>
+            <label htmlFor="confirmPassword" style={{ textAlign: "start" }}>
+              <Typography variant="subtitle2" gutterBottom>
                 Confirm Password
               </Typography>
             </label>
 
             <OutlinedInput
-              id='confirmPassword'
+              id="confirmPassword"
               value={state.confirmPassword}
               onChange={formValueChange}
-              aria-describedby='component-error-text'
+              aria-describedby="component-error-text"
               inputProps={{
                 maxLength: 10,
                 minLength: 7,
-                type: 'password',
-                name: 'confirmPassword',
+                type: "password",
+                name: "confirmPassword",
               }}
             />
-            <FormHelperText id='component-error-text'>
+            <FormHelperText id="component-error-text">
               {state.isError.confirmPassword.length > 0
                 ? state.isError.confirmPassword
-                : ''}
+                : ""}
             </FormHelperText>
             <CButton onClick={RegisterByPhone}>Sign Up</CButton>
           </FormControl>
           <Box
-            style={{ margin: '20px auto', textAlign: 'center', width: '60%' }}
-          >
-            By Signing Up,you agree to PanPoe's <a href='/'>Terms of Use</a>,
-            <a href='/'>Pravicy Policy</a> and
-            <a href='/'>Cookie Policy</a>.
+            style={{ margin: "20px auto", textAlign: "center", width: "60%" }}>
+            By Signing Up,you agree to PanPoe's <a href="/">Terms of Use</a>,
+            <a href="/">Pravicy Policy</a> and
+            <a href="/">Cookie Policy</a>.
           </Box>
         </div>
       </div>
     </>
-  )
-}
+  );
+};
 const Signup = () => {
-  const classes = useStyles()
-  const [errors, setErrors] = useState({ helperText: '', error: false })
-  const [phone, setPhone] = useState('')
-  const [code, setCode] = useState('')
+  const classes = useStyles();
+  const [errors, setErrors] = useState({ helperText: "", error: false });
+  const [phone, setPhone] = useState("");
+  const [code, setCode] = useState("");
 
   const [state, setState] = useState({
     codeMessage: false,
     verifyDialog: false,
     passwordDialog: false,
-  })
+  });
 
   //message
   // const [dialogopen, setDialogOpen] = React.useState(false)
 
   const handlePhoneNumber = (e) => {
-    const phone = e.target.value
-    setPhone(phone)
+    const phone = e.target.value;
+    setPhone(phone);
 
     if (phone.length === 0 || phone.length === 7 || phone.length === 9) {
       return setErrors({
         ...errors,
-        helperText: '',
+        helperText: "",
         error: false,
-      })
+      });
     }
 
     if (phone.length < 7) {
       return setErrors({
         ...errors,
-        helperText: 'minimum required is 7! ',
+        helperText: "minimum required is 7! ",
         error: true,
-      })
+      });
     }
 
     if (phone.length > 9) {
       return setErrors({
         ...errors,
-        helperText: 'maximum required is 9',
+        helperText: "maximum required is 9",
         error: true,
-      })
+      });
     }
-  }
+  };
 
   const handleClickOpenDialog = () => {
-    if (phone === '') {
+    if (phone === "") {
       return setErrors({
         ...errors,
-        helperText: 'required',
+        helperText: "required",
         error: true,
-      })
+      });
     }
-    let number = '+959' + phone
-    setCode(gettingCode(number))
-    console.log(code)
+    let number = "+959" + phone;
+    setCode(gettingCode(number));
+    console.log(code);
 
     setState({
       ...state,
       codeMessage: true,
-    })
+    });
     return setErrors({
       ...errors,
-      helperText: '',
+      helperText: "",
       error: false,
-    })
-  }
+    });
+  };
 
   const handleDialogClose = () => {
-    console.log(phone)
+    console.log(phone);
     setState({
       ...state,
       codeMessage: false,
-    })
-  }
+    });
+  };
 
   const NextToVerification = () => {
     setState({
       ...state,
       codeMessage: false,
       verifyDialog: true,
-    })
-  }
+    });
+  };
 
   const nextToPasswordCreate = (data) => {
     if (data) {
@@ -388,9 +385,9 @@ const Signup = () => {
         ...state,
         verifyDialog: false,
         passwordDialog: true,
-      })
+      });
     }
-  }
+  };
 
   if (state.verifyDialog) {
     return (
@@ -399,41 +396,41 @@ const Signup = () => {
         smscode={code}
         nextToPasswordCreate={nextToPasswordCreate}
       />
-    )
+    );
   }
 
   if (state.passwordDialog) {
-    return <CreatePassword phone={phone} />
+    return <CreatePassword phone={phone} />;
   }
 
   return (
-    <>
+    <React.Fragment>
       {/* <CreatePassword /> */}
 
       <div className={classes.wrapper}>
         <h2>Sing Up</h2>
         <div className={`${classes.container} FaintBox `}>
-          <FormControl variant='standard' error={errors.error} fullWidth>
-            <label htmlFor='PhoneNumber' style={{ textAlign: 'start' }}>
-              <Typography variant='subtitle2' gutterBottom>
+          <FormControl variant="standard" error={errors.error} fullWidth>
+            <label htmlFor="PhoneNumber" style={{ textAlign: "start" }}>
+              <Typography variant="subtitle2" gutterBottom>
                 Phone Number
               </Typography>
             </label>
             <OutlinedInput
-              id='standard-adornment-amount'
+              id="standard-adornment-amount"
               value={phone}
               onChange={handlePhoneNumber}
               startAdornment={
-                <InputAdornment position='start'>
+                <InputAdornment position="start">
                   +95
                   <KeyboardArrowRightIcon /> 9
                 </InputAdornment>
               }
-              aria-describedby='component-error-text'
-              inputProps={{ maxLength: 10, minLength: 7, type: 'number' }}
-              placeholder='000000000'
+              aria-describedby="component-error-text"
+              inputProps={{ maxLength: 10, minLength: 7, type: "number" }}
+              placeholder="000000000"
             />
-            <FormHelperText id='component-error-text'>
+            <FormHelperText id="component-error-text">
               {errors.helperText}
             </FormHelperText>
             <CButton onClick={handleClickOpenDialog}>Continue</CButton>
@@ -445,12 +442,11 @@ const Signup = () => {
       <Dialog
         open={state.codeMessage}
         onClose={handleDialogClose}
-        aria-labelledby='alert-dialog-title'
-        aria-describedby='alert-dialog-description'
-      >
-        <DialogTitle id='alert-dialog-title'>Verify phone</DialogTitle>
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description">
+        <DialogTitle id="alert-dialog-title">Verify phone</DialogTitle>
         <DialogContent>
-          <DialogContentText id='alert-dialog-description'>
+          <DialogContentText id="alert-dialog-description">
             We'll text your verification code to +95 9 000000000. Standard SMS
             fee may apply.
           </DialogContentText>
@@ -462,23 +458,8 @@ const Signup = () => {
           </Button>
         </DialogActions>
       </Dialog>
-    </>
-  )
-}
+    </React.Fragment>
+  );
+};
 
-const Wrapper = styled.section`
-  max-height: 100vh;
-  margin-top: 10vh;
-  display: grid;
-  place-items: center;
-  .container {
-    width: 90vw;
-    max-width: 500px;
-    border: 1px solid rgb(229, 227, 221);
-    border-radius: 4px;
-    height: auto;
-    padding: 30px 20px;
-  }
-`
-
-export default Signup
+export default Signup;

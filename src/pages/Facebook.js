@@ -8,6 +8,8 @@ import { useAuthContext } from '../context/AuthContext'
 export default function FacebookLogin(props) {
   const { loginByPovider } = useAuthContext()
   const onResponse = (resp) => {
+    console.log(resp);
+    
     // console.log(resp.email)
     const formData = {
       email: resp.email,

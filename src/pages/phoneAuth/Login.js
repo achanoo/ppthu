@@ -1,10 +1,12 @@
-import React, { useState } from 'react'
-import styled from 'styled-components'
+/** @format */
 
-import { makeStyles } from '@mui/styles'
-import { useHistory } from 'react-router-dom'
-import FormControl, { useFormControl } from '@mui/material/FormControl'
-import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
+import React, { useState } from "react";
+import styled from "styled-components";
+
+import { makeStyles } from "@mui/styles";
+import { useHistory } from "react-router-dom";
+import FormControl, { useFormControl } from "@mui/material/FormControl";
+import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import {
   OutlinedInput,
   FormHelperText,
@@ -12,130 +14,129 @@ import {
   Typography,
   InputAdornment,
   TextField,
-} from '@mui/material'
-import { CButton } from './../../layout/CCButton'
-import { useAuthContext } from '../../context/AuthContext'
+} from "@mui/material";
+import { CButton } from "./../../layout/CCButton";
+import { useAuthContext } from "../../context/AuthContext";
 
 const useStyles = makeStyles((theme) => ({
   wrapper: {
-    minHeight: '100vh',
-    display: 'grid',
-    marginTop: '5vh',
-    placeItems: 'center',
-    padding: '10px',
-    [theme.breakpoints.only('xs')]: {
-      display: 'block',
-      padding: '10px',
+    minHeight: "100vh",
+    display: "grid",
+    marginTop: "5vh",
+    placeItems: "center",
+    padding: "10px",
+    [theme.breakpoints.only("xs")]: {
+      display: "block",
+      padding: "10px",
     },
-    '& h2': {
-      textAlign: 'center',
+    "& h2": {
+      textAlign: "center",
     },
   },
   container: {
-    width: '90vw',
-    maxWidth: '700px',
-    textAlign: 'start',
-    height: 'auto',
-    padding: '20px',
+    width: "90vw",
+    maxWidth: "700px",
+    textAlign: "start",
+    height: "auto",
+    padding: "20px",
 
-    [theme.breakpoints.only('xs')]: {
-      padding: '5px',
+    [theme.breakpoints.only("xs")]: {
+      padding: "5px",
     },
   },
-}))
+}));
 
 const NextToPassword = (props) => {
-  const classes = useStyles()
-  const { loginbyPhone } = useAuthContext()
+  const classes = useStyles();
+  const { loginbyPhone } = useAuthContext();
   // console.log(phone)
   const [data, setData] = React.useState({
     phone_no: props.phone,
-    password: '',
-    role_id: '3',
-  })
+    password: "",
+    role_id: "3",
+  });
   const handlePassword = (e) => {
-    const { value } = e.target
-    setData({ ...data, password: value })
-  }
+    const { value } = e.target;
+    setData({ ...data, password: value });
+  };
 
   const LoginByPhone = () => {
-    loginbyPhone(data)
-  }
+    loginbyPhone(data);
+  };
 
   return (
     <div className={classes.wrapper}>
       <h2>Log In</h2>
       <div className={`${classes.container} FaintBox `}>
-        <FormControl variant='standard' fullWidth>
-          <label htmlFor='Password' style={{ textAlign: 'start' }}>
-            <Typography variant='subtitle2' gutterBottom>
+        <FormControl variant="standard" fullWidth>
+          <label htmlFor="Password" style={{ textAlign: "start" }}>
+            <Typography variant="subtitle2" gutterBottom>
               Enter Your Password
             </Typography>
           </label>
           <OutlinedInput
-            id='Password'
+            id="Password"
             onChange={handlePassword}
-            aria-describedby='component-error-text'
-            inputProps={{ type: 'password' }}
+            aria-describedby="component-error-text"
+            inputProps={{ type: "password" }}
           />
-          <FormHelperText id='component-error-text'>
+          <FormHelperText id="component-error-text">
             {/* {errors.helperText} */}
           </FormHelperText>
           <a
             // onClick={ResendingCode}
             style={{
-              dispaly: 'inline-flex',
-              alignSelf: 'flex-end',
-              textDecoration: 'underline',
-              color: '#0582dd',
-              margin: '12px 0px',
-            }}
-          >
+              dispaly: "inline-flex",
+              alignSelf: "flex-end",
+              textDecoration: "underline",
+              color: "#0582dd",
+              margin: "12px 0px",
+            }}>
             forgot password?
           </a>
           <CButton onClick={LoginByPhone}>Continue</CButton>
         </FormControl>
       </div>
     </div>
-  )
-}
+  );
+};
 
 const LoginPhone = () => {
-  const classes = useStyles()
+  const classes = useStyles();
   const [state, setState] = useState({
     showPassword: false,
-    phone: '',
-    helperText: '',
+    phone: "",
+    helperText: "",
     error: false,
-  })
+  });
 
   // console.log(state)
   const handlePhoneNumber = (e) => {
-    const { name, value } = e.target
-    let helperText = ''
+    const { name, value } = e.target;
+    let helperText = "";
     // console.log(helperText)
 
     if (value.length === 0 || value.length === 7 || value.length === 9) {
-      helperText = ''
+      helperText = "";
     }
 
     if (value.length < 7) {
-      helperText = 'Minimun value is 7'
+      helperText = "Minimun value is 7";
     }
 
     if (value.length > 9) {
-      helperText = 'Maximum value is 9'
+      helperText = "Maximum value is 9";
     }
     setState({
       ...state,
       error: helperText.length > 0 ? true : false,
       helperText,
       [name]: value,
-    })
-  }
+    });
+  };
 
   if (state.showPassword) {
-    return <NextToPassword phone={state.phone} />
+    return <NextToPassword phone={state.phone} />;
   }
 
   return (
@@ -143,28 +144,28 @@ const LoginPhone = () => {
       <div className={classes.wrapper}>
         <h2>Sing Up</h2>
         <div className={`${classes.container} FaintBox `}>
-          <FormControl variant='standard' error={state.error} fullWidth>
-            <label htmlFor='PhoneNumber' style={{ textAlign: 'start' }}>
-              <Typography variant='subtitle2' gutterBottom>
+          <FormControl variant="standard" error={state.error} fullWidth>
+            <label htmlFor="PhoneNumber" style={{ textAlign: "start" }}>
+              <Typography variant="subtitle2" gutterBottom>
                 Phone Number
               </Typography>
             </label>
             <OutlinedInput
-              id='standard-adornment-amount'
+              id="standard-adornment-amount"
               startAdornment={
-                <InputAdornment position='start'>
+                <InputAdornment position="start">
                   +95
                   <KeyboardArrowRightIcon /> 9
                 </InputAdornment>
               }
               value={state.phone}
-              name='phone'
-              aria-describedby='component-error-text'
-              inputProps={{ inputMode: 'text', pattern: '[0-9]{9}' }}
-              placeholder='000000000'
+              name="phone"
+              aria-describedby="component-error-text"
+              inputProps={{ inputMode: "text", pattern: "[0-9]{9}" }}
+              placeholder="000000000"
               onChange={handlePhoneNumber}
             />
-            <FormHelperText id='component-error-text'>
+            <FormHelperText id="component-error-text">
               {state.helperText}
             </FormHelperText>
             <CButton onClick={() => setState({ ...state, showPassword: true })}>
@@ -174,34 +175,7 @@ const LoginPhone = () => {
         </div>
       </div>
     </>
-  )
-}
+  );
+};
 
-const Wrapper = styled.section`
-  max-height: 100vh;
-  margin-top: 10vh;
-  display: grid;
-  place-items: center;
-  .container {
-    width: 90vw;
-    max-width: 500px;
-    border: 1px solid rgb(229, 227, 221);
-    border-radius: 4px;
-    height: auto;
-    padding: 30px 20px;
-  }
-  @media (max-width: 990px) {
-    display: block;
-
-    .container {
-      width: 90vw;
-      max-width: 500px;
-      border: 1px solid rgb(229, 227, 221);
-      border-radius: 4px;
-      height: auto;
-      padding: 30px 20px;
-    }
-  }
-`
-
-export default LoginPhone
+export default LoginPhone;

@@ -1,5 +1,6 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useGlobalContext } from './../../context/AuthContext'
+import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import { useTheme } from '@mui/material/styles'
 import { makeStyles } from '@mui/styles'
@@ -11,7 +12,10 @@ import CardContent from '@mui/material/CardContent'
 import CardActions from '@mui/material/CardActions'
 import { Avatar, Typography, Divider } from '@mui/material'
 import { CustomButton } from '../../layout/CutomerButton'
-import PostDetail from '../../components/PostDetailView'
+import PostDetailView from '../../components/PostDetailView'
+import { useAuthContext } from '../../context/AuthContext'
+import { BaseUrl } from './../../helpers/Constant'
+import axios from 'axios'
 
 const useStyle = makeStyles((theme) => ({
   root: {
@@ -26,10 +30,42 @@ const useStyle = makeStyles((theme) => ({
 }))
 //first user view/ not creator view
 const UserHome = () => {
+  // const { getPostByid, post } = usePostContext();
+  const { user: authUser,token }=useAuthContext();
   const classes = useStyle()
   const theme = useTheme()
   const islaptop = useMediaQuery(theme.breakpoints.down('md'))
+  const [isdataSet, setDataSet] = React.useState(false);
+  const [post, setPost] = React.useState(null);
 
+  let { id } = useParams();
+
+  const [changes, setChange] = React.useState(false);
+
+  const changeData = () => {
+    setChange(!changes);
+  }
+  
+  
+   React.useEffect(() => {
+    var controller = new AbortController();
+    axios.get(`${BaseUrl}/content/${id}`, { headers: {"Authorization" : `Bearer ${token}`} })
+      .then(res => {
+          console.log(res.data);
+        setPost(res.data.data);
+        setDataSet(true);
+      })
+    
+    return () => {
+      controller.abort();
+    }
+    
+   }, [id,changes])
+  
+  if (!isdataSet) {
+    return <h3>loading.....</h3>
+  }
+  
   return (
     <Wrapper>
       <section className='container'>
@@ -42,7 +78,7 @@ const UserHome = () => {
             display={{ xs: 'block', sm: 'block' }}
             order={{ xs: 1, sm: 2 }}
           >
-            <PostDetail />
+            {isdataSet && <PostDetailView changeData={changeData}  post={post}/>}
           </Grid>
           <Grid
             item
@@ -162,6 +198,7 @@ const UserHome = () => {
     </Wrapper>
   )
 }
+
 
 const Wrapper = styled.section`
   margin: 20px 0px;
