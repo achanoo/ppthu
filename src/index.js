@@ -18,7 +18,10 @@ const theme1 = createTheme({
       main: "#000",
     },
     secondary: {
-      main: "#A00",
+      light: "#f50057",
+      main: "#f50057",
+      dark: "#ba000d",
+      contrastText: "#000",
     },
     success: {
       main: "#A400",
@@ -45,9 +48,13 @@ const theme1 = createTheme({
 ReactDOM.render(
   <Router>
     <AuthProvider>
-      <ThemeProvider theme={theme1}>
-        <App />
-      </ThemeProvider>
+      <SubscriptionProvider>
+        <PostProvider>
+          <ThemeProvider theme={theme1}>
+            <App />
+          </ThemeProvider>
+        </PostProvider>
+      </SubscriptionProvider>
     </AuthProvider>
   </Router>,
   document.getElementById("root")

@@ -34,6 +34,8 @@ const PostProvider = ({ children }) => {
   const { isAuthenticated, token } = useAuthContext();
   const [cancelTokenSource, setCancelTokenSource] = React.useState();
   const [error, setError] = React.useState({});
+  const [isSuccess, setIsSuccess] = React.useState(false);
+  const [progress, setProgress] = React.useState(0);
   const [state, dispatch] = React.useReducer(reducer, initialStates);
   const handleInputImage = (data) => {
     console.log(data);
@@ -106,23 +108,38 @@ const PostProvider = ({ children }) => {
     // dispatch({type:'SET_LOADING'});
 
     try {
-      // const response = axios({
-      //   method: "post",
-      //   url: `${BaseUrl}/content`,
-      //   data: data,
-      //   headers: {
-      //     Accept: "application/json",
-      //     "Content-Type": "multipart/form-data",
-      //     Authorization: `Bearer ${token}`,
-      //   },
-      // });
+      const response = axios({
+        method: "post",
+        url: `${BaseUrl}/content`,
+        data: data,
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
+        },
+        onUploadProgress: function (progressEvent) {
+          // Do whatever you want with the native progress event
+          const { loaded, total } = progressEvent;
+          let percent = Math.floor((loaded * 100) / total);
+          console.log(`${loaded}kb of ${total}kb | ${percent}%`);
+          if (percent < 100) {
+            setProgress(percent);
+          }
+        },
+      });
 
-      const response = api.post("/content", data);
+      setIsSuccess(true);
+
       response
         .then((data) => {
           console.log(data.data);
           if (data.data.success) {
-            history.push("/home");
+            setProgress(100);
+            setTimeout(() => {
+              setProgress(0);
+              alert("successfully uploaded");
+              history.push("/home");
+            }, 1000);
           }
         })
         .catch((err) => {
@@ -172,220 +189,6 @@ const PostProvider = ({ children }) => {
     } catch (err) {
       console.log("helowrod");
       console.log(err);
-    }
-  };
-
-  const LikeHandle = async (id) => {
-    console.log("like");
-    console.log(id);
-    try {
-      // const response = axios({
-      //   method: "post",
-      //   url: `${BaseUrl}/like/`,
-      //   data: { content_id: id },
-      //   headers: {
-      //     Accept: "application/json",
-      //     Authorization: `Bearer ${token}`,
-      //   },
-      // });
-
-      // response.then((data) => {
-      //   //  getPosts();
-      // });
-      return await api.post(`/like`, { content_id: id });
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const CommentLikeHandle = async (id) => {
-    let formData = new FormData();
-    formData.append("comment_id", id);
-    try {
-      // const response = axios({
-      //   method: "post",
-      //   url: `${BaseUrl}/comment-like/`,
-      //   data: formData,
-      //   headers: {
-      //     Accept: "application/json",
-      //     Authorization: `Bearer ${token}`,
-      //   },
-      // });
-
-      // response.then((data) => {
-      //   //  getPosts();
-      // });
-      let promise = new Promise((resolve, reject) => {
-        let res = api.post("/comment-like", formData);
-        return resolve(res);
-      });
-      await promise;
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const RemoveLike = (id) => {
-    try {
-      // const response = axios({
-      //   method: "DELETE",
-      //   url: `${BaseUrl}/like/${id}`,
-      //   headers: {
-      //     Accept: "application/json",
-      //     Authorization: `Bearer ${token}`,
-      //   },
-      // });
-      const response = api.delete(`/like/${id}`);
-
-      response.then((data) => {
-        //  getPosts();
-      });
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const RemoveCommentLikeHandle = (id) => {
-    try {
-      // const response = axios({
-      //   method: "DELETE",
-      //   url: `${BaseUrl}/comment-like/${id}`,
-      //   headers: {
-      //     Accept: "application/json",
-      //     Authorization: `Bearer ${token}`,
-      //   },
-      // });
-
-      // response.then((data) => {
-      //   //  getPosts();
-      // });
-      return api.delete(`comment-like/${id}`);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  //giving comment
-
-  const CommentCreate = (formData) => {
-    try {
-      /* const response = axios({
-        method: "post",
-        url: `${BaseUrl}/comment/`,
-        data: formData,
-        headers: {
-          Accept: "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      response.then((data) => {
-        // getPosts();
-      }); */
-      return api.post("/comment", formData);
-    } catch (response) {
-      console.log(response);
-    }
-  };
-
-  const CommentUpdate = (formData, id) => {
-    try {
-      /* const response = axios({
-        method: "post",
-        url: `${BaseUrl}/comment/${id}`,
-        data: formData,
-        headers: {
-          Accept: "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      response.then((data) => {
-        //  getPosts();
-      }); */
-
-      return api.post(`/comment/${id}`, formData);
-    } catch (response) {
-      console.log(response);
-    }
-  };
-
-  const CommentDelete = (id) => {
-    try {
-      /*  const response = axios({
-        method: "DELETE",
-        url: `${BaseUrl}/comment/${id}`,
-        headers: {
-          Accept: "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      response.then((data) => {
-        //  getPosts();
-      }); */
-      return api.delete(`/comment/${id}`);
-    } catch (response) {
-      console.log(response);
-    }
-  };
-
-  const ReplyCreate = (formData) => {
-    try {
-      // axios({
-      //   method: "post",
-      //   url: `${BaseUrl}/comment-reply/`,
-      //   data: formData,
-      //   headers: {
-      //     Accept: "application/json",
-      //     Authorization: `Bearer ${token}`,
-      //   },
-      // }).then((res) => {
-      //   console.log("now you r here");
-      //   //getPosts();
-      // });
-      return api.post("/comment-reply", formData);
-    } catch (response) {
-      console.log(response);
-    }
-  };
-
-  const ReplyUpdate = (formData, id) => {
-    try {
-      const response = axios({
-        method: "post",
-        url: `${BaseUrl}/comment-reply/${id}`,
-        data: formData,
-        headers: {
-          Accept: "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      response.then((data) => {
-        //  getPosts();
-      });
-    } catch (response) {
-      console.log(response);
-    }
-  };
-
-  const ReplyDelete = (id) => {
-    try {
-      const response = axios({
-        method: "DELETE",
-        url: `${BaseUrl}/comment-reply/${id}`,
-        headers: {
-          Accept: "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      response.then((data) => {
-        //  getPosts();
-      });
-    } catch (response) {
-      console.log(response);
     }
   };
 
@@ -477,21 +280,15 @@ const PostProvider = ({ children }) => {
         removeAudio,
         postCreated,
         postUpdated,
-        LikeHandle,
-        CommentLikeHandle,
-        RemoveLike,
         getPosts,
         getPostByid,
-        CommentCreate,
-        ReplyCreate,
-        CommentDelete,
-        CommentUpdate,
-        ReplyDelete,
-        ReplyUpdate,
-        RemoveCommentLikeHandle,
         handleEditInputImage,
         RemoveData,
         pollAction,
+        isSuccess,
+        setIsSuccess,
+        progress,
+        setProgress,
         error,
       }}>
       {children}
