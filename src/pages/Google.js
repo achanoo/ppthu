@@ -38,6 +38,7 @@ export default function Google(props) {
       isSignedIn={false}
       render={(renderProps) => (
         <button
+          disabled={true}
           onClick={renderProps.onClick}
           className={`${styles.mkBtn} ${styles.mkBtnBg}`}>
           <GoogleIcon />

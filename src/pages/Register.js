@@ -184,9 +184,7 @@ const Register = () => {
       <h2>Sign Up</h2>
       <div className={`${classes.container} FaintBox `}>
         <Google />
-
-        <FacebookLogin />
-
+        {/* <FacebookLogin /> */}
         {/* <Button
           onClick={RegisterByPhone}
           fullWidth
@@ -194,8 +192,8 @@ const Register = () => {
         >
           continue with phone number
         </Button> */}
-
         <CButton
+          style={{ display: "none" }}
           fullWidth
           bgcolor="#fff"
           textcolor="#333"
@@ -205,7 +203,6 @@ const Register = () => {
           onClick={RegisterByPhone}>
           continue with phone number
         </CButton>
-
         <div className={classes.line}>
           <div className={classes.liner}></div>
           <div className={classes.linerSec}>
@@ -213,7 +210,6 @@ const Register = () => {
           </div>
           <div className={classes.liner}></div>
         </div>
-
         <form onSubmit={handleSubmitForm}>
           <Box className={classes.cusFormControl}>
             <label htmlFor="name">Name</label>

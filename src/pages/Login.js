@@ -272,6 +272,7 @@ const Login = () => {
 
         <FacebookLogin />
         <Button
+          style={{ display: "none" }}
           onClick={handlePhoneDivOpen}
           fullWidth
           className="btn btn-facebook">
