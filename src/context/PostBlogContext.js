@@ -15,24 +15,17 @@ const PostBlogProvider = ({ children }) => {
   const { token } = useAuthContext();
 
   const listen = () => {
-    axios({
-      method: "get",
-      url: `${BaseUrl}/comments`,
-      headers: {
-        Accept: "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
     Pusher.logToConsole = true;
 
-    var pusher = new Pusher("7aa300d222231cc7d92f", {
+    const pusher = new Pusher("cbae929ae26fb6b1d072", {
       cluster: "ap1",
       encrypted: true,
     });
 
     var channel = pusher.subscribe("comment-channel");
     channel.bind("newComment", function (data) {
-      alert(JSON.stringify(data));
+      var data = data.comment;
+      refresh();
     });
   };
 
@@ -63,8 +56,7 @@ const PostBlogProvider = ({ children }) => {
   const refresh = () => {
     setReloading(!reloading);
   };
-
-  React.useEffect(() => listen());
+  React.useEffect(() => listen(), []);
   React.useEffect(() => sendGetRequest(), [reloading]);
 
   return (
