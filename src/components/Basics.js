@@ -474,8 +474,6 @@ const Basic = () => {
       }
     });
   }, [getRegions, getUserData]);
-    return (getData = false);
-  }, []);
 
   return (
     <div className={classes.wrapper}>
