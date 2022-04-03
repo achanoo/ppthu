@@ -15,11 +15,11 @@ export default function FacebookLogin(props) {
 
       // console.log(resp.email)
       const formData = {
-        email: resp.email,
-        token: resp.userId,
+        email: resp?.email,
+        token: resp?.userId,
         provider: "Facebook",
-        name: resp.name,
-        image: resp.picture.data.url,
+        name: resp?.name,
+        image: resp?.picture.data.url,
       };
       //console.log(formData)
       loginByPovider(formData);
@@ -29,7 +29,7 @@ export default function FacebookLogin(props) {
   };
   return (
     <ReactFacebookLogin
-      appId="584299076225511" // we created this, remember?
+      appId={process.env.REACT_APP_FACEBOOK_APP_ID} // we created this, remember?
       autoLoad={false}
       fields="name,email,picture"
       callback={onResponse}

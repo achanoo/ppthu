@@ -14,20 +14,25 @@ const PostBlogProvider = ({ children }) => {
   const [reloading, setReloading] = React.useState(false);
   const { token } = useAuthContext();
 
-  const listen = () => {
-    Pusher.logToConsole = true;
+  const pusher = new Pusher(process.env.REACT_APP_PUSHER_KEY, {
+    cluster: process.env.REACT_APP_PUSHER_CLUSTER,
+    encrypted: true,
+  });
 
-    const pusher = new Pusher("cbae929ae26fb6b1d072", {
-      cluster: "ap1",
-      encrypted: true,
-    });
+  // const listen = () => {
+  //   Pusher.logToConsole = true;
 
-    var channel = pusher.subscribe("comment-channel");
-    channel.bind("newComment", function (data) {
-      var data = data.comment;
-      refresh();
-    });
-  };
+  //   const pusher = new Pusher("cbae929ae26fb6b1d072", {
+  //     cluster: "ap1",
+  //     encrypted: true,
+  //   });
+
+  //   var channel = pusher.subscribe("comment-channel");
+  //   channel.bind("newComment", function (data) {
+  //     var data = data.comment;
+  //     refresh();
+  //   });
+  // };
 
   const sendGetRequest = async (data = "all") => {
     try {
@@ -56,7 +61,7 @@ const PostBlogProvider = ({ children }) => {
   const refresh = () => {
     setReloading(!reloading);
   };
-  React.useEffect(() => listen(), []);
+  // React.useEffect(() => listen(), []);
   React.useEffect(() => sendGetRequest(), [reloading]);
 
   return (
@@ -66,6 +71,7 @@ const PostBlogProvider = ({ children }) => {
         loading,
         setLoading,
         sendGetRequest,
+        pusher,
         reloading,
         setReloading,
       }}>

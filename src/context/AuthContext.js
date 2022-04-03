@@ -69,13 +69,17 @@ const AuthProvider = ({ children }) => {
       let data = "";
       if (error.response.status === 400) {
         data = error.response.data.errors;
+        dispatch({ type: "LOGIN_FAILED", payload: data });
       }
 
       if (error.response.status === 422) {
         data = error.response.data.errors;
+        dispatch({
+          type: "LOGIN_FAILED",
+          payload: data,
+        });
       }
 
-      dispatch({ type: "LOGIN_FAILED", payload: data });
       return data;
     }
   };
@@ -114,7 +118,20 @@ const AuthProvider = ({ children }) => {
       }
     } catch (error) {
       //dispatch({ type: GET_PRODUCTS_ERROR })
-      console.log("there is  error!");
+      let data = "";
+      if (error.response.status === 400) {
+        data = error.response.data.errors;
+      }
+
+      if (error.response.status === 422) {
+        data = error.response.data.errors;
+      }
+
+      dispatch({
+        type: "PROVIDER_FAILED",
+        payload: "INVALID ACCESS ,TRY AGAIN!",
+      });
+      return data;
     }
   };
 

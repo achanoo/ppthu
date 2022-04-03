@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import styled from "styled-components";
-
+import AlertMessage from "../components/Alert";
 import { makeStyles } from "@mui/styles";
 import { CButton } from "../layout/CCButton";
 
@@ -107,7 +107,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Register = () => {
   const classes = useStyles();
-  const { registerByaccount } = useAuthContext();
+  const { registerByaccount, errors, failed_status } = useAuthContext();
   const [state, setState] = useState({
     name: "",
     email: "",
@@ -182,9 +182,18 @@ const Register = () => {
   return (
     <div className={classes.wrapper}>
       <h2>Sign Up</h2>
+      {failed_status && (
+        <div className={classes.container}>
+          <AlertMessage
+            alert="true"
+            type="error"
+            msg={`${errors} ,Please Try again!`}
+          />
+        </div>
+      )}
       <div className={`${classes.container} FaintBox `}>
         <Google />
-        {/* <FacebookLogin /> */}
+        <FacebookLogin />
         {/* <Button
           onClick={RegisterByPhone}
           fullWidth

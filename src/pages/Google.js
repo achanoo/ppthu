@@ -29,12 +29,11 @@ export default function Google(props) {
   };
   return (
     <GoogleLogin
-      clientId="263320373300-l7bkr5puk00c726kpoukb9hl0mrh62nv.apps.googleusercontent.com"
+      clientId={`${process.env.REACT_APP_GOOGLE_CLIENT_ID}.apps.googleusercontent.com`}
       autoLoad={false}
       isSignedIn={false}
       render={(renderProps) => (
         <button
-          disabled={true}
           onClick={renderProps.onClick}
           className={`${styles.mkBtn} ${styles.mkBtnBg}`}>
           <GoogleIcon />

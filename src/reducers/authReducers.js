@@ -45,6 +45,15 @@ const auth_reducers = (state, action) => {
     };
   }
 
+  if (action.type === "PROVIDER_FAILED") {
+    return {
+      ...state,
+      errors: action.payload,
+      failed_status: true,
+      success_status: false,
+    };
+  }
+
   if (action.type === "LOGOUT_ACTION") {
     return { ...state, isAuthenticated: false, user: {}, token: "" };
   }

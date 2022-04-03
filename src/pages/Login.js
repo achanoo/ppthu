@@ -212,7 +212,7 @@ const Login = () => {
           <AlertMessage
             alert="true"
             type="error"
-            msg={`${authError.message} ,Please Try again!`}
+            msg={`${authError?.message} ,Please Try again!`}
           />
         </div>
       )}

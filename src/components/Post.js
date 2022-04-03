@@ -211,12 +211,14 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
 const Post = ({ id, post, postPage, ...props }) => {
   const classes = useStyles();
   const history = useHistory();
-  const { reloading, setReloading } = useBlogContext();
+  const { reloading, setReloading, pusher } = useBlogContext();
   const [more, setMore] = React.useState(true);
   const [likes, setLikes] = React.useState([]);
   const [liked, setLiked] = React.useState(false);
   const { user, token } = useAuthContext();
+  const [message, setMessage] = React.useState({});
   const [editPost, SetEditPost] = React.useState(false);
+  const [comments, setComments] = React.useState([]);
 
   //link
   // for link pop up
@@ -316,6 +318,11 @@ const Post = ({ id, post, postPage, ...props }) => {
     setLikes(post?.likes);
   }, [id, post, reloading]);
 
+  React.useEffect(() => {
+    setComments(post?.comments);
+    setLikes(post?.likes);
+  }, [id, post, reloading]);
+
   React.useEffect(
     () =>
       setLiked(
@@ -323,6 +330,23 @@ const Post = ({ id, post, postPage, ...props }) => {
       ),
     [likes]
   );
+
+  React.useEffect(() => {
+    var channel = pusher.subscribe("comment-channel");
+    channel.bind("newComment", function (data) {
+      var res = data.comment;
+
+      if (Number(res.content_id) === post?.id) {
+        setMessage(res);
+      }
+    });
+  }, []);
+
+  React.useEffect(() => {
+    if (Object.keys(message).length > 0) {
+      setComments((prev) => [message, ...prev]);
+    }
+  }, [message]);
 
   return (
     <div className={classes.allposts}>
@@ -333,6 +357,7 @@ const Post = ({ id, post, postPage, ...props }) => {
             src={post?.creator.user_info.profile_image}
             alt="avatar"
           />
+          <h4>{message?.content_id}</h4>
           <Box>
             <Typography
               variant="h6"
@@ -504,22 +529,25 @@ const Post = ({ id, post, postPage, ...props }) => {
             Load more comments
           </a>
           <span>
-            {post?.comments.length === 0
+            {comments.length === 0
               ? 0
-              : post?.comments.length < limit.comment
-              ? post?.comments.length
+              : comments.length < limit.comment
+              ? comments.length
               : limit.comment}{" "}
-            of {post?.comments.length}
+            of {comments.length}
           </span>
         </Box>
 
-        {post?.comments
-          .slice(0, finalLimit)
-          .reverse()
-          .map((item) => {
-            const { id, comment } = item;
-            return <Comment key={id} id={id} comment={comment} item={item} />;
-          })}
+        {comments.length > 0 &&
+          comments
+            .slice(0, finalLimit)
+            .reverse()
+            .map((item, index) => {
+              const { id, comment } = item;
+              return (
+                <Comment key={index} id={id} comment={comment} item={item} />
+              );
+            })}
         <CommentBox id={id} />
       </div>
     </div>
