@@ -69,14 +69,17 @@ const AuthProvider = ({ children }) => {
       let data = "";
       if (error.response.status === 400) {
         data = error.response.data.errors;
-        dispatch({ type: "LOGIN_FAILED", payload: data });
+        dispatch({
+          type: "LOGIN_FAILED",
+          payload: { ...data, message: "invalid" },
+        });
       }
 
       if (error.response.status === 422) {
         data = error.response.data.errors;
         dispatch({
           type: "LOGIN_FAILED",
-          payload: data,
+          payload: { ...data, message: "Invalid Action!" },
         });
       }
 
@@ -143,6 +146,9 @@ const AuthProvider = ({ children }) => {
       const response = await axios({
         method: "post",
         url: `${BaseUrl}/auth/register`,
+        headers: {
+          "Access-Control-Allow-Origin": "http://localhost:8000/api/v1",
+        },
         data: formdata,
       });
       const data = response.data.data;
@@ -153,8 +159,15 @@ const AuthProvider = ({ children }) => {
         history.push("/home");
       }
     } catch (error) {
+      if (error.response.status === 422) {
+        let data = error.response.data.errors;
+        console.log(data);
+        dispatch({
+          type: "FAILED_ACTION",
+          payload: { ...data, message: "failed Action" },
+        });
+      }
       //dispatch({ type: GET_PRODUCTS_ERROR })
-      console.log("there is no error!");
     }
   };
 

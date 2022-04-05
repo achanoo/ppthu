@@ -179,6 +179,8 @@ const Register = () => {
     history.push("/register/phone");
   };
 
+  console.log(errors);
+
   return (
     <div className={classes.wrapper}>
       <h2>Sign Up</h2>
@@ -187,7 +189,7 @@ const Register = () => {
           <AlertMessage
             alert="true"
             type="error"
-            msg={`${errors} ,Please Try again!`}
+            msg={`${errors?.message} ,Please Try again!`}
           />
         </div>
       )}
@@ -238,13 +240,11 @@ const Register = () => {
             <TextField
               id="email"
               type="email"
-              error={state.isError.email.length > 0 ? true : false}
+              error={errors?.email?.length > 0 ? true : false}
               name="email"
               className="input-field"
               fullWidth
-              helperText={
-                state.isError.email.length > 0 ? state.isError.email : ""
-              }
+              helperText={errors?.email}
               onChange={formValChange}
               variant="outlined"
             />
@@ -255,13 +255,11 @@ const Register = () => {
             <TextField
               id="password"
               type="password"
-              error={state.isError.password.length > 0 ? true : false}
+              error={errors?.password?.length > 0 ? true : false}
               name="password"
               className="input-field"
               fullWidth
-              helperText={
-                state.isError.password.length > 0 ? state.isError.password : ""
-              }
+              helperText={errors?.password}
               onChange={formValChange}
               variant="outlined"
             />
