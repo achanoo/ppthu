@@ -277,7 +277,7 @@ const Basic = () => {
   const inputChange = (e) => {
     const { name, value, files } = e.target;
     console.log(value);
-    if (name === "cover" || name === "profile") {
+    if (name === "cover" || name === "new_profile_image") {
       setState((prev) => ({
         ...prev,
         [name]: files[0],

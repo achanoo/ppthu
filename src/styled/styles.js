@@ -71,3 +71,31 @@ export const Counting = styled.span`
   font-size: 1rem;
   color: #000;
 `;
+
+export const Wrapper = styled.div`
+  minheight: 100vh;
+  diplay: grid;
+  place-items: center;
+`;
+
+export const CusFormInput = styled.div`
+  text-align: start;
+  padding: 10px 10px;
+  width:100%;
+  & label: {
+    color: #333333;
+    padding: 18px 0px;
+    margin-bottom: 8px;
+  }
+  ,
+  & .inputfield: {
+    margin: 0.5rem 0px;
+    background: rgb(245, 244, 242);
+  },
+  
+`;
+export const CusOptions = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;

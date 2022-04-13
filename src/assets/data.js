@@ -10,10 +10,10 @@ import youtube from "./youtube.png";
 import facebook from "./facebook.png";
 
 export const socialIcons = [
-  { name: "facebook", image: facebook },
-  { name: "youtube", image: youtube },
-  { name: "instagram", image: instagram },
-  { name: "twitter", image: instagram },
+  { id: 1, name: "facebook", image: facebook },
+  { id: 2, name: "youtube", image: youtube },
+  { id: 3, name: "instagram", image: instagram },
+  { id: 4, name: "twitter", image: instagram },
 ];
 
 export const itemData = [img1, img2, img3, img4, img5];

@@ -228,79 +228,33 @@ const AuthProvider = ({ children }) => {
   };
 
   const getRegions = async () => {
-    try {
-      {
-        /* const response = await axios({
-        method: "get",
-        url: `${BaseUrl}/region`,
-        headers: {
-          Accept: "application/json",
-          Authorization: `Bearer ${state.token}`,
-        },
-      }); */
-      }
-      const response = await api.get("/region");
-      if (response.status === 200) {
-        dispatch({ type: "REGION_LOAD", payload: response.data.data });
-      }
-    } catch (error) {
-      console.log(error.response);
-    }
+    const response = await axios({
+      method: "get",
+      url: `${BaseUrl}/region`,
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${state.token}`,
+      },
+    });
+    return response.data;
   };
 
-  const updatetoCreator = async (data) => {
-    dispatch({ type: "SET_LOADING" });
-    try {
-      {
-        /* const response = await axios({
-        method: "post",
-        url: `${BaseUrl}/user/update`,
-        data: data,
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${state.token}`,
-        },
-      }); */
-      }
-      const response = await api.post("/user/update", data);
-      if (response.data.status) {
-        let data = getUserData();
-        console.log("it is working");
-        data.then((data) => {
-          console.log(data.data.user_info);
-          let user_var = localStorage.getItem("user");
-          if (user_var) {
-            let userobj = JSON.parse(user_var);
-
-            userobj.name = data.data.user_info.user.name;
-            userobj.role = data.data.user_info.user.role.name;
-            userobj.profile_image = data.data.user_info.profile_image;
-            userobj.profile_url = data.data.user_info.profile_url;
-
-            localStorage.setItem("user", JSON.stringify(userobj));
-            localStorage.removeItem("sexual_content");
-            localStorage.removeItem("selectedCategory");
-            dispatch({
-              type: "UPDATE_USER",
-              payload: data.data,
-            });
-          }
-        });
-
-        dispatch({ type: "UNSET_LOADING" });
-      }
-
-      // const payload = response.data.data
-      // dispatch({ type: 'NEWDATA_LOADED', payload: payload })
-      // dispatch({ type: 'UNSET_LOADING' })
-    } catch (error) {
-      if (error.response.status === 422) {
-        let data = error.response.data.errors;
-        console.log(data);
-        dispatch({ type: "FAILED_ACTION", payload: data });
-      }
-    }
+  const upgradetoCreator = async (data) => {
+    await axios({
+      method: "post",
+      url: `${BaseUrl}/user/update`,
+      data: data,
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${state.token}`,
+      },
+    })
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((error) => console.log(error));
   };
 
   const updateUserProfile = (data) => {
@@ -371,7 +325,7 @@ const AuthProvider = ({ children }) => {
         loginbyPhone,
         defaultLogged,
         getRegions,
-        updatetoCreator,
+        upgradetoCreator,
         getUserData,
         searchByprofileUrl,
         updateUserProfile,
