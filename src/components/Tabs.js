@@ -98,7 +98,7 @@ export default function BasicTabs() {
               style={{ fontVariant: "normal" }}
             />
             <Tab label="Tiers" {...a11yProps(1)} />
-            <Tab label="Page Settings" {...a11yProps(2)} />
+            <Tab label="Account Settings" {...a11yProps(2)} />
             {/* <Tab label='Getting Paid' {...a11yProps(2)} />
             
             <Tab label='Preview' {...a11yProps(4)} /> */}

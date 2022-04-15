@@ -20,6 +20,8 @@ import { useBlogContext } from "../context/PostBlogContext.js";
 
 const Reply = ({ id, item }) => {
   const [edit, setEdit] = React.useState(false);
+  const [status, setStatus] = React.useState(false);
+
   const { user, token } = useAuthContext();
   const { reloading, setReloading } = useBlogContext();
 
@@ -74,6 +76,8 @@ const Reply = ({ id, item }) => {
     setReloading(!reloading);
   };
 
+  React.useEffect(() => setStatus(item?.user_info?.user.id === user?.id), [id]);
+
   return (
     <MainReply>
       <ReplyInfo>
@@ -82,12 +86,16 @@ const Reply = ({ id, item }) => {
           <ReplyDetail>
             <h4>{item?.user_info.user.name}</h4>
             <p>{item?.comment}</p>
-            <IconButton aria-label="Example" onClick={() => setEdit(!edit)}>
-              <EditIcon fontSize="small" />
-            </IconButton>
-            <IconButton aria-label="Example" onClick={replyDelete}>
-              <DeleteIcon fontSize="small" />
-            </IconButton>
+            {status && (
+              <IconButton aria-label="Example" onClick={() => setEdit(!edit)}>
+                <EditIcon fontSize="small" />
+              </IconButton>
+            )}
+            {status && (
+              <IconButton aria-label="Example" onClick={replyDelete}>
+                <DeleteIcon fontSize="small" />
+              </IconButton>
+            )}
           </ReplyDetail>
         )}
         {edit && (

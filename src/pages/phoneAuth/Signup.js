@@ -6,6 +6,9 @@ import { useHistory } from "react-router-dom";
 import { makeStyles } from "@mui/styles";
 import axios from "axios";
 import { BaseUrl } from "../../helpers/Constant";
+import PhoneInput from "react-phone-input-2";
+import { formatPhoneNumber } from "react-phone-number-input";
+import "react-phone-input-2/lib/style.css";
 //form input
 import FormControl, { useFormControl } from "@mui/material/FormControl";
 import {
@@ -323,6 +326,7 @@ const Signup = () => {
   const handlePhoneNumber = (e) => {
     const phone = e.target.value;
     setPhone(phone);
+    console.log(phone);
 
     if (phone.length === 0 || phone.length === 7 || phone.length === 9) {
       return setErrors({
@@ -381,6 +385,7 @@ const Signup = () => {
   };
 
   const NextToVerification = () => {
+    console.log(phone);
     axios.get(`${BaseUrl}/auth/phone/send-sms/${phone}`).then(
       (res) => {
         if (res.status === 200) {
@@ -433,20 +438,28 @@ const Signup = () => {
                 Phone Number
               </Typography>
             </label>
-            <OutlinedInput
-              id="standard-adornment-amount"
-              value={phone}
-              onChange={handlePhoneNumber}
-              startAdornment={
-                <InputAdornment position="start">
-                  +95
-                  <KeyboardArrowRightIcon /> 9
-                </InputAdornment>
-              }
-              aria-describedby="component-error-text"
-              inputProps={{ maxLength: 10, minLength: 7, type: "number" }}
-              placeholder="000000000"
-            />
+            <div style={{ padding: "0px 10px" }}>
+              <PhoneInput
+                placeholder="Enter phone number"
+                value={phone}
+                country="mm"
+                inputProps={{
+                  name: "phone",
+
+                  required: true,
+                  autoFocus: true,
+                  countryCodeEditable: false,
+                }}
+                inputStyle={{
+                  background: "lightblue",
+                }}
+                buttonStyle={{
+                  borderRight: "none",
+                }}
+                onChange={setPhone}
+              />
+            </div>
+
             <FormHelperText id="component-error-text">
               {errors.helperText}
             </FormHelperText>
@@ -464,8 +477,8 @@ const Signup = () => {
         <DialogTitle id="alert-dialog-title">Verify phone</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            We'll text your verification code to +95 9 000000000. Standard SMS
-            fee may apply.
+            We'll text your verification code to +{phone}. Standard SMS fee may
+            apply.
           </DialogContentText>
         </DialogContent>
         <DialogActions>

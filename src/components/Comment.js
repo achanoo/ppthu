@@ -26,10 +26,12 @@ import ReplyBox from "./ReplyBox.js";
 const Comment = ({ id, comment, item }) => {
   const [likes, setLikes] = React.useState([]);
   const [liked, setLiked] = React.useState([]);
+  const [list, setList] = React.useState([]);
   const [reply, setReply] = React.useState(false);
   const [edit, setEdit] = React.useState(false);
+  const [status, setStatus] = React.useState(false);
   const { user, token } = useAuthContext();
-  const { reloading, setReloading } = useBlogContext();
+  const { reloading, setReloading, pusher } = useBlogContext();
 
   const handleUpdate = (data) => {
     const formData = new FormData();
@@ -118,10 +120,10 @@ const Comment = ({ id, comment, item }) => {
     setReloading(!reloading);
   };
 
-  React.useEffect(
-    () => setLikes(item.comment_likes),
-    [id, item?.comment_likes]
-  );
+  React.useEffect(() => {
+    setLikes(item.comment_likes);
+    setList(item?.comment_replies);
+  }, [id, item?.comment_likes]);
 
   React.useEffect(
     () =>
@@ -132,6 +134,20 @@ const Comment = ({ id, comment, item }) => {
       ),
     [likes]
   );
+
+  React.useEffect(() => setStatus(item?.user_info?.user.id === user?.id), [id]);
+
+  React.useEffect(() => {
+    var channel = pusher.subscribe("comment-reply-channel");
+    channel.bind("newCommentReply", function (data) {
+      var res = data.comment_reply;
+
+      if (Number(res.comment_id) === item?.id) {
+        setList((prev) => [res, ...prev]);
+      }
+    });
+  }, [pusher]);
+
   return (
     <div>
       <CommentContent>
@@ -155,12 +171,16 @@ const Comment = ({ id, comment, item }) => {
               <IconButton aria-label="Example" onClick={() => setReply(!reply)}>
                 <ChatBubbleOutlineIcon fontSize="small" />
               </IconButton>
-              <IconButton aria-label="Example" onClick={() => setEdit(true)}>
-                <EditIcon fontSize="small" />
-              </IconButton>
-              <IconButton aria-label="Example" onClick={commentDelete}>
-                <DeleteIcon fontSize="small" />
-              </IconButton>
+              {status && (
+                <IconButton aria-label="Example" onClick={() => setEdit(true)}>
+                  <EditIcon fontSize="small" />
+                </IconButton>
+              )}
+              {status && (
+                <IconButton aria-label="Example" onClick={commentDelete}>
+                  <DeleteIcon fontSize="small" />
+                </IconButton>
+              )}
             </CommentDetail>
           )}
           {edit && (
@@ -179,8 +199,8 @@ const Comment = ({ id, comment, item }) => {
 
       {reply && <ReplyBox id={id} cancelButton={() => setReply(false)} />}
 
-      {item?.comment_replies &&
-        item?.comment_replies.map((reply, index) => {
+      {list &&
+        list.map((reply, index) => {
           return <Reply key={index} id={reply?.id} item={reply} />;
         })}
     </div>

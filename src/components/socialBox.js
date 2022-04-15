@@ -12,12 +12,13 @@ import ListItemText from "@mui/material/ListItemText";
 
 import RemoveCircleOutlineSharpIcon from "@mui/icons-material/RemoveCircleOutlineSharp";
 import { socialIcons } from "../assets/data";
+import { changeSocials } from "../helpers/Constant";
 const linkItem = {
   name: "",
   value: "",
   id: 0,
 };
-const SocialBox = ({ submitLinks }) => {
+const SocialBox = ({ submitLinks, data = [] }) => {
   const [link, setLink] = React.useState(linkItem);
   const [list, setList] = React.useState([]);
   const [error, setError] = React.useState({});
@@ -57,12 +58,13 @@ const SocialBox = ({ submitLinks }) => {
     const status = validate();
 
     if (!status) {
-      alert("jelo");
       let acc = [];
       acc.push(link.name);
       acc.push(link.value);
-      setList((prev) => [...prev, acc]);
-      submitLinks(acc);
+      let newList = list;
+      newList.push(acc);
+      setList(newList);
+      submitLinks(newList);
       setLink(linkItem);
       setError({});
     }
@@ -73,6 +75,12 @@ const SocialBox = ({ submitLinks }) => {
     setList(newSocials);
     submitLinks(newSocials);
   };
+
+  React.useEffect(() => {
+    if (data) {
+      setList(data);
+    }
+  }, [data]);
   return (
     <CusFormInput>
       <CusOptions>

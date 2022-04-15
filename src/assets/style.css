@@ -175,3 +175,8 @@
 .invalid {
     color: red;
 }
+
+.react-tel-input {
+    margin: 2px !important;
+    margin-bottom: 8px !important;
+}

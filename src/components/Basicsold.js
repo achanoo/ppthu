@@ -19,6 +19,7 @@ import { CButton } from "../layout/CCButton";
 import Editor from "./Editor";
 import defaultCover from "./../assets/images/download.png";
 import { useAuthContext } from "../context/AuthContext";
+import { getFullUrl } from "../helpers/Constant";
 
 const Basic = ({ user, changeTab }) => {
   const cover = useRef(null);
@@ -69,21 +70,16 @@ const Basic = ({ user, changeTab }) => {
   const handleSubmit = () => {
     let formData = new FormData();
     formData.append("name", state.name);
-    formData.append("role_id", 3);
+    formData.append("role_id", 2);
     formData.append(
       "cover_photo",
       state.new_cover === "" ? state.cover : state.new_cover
     );
     formData.append(
       "profile_image",
-      state.new_profile_image === ""
-        ? state.profile_image
-        : state.new_profile_image
+      state.new_profile_image === "" ? state.profile : state.new_profile_image
     );
-    formData.append(
-      "categories",
-      JSON.stringify(localStorage.getItem("selectedCategory"))
-    );
+    formData.append("categories", localStorage.getItem("selectedCategory"));
 
     formData.append("bio", content);
     formData.append("profile_url", state.profile_url);
@@ -103,9 +99,10 @@ const Basic = ({ user, changeTab }) => {
       ...prev,
       name: user?.user_info?.user?.name || user?.user?.name || "",
       desc: user?.description || "",
-      profile: user?.user_info?.profile_image || user?.profile_image,
-      cover: user?.user_info?.cover_photo || user?.cover_photo,
-      profile_url: user?.user_info?.profile_url || "",
+      profile:
+        user?.user_info?.profile_image || getFullUrl(user?.profile_image),
+      cover: user?.user_info?.cover_photo || getFullUrl(user?.cover_photo),
+      profile_url: user?.user_info?.profile_url || user?.profile_url || "",
       plans: user?.subscription_plans || [],
       region_id: user?.user_info?.region?.id || user?.user?.region_id,
     }));
@@ -220,7 +217,7 @@ const Basic = ({ user, changeTab }) => {
                       src={
                         (state.new_profile_image &&
                           showimage(state.new_profile_image)) ||
-                        state.profile_image
+                        state.profile
                       }
                       alt="Avatar"
                       className="image circle-img"
@@ -269,6 +266,7 @@ const Basic = ({ user, changeTab }) => {
                       <img
                         src={
                           (state.new_cover && showimage(state.new_cover)) ||
+                          state.cover ||
                           defaultCover
                         }
                         alt="div"

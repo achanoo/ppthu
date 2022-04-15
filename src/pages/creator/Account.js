@@ -30,6 +30,7 @@ import { makeStyles } from "@mui/styles";
 import { CButton } from "../../layout/CCButton";
 import { coverphoto } from "../../assets/data";
 import TextareaAutosize from "@mui/material/TextareaAutosize";
+import parsePhoneNumber from "libphonenumber-js";
 import FemaleIcon from "@mui/icons-material/Female";
 import MaleIcon from "@mui/icons-material/Male";
 import SelectOption from "../../layout/SelectOption";
@@ -38,7 +39,12 @@ import moment from "moment";
 import { useAuthContext } from "../../context/AuthContext";
 import SocialBox from "../../components/socialBox";
 import axios from "axios";
-import { BaseUrl } from "../../helpers/Constant";
+import { BaseUrl, changeSocials } from "../../helpers/Constant";
+
+import PhoneInput from "react-phone-input-2";
+
+import "react-phone-input-2/lib/style.css";
+
 const useStyles = makeStyles((theme) => ({
   wrapper: {
     minHeight: "100vh",
@@ -202,9 +208,13 @@ const AccountSetting = ({ user }) => {
   const history = useHistory();
   const classes = useStyles();
   const editor = useRef(null);
+  const [errors, setError] = useState({});
+  const [phone, setPhone] = useState("");
   const [content, setContent] = useState("");
   const [validation, setValidation] = useState({});
-  const [state, setState] = useState({});
+  const [state, setState] = useState({
+    list: [],
+  });
   const [dob, setDob] = useState({});
   const { getRegions, token } = useAuthContext();
   const [regions, setRegion] = useState([]);
@@ -227,12 +237,20 @@ const AccountSetting = ({ user }) => {
 
   const handleInput = (event) => {
     const { name, value } = event.target;
+
     setState((prev) => ({
       ...prev,
       [name]: value,
     }));
   };
-  const updateInfo = () => {
+
+  const handlePhone = (value) => {
+    setState((prev) => ({
+      ...prev,
+      phone_1: value,
+    }));
+  };
+  const updateInfo = async () => {
     let dob = "";
     if (state.day !== "" && state.month !== "" && state.year !== "") {
       dob = moment()
@@ -245,13 +263,14 @@ const AccountSetting = ({ user }) => {
     let formData = new FormData();
     formData.append("email", state.email);
     formData.append("phone_1", state.phone_1);
-    formData.append("socials", JSON.stringify(state.socials));
+    formData.append("socials", JSON.stringify(state.list));
     formData.append("gender", state.gender);
     formData.append("address", state.address);
-    formData.append("region_id", state.region_id);
+    formData.append("region_id", state.region_id == 0 ? "" : state.region_id);
     formData.append("name", state.name);
+    formData.append("dob", dob);
 
-    axios({
+    await axios({
       method: "post",
       url: `${BaseUrl}/user/account/update`,
       data: formData,
@@ -260,7 +279,14 @@ const AccountSetting = ({ user }) => {
         "Content-Type": "multipart/form-data",
         Authorization: `Bearer ${token}`,
       },
-    });
+    })
+      .then((res) => console.log(res))
+      .catch((error) => {
+        if (error.response.status === 422) {
+          let data = error.response.data.errors;
+          setError(data);
+        }
+      });
   };
 
   const handleChange = (data) => {
@@ -298,11 +324,9 @@ const AccountSetting = ({ user }) => {
     }
   };
   const submitLinks = (collection) => {
-    let { socials } = state;
-    socials.push(collection);
     setState((prev) => ({
       ...prev,
-      socials,
+      list: collection,
     }));
   };
 
@@ -317,17 +341,26 @@ const AccountSetting = ({ user }) => {
 
   React.useEffect(() => {
     setState((prev) => ({
-      name: user?.user?.name,
-      email: user?.user?.email,
-      gender: user?.gender,
-      day: user?.dob === null ? "" : moment(user?.dob).get("date"),
-      month: user?.dob === null ? "" : moment(user?.dob).get("month"),
-      year: user?.dob === null ? "" : moment(user?.dob).get("year"),
-      list: user?.socials,
-      region_id: user?.region?.id,
-      address: user?.address,
-      phone_1: user?.user?.phone_no,
-      socials: user?.socials,
+      ...prev,
+      name: user?.user?.name || user?.user_info?.user?.name,
+      email:
+        user?.user?.email === "undefined"
+          ? ""
+          : user?.user?.email === "undefined" ||
+            user?.user_info?.user?.email === "undefined"
+          ? ""
+          : user?.user_info?.user?.email,
+      gender: user?.gender || user?.user_info?.gender || "",
+      day: moment(user?.user_info?.dob || user?.dob).get("date") || "",
+      month: moment(user?.user_info?.dob || user?.dob).get("month") + 1 || "",
+
+      year: moment(user?.user_info?.dob || user?.dob).get("year") || "",
+
+      list: changeSocials(user?.user_info?.socials || []) || [],
+      region_id: user?.region?.id || user?.user_info?.region?.id || 0,
+      address: user?.address || user?.user_info?.address,
+      phone_1: `+${user?.user?.phone_no}`,
+      socials: user?.user_info?.socials || [],
     }));
   }, [user]);
 
@@ -367,22 +400,23 @@ const AccountSetting = ({ user }) => {
               <h5 className="input-label"> Phone </h5>
               {/* <Button>Add</Button> */}
             </Box>
-
-            <OutlinedInput
-              fullWidth
-              id="loginPh"
+            <PhoneInput
+              placeholder="Enter phone number"
               value={state.phone_1}
-              name="phone_1"
-              onChange={handleInput}
-              startAdornment={
-                <InputAdornment position="start">
-                  +95
-                  <KeyboardArrowRightIcon /> 9
-                </InputAdornment>
-              }
-              aria-describedby="component-error-text"
-              inputProps={{ type: "number", "aria-label": "Without label" }}
-              placeholder="000000000"
+              country="mm"
+              inputProps={{
+                name: "phone_1",
+                required: true,
+                autoFocus: true,
+                countryCodeEditable: false,
+              }}
+              inputStyle={{
+                background: "lightblue",
+              }}
+              buttonStyle={{
+                borderRight: "none",
+              }}
+              onChange={handlePhone}
             />
           </Box>
           <Box className={classes.general}>
@@ -395,6 +429,9 @@ const AccountSetting = ({ user }) => {
                   variant="contained"
                   aria-label="outlined primary button group">
                   <Button
+                    onClick={() => {
+                      setState((prev) => ({ ...prev, gender: "male" }));
+                    }}
                     style={{
                       backgroundColor: `${
                         state.gender === "male" ? "#333" : ""
@@ -403,6 +440,9 @@ const AccountSetting = ({ user }) => {
                     <MaleIcon />
                   </Button>
                   <Button
+                    onClick={() => {
+                      setState((prev) => ({ ...prev, gender: "female" }));
+                    }}
                     style={{
                       backgroundColor: `${
                         state.gender === "female" ? "#333" : ""
@@ -465,19 +505,22 @@ const AccountSetting = ({ user }) => {
         <Divider className={classes.hrdiv} />
         {/* link start */}
 
-        <SocialBox submitLinks={submitLinks} />
+        <SocialBox submitLinks={submitLinks} data={state.list} />
 
         {/* region start */}
         <Box className={classes.cusFormControl}>
           <Box className={classes.cusOptions}>
             <h5 className="input-label"> Regions </h5>
+            {errors?.region_id && (
+              <span className="invalid">{errors?.region_id}</span>
+            )}
             {/* <Button>Add</Button> */}
           </Box>
           {regions ? (
             <SelectOption
               data={regions}
               handleChange={handleChange}
-              selected={1}
+              selected={state.region_id}
             />
           ) : (
             <div>Data is unavaliable at the moment!</div>

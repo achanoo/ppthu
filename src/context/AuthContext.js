@@ -60,8 +60,13 @@ const AuthProvider = ({ children }) => {
       const data = response.data.data;
       console.log(data);
       if (data.status === "Active") {
+        let lastSeen = Date.now();
         localStorage.setItem("token", JSON.stringify(data.access_token));
-        localStorage.setItem("user", JSON.stringify(data));
+        localStorage.setItem(
+          "user",
+          JSON.stringify({ ...data, seen: lastSeen })
+        );
+
         dispatch({ type: "LOGIN_SUCCESS", payload: data });
         history.push("/home");
       }
@@ -153,8 +158,13 @@ const AuthProvider = ({ children }) => {
       });
       const data = response.data.data;
       if (data.status === "Active") {
+        let lastSeen = Date.now();
         localStorage.setItem("token", JSON.stringify(data.access_token));
-        localStorage.setItem("user", JSON.stringify(data));
+        localStorage.setItem(
+          "user",
+          JSON.stringify({ ...data, seen: lastSeen })
+        );
+
         dispatch({ type: "LOGIN_SUCCESS", payload: data });
         history.push("/home");
       }
@@ -252,7 +262,18 @@ const AuthProvider = ({ children }) => {
       },
     })
       .then((res) => {
-        console.log(res);
+        if (res.status === 200) {
+          let result = res.data.data;
+          console.log(result);
+          let user = localStorage.getItem("user");
+          let user_obj = JSON.parse(user);
+          user_obj.profile_image = result.profile_image;
+          user_obj.profile_url = result.profile_url;
+          user_obj.role = result.user.role.name;
+          localStorage.setItem("user", JSON.stringify(user_obj));
+          localStorage.removeItem("selectedCategory");
+          localStorage.removeItem("sexual_content");
+        }
       })
       .catch((error) => console.log(error));
   };

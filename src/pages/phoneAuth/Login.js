@@ -6,6 +6,9 @@ import styled from "styled-components";
 import { makeStyles } from "@mui/styles";
 import { useHistory } from "react-router-dom";
 import FormControl, { useFormControl } from "@mui/material/FormControl";
+
+import "react-phone-input-2/lib/style.css";
+import PhoneInput from "react-phone-input-2";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import {
   OutlinedInput,
@@ -20,9 +23,9 @@ import { useAuthContext } from "../../context/AuthContext";
 
 const useStyles = makeStyles((theme) => ({
   wrapper: {
-    minHeight: "100vh",
+    minHeight: "50vh",
     display: "grid",
-    marginTop: "5vh",
+
     placeItems: "center",
     padding: "10px",
     [theme.breakpoints.only("xs")]: {
@@ -142,7 +145,7 @@ const LoginPhone = () => {
   return (
     <>
       <div className={classes.wrapper}>
-        <h2>Sing Up</h2>
+        <h2>Login</h2>
         <div className={`${classes.container} FaintBox `}>
           <FormControl variant="standard" error={state.error} fullWidth>
             <label htmlFor="PhoneNumber" style={{ textAlign: "start" }}>
@@ -150,20 +153,29 @@ const LoginPhone = () => {
                 Phone Number
               </Typography>
             </label>
-            <OutlinedInput
-              id="standard-adornment-amount"
-              startAdornment={
-                <InputAdornment position="start">
-                  +95
-                  <KeyboardArrowRightIcon /> 9
-                </InputAdornment>
-              }
+            <PhoneInput
+              placeholder="Enter phone number"
               value={state.phone}
-              name="phone"
-              aria-describedby="component-error-text"
-              inputProps={{ inputMode: "text", pattern: "[0-9]{9}" }}
-              placeholder="000000000"
-              onChange={handlePhoneNumber}
+              country="mm"
+              inputProps={{
+                name: "phone",
+
+                required: true,
+                autoFocus: true,
+                countryCodeEditable: false,
+              }}
+              inputStyle={{
+                background: "lightblue",
+              }}
+              buttonStyle={{
+                borderRight: "none",
+              }}
+              onChange={(value) => {
+                setState((prev) => ({
+                  ...prev,
+                  phone: value,
+                }));
+              }}
             />
             <FormHelperText id="component-error-text">
               {state.helperText}

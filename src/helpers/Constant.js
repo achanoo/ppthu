@@ -33,7 +33,7 @@ export const profileUrl = (keyword) => {
 
 export const changeSocials = (data) => {
   let acc = [];
-
+  console.log(data);
   if (data.length > 0) {
     return data.map((i) => {
       acc[0] = i.link;

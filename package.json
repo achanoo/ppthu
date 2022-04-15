@@ -29,7 +29,7 @@
         "javascript-time-ago": "^2.3.10",
         "jodit-react": "^1.1.15",
         "laravel-echo": "^1.11.4",
-        "libphonenumber-js": "^1.9.44",
+        "libphonenumber-js": "^1.9.51",
         "moment": "^2.29.1",
         "pusher": "^5.0.1",
         "pusher-js": "^7.0.6",
