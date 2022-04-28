@@ -34,14 +34,11 @@ const PostBlogProvider = ({ children }) => {
   //   });
   // };
 
-  const sendGetRequest = async (data = "all") => {
+  const sendGetRequest = async (endPoint = "public-content") => {
     try {
       const res = await axios({
         method: "get",
-        url: `${BaseUrl}/content`,
-        params: {
-          type: data,
-        },
+        url: `${BaseUrl}/${endPoint}`,
         headers: {
           Accept: "application/json",
           Authorization: `Bearer ${token}`,

@@ -262,6 +262,10 @@ const CreatorProfileView = ({ user }) => {
   //   setMore(!more);
   // };
 
+  const sanitizedData = (data) => ({
+    __html: DOMPurify.sanitize(data),
+  });
+
   //start for share tooltip
   const [open, setOpen] = React.useState(false);
 
@@ -319,7 +323,7 @@ const CreatorProfileView = ({ user }) => {
           <h3>
             {name} ({profile_url})
           </h3>
-          <h5>{bio}</h5>
+          <h5 dangerouslySetInnerHTML={sanitizedData(bio)} />
         </Box>
       </div>
 

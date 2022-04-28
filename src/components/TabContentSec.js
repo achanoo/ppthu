@@ -55,14 +55,24 @@ export default function PostTabs() {
     setValue(newValue);
   };
 
-  // const loadPosts = async () => {
-  //   setLoading(true);
-  //   sendGetRequest();
-  //   setLoading(false);
-  // };
+  const loadPosts = async () => {
+    setLoading(true);
+    if (value === 0) {
+      sendGetRequest("public-content");
+    } else if (value === 1) {
+      sendGetRequest("pantpoe-content");
+    } else {
+      sendGetRequest("subscribe-content");
+    }
+    setLoading(false);
+  };
+
+  React.useEffect(() => {
+    loadPosts();
+  }, [value]);
 
   if (loading) {
-    return "loading";
+    return "loading...";
   }
 
   return (
@@ -84,25 +94,22 @@ export default function PostTabs() {
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
-        {posts
-          .filter((post) => post?.type === 1)
-          .map((post) => (
-            <Post key={post.id} id={post.id} post={post} />
-          ))}
+        {posts.map((post) => (
+          <Post key={post.id} id={post.id} post={post} />
+        ))}{" "}
+        {posts.length === 0 && "no data avaliable"}
       </TabPanel>
       <TabPanel value={value} index={1}>
-        {posts
-          .filter((post) => post?.type === 2)
-          .map((post) => (
-            <Post key={post.id} id={post.id} post={post} />
-          ))}
+        {posts.map((post) => (
+          <Post key={post.id} id={post.id} post={post} />
+        ))}
+        {posts.length === 0 && "no data avaliable"}
       </TabPanel>
       <TabPanel value={value} index={2}>
-        {posts
-          .filter((post) => post?.type === 3)
-          .map((post) => (
-            <Post key={post.id} id={post.id} post={post} />
-          ))}
+        {posts.map((post) => (
+          <Post key={post.id} id={post.id} post={post} />
+        ))}
+        {posts.length === 0 && "no data avaliable"}
       </TabPanel>
     </Box>
   );
