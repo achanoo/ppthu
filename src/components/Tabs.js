@@ -45,6 +45,7 @@ export default function BasicTabs() {
   const [value, setValue] = React.useState(0);
   const { getUserData } = useAuthContext();
   const [user, setUser] = React.useState({});
+  const [refresh, setRefresh] = React.useState(false);
 
   const handleChange = (event, newValue) => {
     console.log(newValue);
@@ -54,6 +55,10 @@ export default function BasicTabs() {
   const changeTab = (newValue) => {
     console.log(newValue);
     setValue(newValue);
+  };
+
+  const freshData = () => {
+    setRefresh(!refresh);
   };
 
   const [loading, setLoading] = React.useState(false);
@@ -72,7 +77,7 @@ export default function BasicTabs() {
       });
 
     setLoading(false);
-  }, [getUserData]);
+  }, [refresh]);
 
   if (loading) {
     return (
@@ -113,7 +118,7 @@ export default function BasicTabs() {
         </TabPanel>
 
         <TabPanel value={value} index={2}>
-          <Account user={user} />
+          <Account user={user} freshData={freshData} />
         </TabPanel>
       </Box>
     </Toolbar>

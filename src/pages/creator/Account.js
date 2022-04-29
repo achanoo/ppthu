@@ -42,8 +42,22 @@ import axios from "axios";
 import { BaseUrl, changeSocials } from "../../helpers/Constant";
 
 import PhoneInput from "react-phone-input-2";
+import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 
 import "react-phone-input-2/lib/style.css";
+import Modal from "@mui/material/Modal";
+
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  bgcolor: "background.paper",
+  border: "2px solid #000",
+  boxShadow: 24,
+  p: 4,
+};
 
 const useStyles = makeStyles((theme) => ({
   wrapper: {
@@ -204,7 +218,7 @@ const dob_validation = {
 
 // input formula=> (valu.length + 1)*8
 
-const AccountSetting = ({ user }) => {
+const AccountSetting = ({ user, freshData }) => {
   const history = useHistory();
   const classes = useStyles();
   const editor = useRef(null);
@@ -228,6 +242,14 @@ const AccountSetting = ({ user }) => {
     "tiktok",
     "others",
   ];
+
+  const [modalOpen, setModalOpen] = React.useState(false);
+  const handleOpen = () => {
+    setModalOpen(true);
+  };
+  const handleClose = () => {
+    setModalOpen(false);
+  };
 
   const places = ["yangon", "mandalay", "sagaing"];
 
@@ -287,6 +309,7 @@ const AccountSetting = ({ user }) => {
           setError(data);
         }
       });
+    handleOpen();
   };
 
   const handleChange = (data) => {
@@ -343,24 +366,20 @@ const AccountSetting = ({ user }) => {
     setState((prev) => ({
       ...prev,
       name: user?.user?.name || user?.user_info?.user?.name,
-      email:
-        user?.user?.email === "undefined"
-          ? ""
-          : user?.user?.email === "undefined" ||
-            user?.user_info?.user?.email === "undefined"
-          ? ""
-          : user?.user_info?.user?.email,
+      email: user?.user?.email || user?.user_info?.email || "",
+
       gender: user?.gender || user?.user_info?.gender || "",
       day: moment(user?.user_info?.dob || user?.dob).get("date") || "",
       month: moment(user?.user_info?.dob || user?.dob).get("month") + 1 || "",
 
       year: moment(user?.user_info?.dob || user?.dob).get("year") || "",
 
-      list: changeSocials(user?.user_info?.socials || []) || [],
+      list:
+        changeSocials(user?.user_info?.socials || user?.socials || []) || [],
       region_id: user?.region?.id || user?.user_info?.region?.id || 0,
       address: user?.address || user?.user_info?.address,
-      phone_1: `+${user?.user?.phone_no}`,
-      socials: user?.user_info?.socials || [],
+      phone_1: `+${user?.user_info?.user.phone_no || user?.user.phone_no}`,
+      socials: user?.socials || user?.user_info?.socials || [],
     }));
   }, [user]);
 
@@ -554,6 +573,23 @@ const AccountSetting = ({ user }) => {
           <CButton onClick={updateInfo}>Save</CButton>
         </Box>
       </div>
+      <Modal
+        open={modalOpen}
+        onClose={() => {
+          handleClose();
+          freshData();
+        }}
+        aria-labelledby="parent-modal-title"
+        aria-describedby="parent-modal-description">
+        <Box sx={{ ...style, width: 400 }}>
+          <h2 id="parent-modal-title">
+            <AutoAwesomeIcon />
+            Success Message!
+          </h2>
+
+          <p id="parent-modal-description">SuccessFully Updated!</p>
+        </Box>
+      </Modal>
     </div>
   );
 };

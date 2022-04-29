@@ -109,7 +109,7 @@ const Tiers = () => {
       newDialog: false,
       level: subscription?.level,
       price: subscription?.price,
-      image: getFullUrl(subscription?.image),
+      image: subscription?.image,
       desc: subscription?.desc,
       editDialog: true,
       id: id,
@@ -185,13 +185,23 @@ const Tiers = () => {
 
   // Edit
   const EditformInputValue = (e) => {
-    const { name, value } = e.target;
+    const { name, value, files } = e.target;
     const { isError, newData } = state;
 
-    setState({
-      ...state,
-      editData: { ...state.editData, [name]: value },
-    });
+    if (name !== "image") {
+      setState({
+        ...state,
+        editDialog: true,
+        [name]: value,
+      });
+    } else {
+      setPreview(URL.createObjectURL(files[0]));
+      setState({
+        ...state,
+        editDialog: true,
+        image: files[0],
+      });
+    }
   };
 
   const NewgetValue = (value) => {
@@ -201,17 +211,19 @@ const Tiers = () => {
     }));
     // setDescription(value)
     // setState({ ...state, isError })
+    setContent(value);
   };
   const editGetValue = (value) => {
     setState({
       ...state,
       editData: { ...state.editData, desc: value },
     });
+    setContent(value);
   };
 
   React.useEffect(() => {
     getSubscriptions();
-  }, []);
+  }, [state.editDialog, state.newDialog]);
 
   const createHandleSubmit = () => {
     const formData = new FormData();
@@ -239,7 +251,8 @@ const Tiers = () => {
     formData.append("level", state.level);
     formData.append("price", state.price);
     formData.append("image", state.image);
-    formData.append("description", state.desc);
+    formData.append("description", content);
+    formData.append("_method", "PUT");
     // const newformData = {
     //   level: state.title,
     //   price: state.price,
@@ -356,7 +369,7 @@ const Tiers = () => {
                   </Grid> */}
 
                   {subscriptions.map((plan, index) => {
-                    const { id, level, price, description } = plan;
+                    const { id, level, price, description, image } = plan;
 
                     return (
                       <Grid key={index} item xs={12} sm={6} md={4} lg={4}>
@@ -381,11 +394,21 @@ const Tiers = () => {
                             </Grid>
                             <br />
                             <Grid item container>
-                              <Grid item xs={12} sm={12} md={12} lg={12}>
+                              <Grid item xs={6} sm={6} md={6} lg={6}>
                                 <div className="input-label">{level}</div>
                                 <div className="subtitle">
                                   Ks {price} per month
                                 </div>
+                              </Grid>
+                              <Grid item xs={6} sm={6} md={6} lg={6}>
+                                <Avatar
+                                  alt="Remy Sharp"
+                                  src={getFullUrl(image)}
+                                  style={{
+                                    float: "right",
+                                    marginRight: "20px",
+                                  }}
+                                />
                               </Grid>
                             </Grid>
                             <Grid item container>
@@ -586,7 +609,6 @@ const Tiers = () => {
                 accept="image/*"
                 className=""
                 id="contained-button-file"
-                multiple
                 type="file"
                 name="image"
                 onChange={EditformInputValue}
