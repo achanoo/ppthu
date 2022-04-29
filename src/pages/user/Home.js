@@ -1,72 +1,113 @@
-import React from 'react'
-import { useHistory } from 'react-router'
-import { useGlobalContext } from './../../context/AuthContext'
-import styled from 'styled-components'
-import { useTheme } from '@mui/material/styles'
-import { makeStyles } from '@mui/styles'
-import useMediaQuery from '@mui/material/useMediaQuery'
-import Grid from '@mui/material/Grid'
-import Box from '@mui/material/Box'
-import Card from '@mui/material/Card'
-import CardContent from '@mui/material/CardContent'
-import CardActions from '@mui/material/CardActions'
-import { Avatar, Typography, Divider } from '@mui/material'
-import { CustomButton } from '../../layout/CutomerButton'
-import TabContents from '../../components/TabContent'
+/** @format */
+
+import React, { useEffect } from "react";
+import { useHistory } from "react-router";
+import { useAuthContext, useGlobalContext } from "./../../context/AuthContext";
+import styled from "styled-components";
+import { useTheme } from "@mui/material/styles";
+import { makeStyles } from "@mui/styles";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import Grid from "@mui/material/Grid";
+import Box from "@mui/material/Box";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import CardActions from "@mui/material/CardActions";
+import { Avatar, Typography, Divider } from "@mui/material";
+import { CustomButton } from "../../layout/CutomerButton";
+import TabContents from "../../components/TabContentSec";
+import { getFullUrl, BaseUrl } from "../../helpers/Constant";
+import api from "../../services/apifinal.service";
+import axios from "axios";
+import { PostBlogProvider } from "../../context/PostBlogContext";
 
 const useStyle = makeStyles((theme) => ({
   root: {
-    [theme.breakpoints.down('md')]: {
-      display: 'none',
+    [theme.breakpoints.down("md")]: {
+      display: "none",
     },
 
-    [theme.breakpoints.up('lg')]: {
-      display: 'block',
+    [theme.breakpoints.up("lg")]: {
+      display: "block",
     },
   },
   wrapper: {
-    minHeight: '100vh',
-    display: 'grid',
-    marginTop: '5vh',
-    placeItems: 'center',
-    [theme.breakpoints.only('xs')]: {
-      display: 'block',
-      padding: '10px',
+    // minHeight: "100vh",
+    display: "grid",
+
+    placeItems: "center",
+    [theme.breakpoints.only("xs")]: {
+      display: "block",
+      padding: "10px",
     },
   },
   container: {
-    width: '90vw',
-    maxWidth: '1200px',
-    textAlign: 'center',
-    height: 'auto',
-    [theme.breakpoints.only('xs')]: {},
+    width: "90vw",
+    maxWidth: "1200px",
+    textAlign: "center",
+    height: "auto",
+    [theme.breakpoints.only("xs")]: {},
   },
   card: {
-    marginTop: '10px !important',
-    boxShadow: 'none !important',
-    border: '1px solid rgb(229, 227, 221)',
-    '& h3': {
-      margin: '0px',
+    marginTop: "10px !important",
+    boxShadow: "none !important",
+    border: "1px solid rgb(229, 227, 221)",
+    "& h3": {
+      margin: "0px",
     },
   },
 
   cardcontent: {
-    padding: '0px',
+    padding: "0px",
   },
   cardLast: {
-    marginTop: '8px',
+    marginTop: "8px",
   },
-}))
+}));
+
 //first user view/ not creator view
 const UserHome = () => {
-  const history = useHistory()
-  const classes = useStyle()
-  const theme = useTheme()
-  const islaptop = useMediaQuery(theme.breakpoints.down('md'))
+  const { token, user } = useAuthContext();
+  const history = useHistory();
+  const classes = useStyle();
+  const theme = useTheme();
+  const islaptop = useMediaQuery(theme.breakpoints.down("md"));
+  const [creators, setCreator] = React.useState([]);
+  const [loading, setLoading] = React.useState(true);
   const goToEdit = () => {
-    history.push('/step/1')
-  }
+    if (user.role === "creator") {
+      history.push("/edit");
+    } else {
+      history.push("/step/1");
+    }
+  };
 
+  const getCreators = async () => {
+    setLoading(false);
+    await api
+      .get("/user/get-creators")
+      .then((res) => {
+        console.log(res.data.data);
+        setCreator(res.data.data);
+        setLoading(false);
+      })
+      .catch((error) => console.log(error.message));
+  };
+
+  React.useEffect(() => {
+    let controller = new AbortController();
+    console.log("heo wrold getCreator");
+    async function anyfunction() {
+      await getCreators();
+    }
+    anyfunction();
+    //getCreators();
+
+    return () => {
+      controller.abort();
+    };
+  }, []);
+
+  //
   return (
     <div className={classes.wrapper}>
       <section className={classes.container}>
@@ -76,10 +117,12 @@ const UserHome = () => {
             xs={12}
             sm={8}
             md={6}
-            display={{ xs: 'block', sm: 'block' }}
-            order={{ xs: 1, sm: 2 }}
-          >
-            <TabContents />
+            display={{ xs: "block", sm: "block" }}
+            order={{ xs: 1, sm: 2 }}>
+            {creators.length > 0 && <TabContents creators={creators} />}
+            <PostBlogProvider>
+              <TabContents />
+            </PostBlogProvider>
           </Grid>
           <Grid
             item
@@ -87,8 +130,7 @@ const UserHome = () => {
             sm={4}
             md={3}
             order={{ xs: 2, sm: 1 }}
-            display={{ xs: 'none', sm: 'block' }}
-          >
+            display={{ xs: "none", sm: "block" }}>
             {/* supporting */}
 
             <Card className={classes.card}>
@@ -96,33 +138,56 @@ const UserHome = () => {
                 <Grid
                   p={2}
                   container
-                  direction='column'
-                  justifyContent='center'
-                  alignItems='center'
-                >
+                  direction="column"
+                  justifyContent="center"
+                  alignItems="center">
                   <Avatar
-                    alt='Remy Sharp'
-                    src='/static/images/avatar/1.jpg'
+                    alt="Remy Sharp"
+                    src={getFullUrl(user.profile_image)}
                     sx={{ width: 80, height: 80 }}
                   />
-                  <Typography variant='subtitle1' mt={2} component='div'>
-                    chan lay
+                  <Typography variant="subtitle1" mt={2} component="div">
+                    {user.name}
                   </Typography>
                 </Grid>
                 <Divider />
                 <Grid p={2}>
-                  <h3 m={0}>Supporting</h3>
+                  <h3>Supporting</h3>
                 </Grid>
                 <Divider />
                 <Grid p={2}>
-                  <span m={0}>You aren’t supporting any creators yet.</span>
+                  {creators.length > 0 || (
+                    <span m={0}>You aren’t supporting any creators yet.</span>
+                  )}
+
+                  {creators.length > 0 &&
+                    creators.map((item, index) => (
+                      <Box
+                        key={index}
+                        display="flex"
+                        justifyContent={"center"}
+                        alignItems={"center"}>
+                        <Typography
+                          variant="body1"
+                          component="div"
+                          gutterBottom={false}>
+                          {item.creator.user_info.user.name}
+                        </Typography>
+                        <Typography
+                          variant="caption"
+                          component="div"
+                          gutterBottom={false}>
+                          ({item.creator.user_info.profile_url})
+                        </Typography>
+                      </Box>
+                    ))}
                 </Grid>
               </CardContent>
             </Card>
 
-            <Box display={{ xs: 'none', sm: 'block', md: 'none' }}>
-              <Card className='card card-last '>
-                <CardContent className='cardcontent'>
+            <Box display={{ xs: "none", sm: "block", md: "none" }}>
+              <Card className="card card-last ">
+                <CardContent className="cardcontent">
                   <Grid p={2}>
                     <h3 m={0}>Supporting</h3>
                   </Grid>
@@ -132,14 +197,16 @@ const UserHome = () => {
                       You're almost there! Complete your page and take it live.
                     </p>
                     <CustomButton onClick={goToEdit}>
-                      Finish my page
+                      {user.role === "creator"
+                        ? "Finish my page"
+                        : "Become a creator"}
                     </CustomButton>
                   </Grid>
                 </CardContent>
               </Card>
 
-              <Card className='card card-last'>
-                <CardContent className='cardcontent'>
+              <Card className="card card-last">
+                <CardContent className="cardcontent">
                   <Grid p={2}>
                     <h3 m={0}>FIND CREATORS YOU LOVE</h3>
                   </Grid>
@@ -161,9 +228,8 @@ const UserHome = () => {
             xs={12}
             md={3}
             order={{ xs: 2, sm: 3 }}
-            display={{ xs: 'flex', sm: 'none', md: 'flex' }}
-            flexDirection='column'
-          >
+            display={{ xs: "flex", sm: "none", md: "flex" }}
+            flexDirection="column">
             {/* find creator */}
 
             <Card className={classes.card}>
@@ -200,8 +266,8 @@ const UserHome = () => {
         </Grid>
       </section>
     </div>
-  )
-}
+  );
+};
 
 const Wrapper = styled.section`
   margin: 20px 0px;
@@ -230,6 +296,6 @@ const Wrapper = styled.section`
   .card-last {
     margin-top: 8px;
   }
-`
+`;
 
-export default UserHome
+export default UserHome;

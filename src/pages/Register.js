@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from 'react'
-import { Link, useHistory } from 'react-router-dom'
-import styled from 'styled-components'
+/** @format */
 
-import { makeStyles } from '@mui/styles'
-import { CButton } from '../layout/CCButton'
+import React, { useEffect, useState } from "react";
+import { Link, useHistory } from "react-router-dom";
+import styled from "styled-components";
+import AlertMessage from "../components/Alert";
+import { makeStyles } from "@mui/styles";
+import { CButton } from "../layout/CCButton";
 
 import {
   TextField,
@@ -12,197 +14,205 @@ import {
   Fade,
   Backdrop,
   Typography,
-} from '@mui/material'
-import GoogleLogin from 'react-google-login'
-import facebookLogo from './../assets/logos/icons8-facebook.svg'
-import FacebookLogin from './Facebook'
-import Google from './Google'
-import Modal from '@mui/material/Modal'
+} from "@mui/material";
+import GoogleLogin from "react-google-login";
+import facebookLogo from "./../assets/logos/icons8-facebook.svg";
+import FacebookLogin from "./Facebook";
+import Google from "./Google";
+import Modal from "@mui/material/Modal";
 
-import { useAuthContext } from '../context/AuthContext'
-import axios from 'axios'
+import { useAuthContext } from "../context/AuthContext";
+import axios from "axios";
 
-import 'react-phone-input-2/lib/style.css'
+import "react-phone-input-2/lib/style.css";
 const useStyles = makeStyles((theme) => ({
   wrapper: {
-    minHeight: '100vh',
-    display: 'grid',
-    marginTop: '5vh',
-    placeItems: 'center',
-    padding: '10px',
-    [theme.breakpoints.only('xs')]: {
-      display: 'block',
-      padding: '10px',
+    minHeight: "100vh",
+    display: "grid",
+    marginTop: "5vh",
+    placeItems: "center",
+    padding: "10px",
+    [theme.breakpoints.only("xs")]: {
+      display: "block",
+      padding: "10px",
     },
-    '& h2': {
-      textAlign: 'center',
+    "& h2": {
+      textAlign: "center",
     },
   },
   container: {
-    width: '90vw',
-    maxWidth: '700px',
-    textAlign: 'start',
-    height: 'auto',
-    padding: '20px',
-    [theme.breakpoints.only('xs')]: {
-      padding: '5px',
+    width: "90vw",
+    maxWidth: "700px",
+    textAlign: "start",
+    height: "auto",
+    padding: "20px",
+    [theme.breakpoints.only("xs")]: {
+      padding: "5px",
     },
   },
   line: {
-    alignItems: 'center',
-    boxSizing: 'border-box',
-    display: 'flex',
-    transition: 'all 300ms cubic-bezier(0.19, 1, 0.22, 1) 0s',
-    verticalAlign: 'middle',
-    padding: '0.5rem 0rem 0rem',
-    margin: '0rem',
+    alignItems: "center",
+    boxSizing: "border-box",
+    display: "flex",
+    transition: "all 300ms cubic-bezier(0.19, 1, 0.22, 1) 0s",
+    verticalAlign: "middle",
+    padding: "0.5rem 0rem 0rem",
+    margin: "0rem",
   },
   liner: {
-    boxSizing: 'border-box',
+    boxSizing: "border-box",
     webkitBoxFlex: 1,
     flexGrow: 1,
-    transition: ' all 300ms cubic-bezier(0.19, 1, 0.22, 1) 0s',
-    padding: '0rem',
-    margin: '0rem',
-    borderBottom: '1px solid rgb(229, 227, 221)',
+    transition: " all 300ms cubic-bezier(0.19, 1, 0.22, 1) 0s",
+    padding: "0rem",
+    margin: "0rem",
+    borderBottom: "1px solid rgb(229, 227, 221)",
   },
 
   linerSec: {
-    boxSizing: 'border-box',
-    transition: 'all 300ms cubic-bezier(0.19, 1, 0.22, 1) 0s',
-    padding: '0rem 0.5rem',
-    margin: '0rem',
+    boxSizing: "border-box",
+    transition: "all 300ms cubic-bezier(0.19, 1, 0.22, 1) 0s",
+    padding: "0rem 0.5rem",
+    margin: "0rem",
 
-    '& p': {
-      color: 'rgb(112, 108, 100)',
-      fontFamily: 'aktiv-grotesk, sans-serif',
-      position: 'relative',
-      transition: 'all 300ms cubic-bezier(0.19, 1, 0.22, 1) 0s',
-      textAlign: 'center',
-      fontWeight: '400 !important',
-      margin: ' 0.5rem 0rem !important',
-      fontSize: '1rem !important',
-      lineHeight: '1.5 !important',
+    "& p": {
+      color: "rgb(112, 108, 100)",
+      fontFamily: "aktiv-grotesk, sans-serif",
+      position: "relative",
+      transition: "all 300ms cubic-bezier(0.19, 1, 0.22, 1) 0s",
+      textAlign: "center",
+      fontWeight: "400 !important",
+      margin: " 0.5rem 0rem !important",
+      fontSize: "1rem !important",
+      lineHeight: "1.5 !important",
     },
   },
 
   cusFormControl: {
-    textAlign: 'start',
-    padding: ' 10px 0px',
-    '& label': {
-      color: '#333333bd',
+    textAlign: "start",
+    padding: " 10px 0px",
+    "& label": {
+      color: "#333333bd",
     },
-    '& .input-field': {
-      margin: '0.5rem 0px',
-      background: 'rgb(245, 244, 242)',
+    "& .input-field": {
+      margin: "0.5rem 0px",
+      background: "rgb(245, 244, 242)",
     },
   },
 
   // start//////////////////////
 
   // end//////////////////////
-}))
+}));
 
 const Register = () => {
-  const classes = useStyles()
-  const { registerByaccount } = useAuthContext()
+  const classes = useStyles();
+  const { registerByaccount, errors, failed_status } = useAuthContext();
   const [state, setState] = useState({
-    name: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
     isError: {
-      email: '',
-      password: '',
-      confirmPassword: '',
+      email: "",
+      password: "",
+      confirmPassword: "",
     },
-  })
-  const history = useHistory()
+  });
+  const history = useHistory();
   // console.log(getCountryCallingCode('MM'))
 
   const formValChange = (e) => {
-    const { name, value } = e.target
-    const regExp = RegExp(/^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/)
+    const { name, value } = e.target;
+    const regExp = RegExp(
+      /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9]+\.[A-Za-z]+$/
+    );
 
-    const { isError, email, name: ename, password, confirmPassword } = state
+    const { isError, email, name: ename, password, confirmPassword } = state;
 
-    if (name === 'email') {
-      isError.email = regExp.test(value) ? '' : 'Email address is invalid!'
+    if (name === "email") {
+      isError.email = regExp.test(value) ? "" : "Email address is invalid!";
     }
 
-    if (name === 'password') {
+    if (name === "password") {
       if (confirmPassword.length > 0) {
         isError.confirmPassword =
-          value == confirmPassword ? '' : 'ConfirmPassword is not match!'
+          value == confirmPassword ? "" : "ConfirmPassword is not match!";
       } else {
         isError.password =
-          value.length < 8 ? '"Atleast 6 characaters required"' : ''
+          value.length < 8 ? '"Atleast 6 characaters required"' : "";
       }
     }
 
-    if (name === 'confirmPassword') {
+    if (name === "confirmPassword") {
       isError.confirmPassword =
-        value == password ? '' : 'ConfirmPassword is not match!'
+        value == password ? "" : "ConfirmPassword is not match!";
     }
 
     setState({
       ...state,
       isError,
       [name]: value,
-    })
-  }
+    });
+  };
 
   const handleSubmitForm = (e) => {
-    e.preventDefault()
+    e.preventDefault();
     const formdata = {
       name: state.name,
       email: state.email,
       password: state.password,
       password_confirmation: state.confirmPassword,
-      dob: '',
-      categories: '[2]',
-      role_id: '2',
-    }
+      dob: "",
+      categories: "[2]",
+      role_id: "2",
+    };
     //console.log(formdata)
-    registerByaccount(formdata)
-  }
+    registerByaccount(formdata);
+  };
 
   const gotoHome = () => {
-    history.push('/home')
-  }
+    history.push("/home");
+  };
 
   const RegisterByPhone = () => {
-    history.push('/register/phone')
-  }
+    history.push("/register/phone");
+  };
+
+  console.log(errors);
 
   return (
     <div className={classes.wrapper}>
       <h2>Sign Up</h2>
+      {failed_status && (
+        <div className={classes.container}>
+          <AlertMessage
+            alert="true"
+            type="error"
+            msg={`${errors?.message} ,Please Try again!`}
+          />
+        </div>
+      )}
       <div className={`${classes.container} FaintBox `}>
         <Google />
-
         <FacebookLogin />
-
-        {/* <Button
+        <Button
           onClick={RegisterByPhone}
           fullWidth
-          className='btn btn-facebook'
-        >
+          className="btn btn-facebook">
           continue with phone number
-        </Button> */}
-
+        </Button>
         <CButton
+          style={{ display: "none" }}
           fullWidth
-          bgcolor='#fff'
-          textcolor='#333'
+          bgcolor="#fff"
+          textcolor="#333"
           border={true}
-          type='submit'
-          className='btn btn-filled'
-          onClick={RegisterByPhone}
-        >
+          type="submit"
+          className="btn btn-filled"
+          onClick={RegisterByPhone}>
           continue with phone number
         </CButton>
-
         <div className={classes.line}>
           <div className={classes.liner}></div>
           <div className={classes.linerSec}>
@@ -210,92 +220,86 @@ const Register = () => {
           </div>
           <div className={classes.liner}></div>
         </div>
-
         <form onSubmit={handleSubmitForm}>
           <Box className={classes.cusFormControl}>
-            <label htmlFor='name'>Name</label>
+            <label htmlFor="name">Name</label>
             <TextField
-              id='name'
-              type='text'
-              name='name'
-              className='input-field'
+              id="name"
+              type="text"
+              name="name"
+              className="input-field"
               fullWidth
               onChange={formValChange}
-              variant='outlined'
+              variant="outlined"
             />
           </Box>
 
           <Box className={classes.cusFormControl}>
-            <label htmlFor='email'>Email</label>
+            <label htmlFor="email">Email</label>
             <TextField
-              id='email'
-              type='email'
-              error={state.isError.email.length > 0 ? true : false}
-              name='email'
-              className='input-field'
+              id="email"
+              type="email"
+              error={errors?.email?.length > 0 ? true : false}
+              name="email"
+              className="input-field"
               fullWidth
-              helperText={
-                state.isError.email.length > 0 ? state.isError.email : ''
-              }
+              helperText={errors?.email}
               onChange={formValChange}
-              variant='outlined'
+              variant="outlined"
             />
           </Box>
 
           <Box className={classes.cusFormControl}>
-            <label htmlFor='password'>Password</label>
+            <label htmlFor="password">Password</label>
             <TextField
-              id='password'
-              type='password'
-              error={state.isError.password.length > 0 ? true : false}
-              name='password'
-              className='input-field'
+              id="password"
+              type="password"
+              error={errors?.password?.length > 0 ? true : false}
+              name="password"
+              className="input-field"
               fullWidth
-              helperText={
-                state.isError.password.length > 0 ? state.isError.password : ''
-              }
+              helperText={errors?.password}
               onChange={formValChange}
-              variant='outlined'
+              variant="outlined"
             />
           </Box>
 
           <Box className={classes.cusFormControl}>
-            <label htmlFor='confirmPassword'>Confirm Password</label>
+            <label htmlFor="confirmPassword">Confirm Password</label>
             <TextField
               error={state.isError.confirmPassword.length > 0 ? true : false}
-              id='confirmPassword'
-              type='password'
-              name='confirmPassword'
-              className='input-field'
+              id="confirmPassword"
+              type="password"
+              name="confirmPassword"
+              className="input-field"
               fullWidth
               helperText={
                 state.isError.confirmPassword.length > 0
                   ? state.isError.confirmPassword
-                  : ''
+                  : ""
               }
               onChange={formValChange}
-              variant='outlined'
+              variant="outlined"
             />
           </Box>
 
           <CButton
             fullWidth
-            bgcolor='rgb(195 197 194)'
-            type='submit'
-            className='btn btn-filled'
-            onClick={gotoHome}
-          >
+            bgcolor="rgb(195 197 194)"
+            type="submit"
+            className="btn btn-filled"
+            onClick={handleSubmitForm}>
             Sing Up
           </CButton>
-          <p style={{ textAlign: 'center' }}>
+          <p style={{ textAlign: "center" }}>
             By signing up, you agree to Patreon's Terms of Use, Privacy Policy
             and Cookie Policy.
           </p>
         </form>
       </div>
     </div>
-  )
-}
+  );
+};
 const Wrapper = styled.section`
   min-height: 100vh;
   display: grid;
@@ -318,7 +322,7 @@ const Wrapper = styled.section`
     text-align: center;
     border-radius: 50px;
     border: 1px solid rgb(195 197 194);
-    color: 'white';
+    color: "white";
     height: 48px;
     padding: 0px 30px;
     text-transform: capitalize;
@@ -386,5 +390,5 @@ const Wrapper = styled.section`
     margin: 0.5rem 0px;
     background: rgb(245, 244, 242);
   }
-`
-export default Register
+`;
+export default Register;

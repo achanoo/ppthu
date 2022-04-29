@@ -1,41 +1,44 @@
-import * as React from 'react'
-import InputLabel from '@mui/material/InputLabel'
-import MenuItem from '@mui/material/MenuItem'
-import FormHelperText from '@mui/material/FormHelperText'
-import FormControl from '@mui/material/FormControl'
-import Select from '@mui/material/Select'
+/** @format */
+
+import * as React from "react";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormHelperText from "@mui/material/FormHelperText";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
 
 export default function SelectLabels(props) {
-  const { data } = props
-  const [value, setValue] = React.useState('')
+  const { data, handleChange, selected = 0 } = props;
+  const [value, setValue] = React.useState(0);
 
-  const handleChange = (event) => {
-    setValue(event.target.value)
-  }
-  // console.log(props.fullWidth)
+  const handleSubmit = (event) => {
+    setValue(event.target.value);
+    handleChange(event.target.value);
+  };
+  React.useEffect(() => {
+    setValue(selected);
+  }, [selected]);
 
   return (
-    <>
-      <FormControl sx={{ m: 1, minWidth: 120 }} fullWidth={props.fullWidth}>
-        <Select
-          value={value}
-          onChange={handleChange}
-          displayEmpty
-          inputProps={{ 'aria-label': 'Without label' }}
-        >
-          <MenuItem value=''>
-            <em>Choose one</em>
-          </MenuItem>
-          {data.map((item, index) => {
-            return (
-              <MenuItem key={index} value={index}>
-                {item}
-              </MenuItem>
-            )
-          })}
-        </Select>
-        {/* <FormHelperText>Without label</FormHelperText> */}
-      </FormControl>
-    </>
-  )
+    <FormControl sx={{ minWidth: 120 }} fullWidth={props.fullWidth}>
+      <Select
+        labelId="demo-simple-select-label"
+        id="demo-simple-select"
+        value={value}
+        label="Region"
+        onChange={handleSubmit}>
+        <MenuItem value={0}>
+          <em>None</em>
+        </MenuItem>
+
+        {data.map((item, index) => {
+          return (
+            <MenuItem key={index} value={item.id}>
+              {item.name}
+            </MenuItem>
+          );
+        })}
+      </Select>
+    </FormControl>
+  );
 }
