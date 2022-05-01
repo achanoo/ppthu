@@ -155,6 +155,7 @@ const PostProvider = ({ children }) => {
 
   const postUpdated = async (data, id) => {
     // console.log(id);
+    data.append("_method", "PUT");
     if (state.formAudio != "") {
       data.append("audio", state.formAudio[0]);
     }
@@ -170,19 +171,18 @@ const PostProvider = ({ children }) => {
     }
 
     try {
-      // const response = axios({
-      //   method: "post",
-      //   url: `${BaseUrl}/content/${id}`,
-      //   data: data,
-      //   headers: {
-      //     Accept: "application/json",
-      //     "Content-Type": "multipart/form-data",
-      //     Authorization: `Bearer ${token}`,
-      //   },
-      // });
-      await api.post(`/content/${id}`, data).then((data) => {
-        console.log(data.data);
-        if (data.data.success) {
+      await axios({
+        method: "post",
+        url: `${BaseUrl}/content/${id}`,
+        data: data,
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
+        },
+      }).then((data) => {
+        const res = data.data;
+        if (res.success) {
           history.push("/home");
         }
       });

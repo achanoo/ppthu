@@ -1,27 +1,48 @@
-import React, {useState, useRef, useMemo} from 'react';
+/** @format */
+
+import React, { useRef, useMemo } from "react";
 import JoditEditor from "jodit-react";
 
- const Editor = ({placeholder,sendData}) => {
-    const editor = useRef(null)
-    const [content, setContent] = useState('')
+const Editor = ({ oldvalue = "", ...props }) => {
+  const { contents, getValue } = props;
+  console.log(contents);
+  const [content, setContent] = React.useState("");
+  const editor = useRef(null);
 
-    const config = useMemo({
-        readonly: false // all options from https://xdsoft.net/jodit/doc/,
-        placeholder: placeholder || 'Start typings...'
-    }, [placeholder])
+  const placeholder = " type herr";
+  const config = {
+    buttons: [
+      "bold",
+      "italic",
+      "underline",
+      "strikethrough",
+      "|",
+      "ul",
+      "ol",
+      "|",
+      "center",
+      "left",
+      "right",
+      "justify",
+      "|",
+      "link",
+      // 'image',
+    ],
+    uploader: { insertImageAsBase64URI: true },
+    removeButtons: ["brush", "file", "image"],
+  };
 
-    return (
-        <JoditEditor
-            style={{width:'100%'}}
-                ref={editor}
-                value={content}
-                config={config}
-        tabIndex={1} // tabIndex of textarea
-        onBlur={newContent => setContent(newContent)} // preferred to use only this option to update the content for performance reasons
-            onChange={newContent => {
-                sendData(newContent);
-                }}
-            />
-        );
- }
+  return useMemo(
+    () => (
+      <JoditEditor
+        ref={editor}
+        value={contents}
+        config={config}
+        onChange={(content) => getValue(content)}
+      />
+    ),
+    []
+  );
+};
+
 export default Editor;

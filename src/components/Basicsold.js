@@ -91,8 +91,9 @@ const Basic = ({ user, changeTab }) => {
     }
   };
 
-  const getValue = (data) => {
-    setContent(data);
+  const getUpdateData = (content) => {
+    // console.log(content);
+    setContent(content);
   };
 
   const handleSubmit = () => {
@@ -356,7 +357,7 @@ const Basic = ({ user, changeTab }) => {
                 </Grid>
 
                 <Grid item alignSelf="center" style={{ width: "100%" }}>
-                  <Editor getValue={getValue} contents={content} />
+                  <Editor getValue={getUpdateData} contents={content} />
                 </Grid>
               </Grid>
             </CardContent>

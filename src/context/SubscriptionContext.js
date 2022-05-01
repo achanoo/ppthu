@@ -112,7 +112,7 @@ const SubscriptionProvider = ({ children }) => {
     dispatch({ type: "SET_LOADING" });
     try {
       const response = await axios({
-        method: "PUT",
+        method: "Post",
         url: `${BaseUrl}/subscription-plan/${id}`,
         data: data,
         headers: {

@@ -328,6 +328,7 @@ const AuthProvider = ({ children }) => {
             type: "UPDATE_USER",
             payload: res.data.data,
           });
+          handleOpen();
           // getUserData();
         }
       })

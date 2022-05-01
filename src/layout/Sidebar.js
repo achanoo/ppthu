@@ -207,7 +207,7 @@ export default function TemporaryDrawer({ props }) {
 
         <ListItem
           button
-          key=" My Earnings"
+          key=" My Earnings helo"
           style={{ display: user.role === "creator" ? "" : "none" }}
           onClick={() => history.push("/earnings-overview")}>
           <ListItemIcon>

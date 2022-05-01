@@ -95,7 +95,9 @@ export default function AccountMenu() {
           onClick={() => history.push("/rsmanager")}>
           Relationship Manager
         </MenuItem>
-        <MenuItem onClick={() => history.push("/earnings-overview")}>
+        <MenuItem
+          style={{ display: user.role === "creator" ? "" : "none" }}
+          onClick={() => history.push("/earnings-overview")}>
           My Earnings
         </MenuItem>
         <MenuItem onClick={() => history.push("/membership")}>
