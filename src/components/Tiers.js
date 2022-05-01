@@ -26,6 +26,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import "../assets/style.css";
 import { useAuthContext } from "../context/AuthContext";
 import { getFullUrl } from "../helpers/Constant";
+import moment from "moment";
 
 const useStyles = makeStyles((theme) => ({
   tierImage: {
@@ -383,9 +384,15 @@ const Tiers = () => {
                             <Grid item container>
                               <Grid item xs={10} sm={10} md={10} lg={10}>
                                 <div className="subtitle">
-                                  Published Oct 18, 2021{" "}
+                                  Published at{" "}
+                                  {moment(plan?.created_at, [
+                                    "YYYY",
+                                    moment.ISO_8601,
+                                  ]).format("MMM Do YY")}
                                 </div>
-                                <div className="subtitle">0 pantpoethus</div>
+                                <div className="subtitle">
+                                  {plan?.subscription_counts} pantpoethus
+                                </div>
                               </Grid>
                               <Grid item xs={2} sm={2} md={2} lg={2}>
                                 <a

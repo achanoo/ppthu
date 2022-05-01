@@ -229,8 +229,9 @@ const SearchInput = (props) => {
                       <span
                         style={{ fontSize: "0.825rem" }}
                         dangerouslySetInnerHTML={sanitizedData(
-                          item?.user_info?.bio.slice(0, 80) + "..." ||
-                            item?.user_info?.bio
+                          item?.user_info?.bio?.length > 80
+                            ? item?.user_info?.bio.slice(0, 80) + "..."
+                            : item?.user_info?.bio || ""
                         )}></span>
                     </div>
                   </BoxItem>
