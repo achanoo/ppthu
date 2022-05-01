@@ -28,7 +28,7 @@ export const FrontEndBaseUrl = "https://localhost:3000/";
 export const RBaseUrl = "https://localhost:3000/creator-profile/";
 
 export const profileUrl = (keyword) => {
-  return `https://localhost:3000/creator-profile/${keyword}`;
+  return `https://localhost:3000/${keyword}`;
 };
 
 export const changeSocials = (data) => {
