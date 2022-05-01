@@ -39,6 +39,14 @@ const AuthProvider = ({ children }) => {
     dispatch({ type: "IS_AUTHENTICATED" });
   };
 
+  const [modalOpen, setModalOpen] = React.useState(false);
+  const handleOpen = () => {
+    setModalOpen(true);
+  };
+  const handleClose = () => {
+    setModalOpen(false);
+  };
+
   useEffect(() => {
     checkLogin();
   }, []);
@@ -51,6 +59,7 @@ const AuthProvider = ({ children }) => {
 
   const loginbyAccount = async (formdata) => {
     //console.log(formdata)
+
     try {
       const response = await axios({
         method: "post",
@@ -92,7 +101,17 @@ const AuthProvider = ({ children }) => {
     }
   };
 
-  const logout = () => {
+  const logout = async () => {
+    await axios({
+      method: "get",
+      url: `${BaseUrl}/logout`,
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${state.token}`,
+      },
+    });
+
     localStorage.removeItem("user");
     localStorage.removeItem("token");
     dispatch({ type: "LOGOUT_ACTION" });
@@ -152,7 +171,7 @@ const AuthProvider = ({ children }) => {
         method: "post",
         url: `${BaseUrl}/auth/register`,
         headers: {
-          "Access-Control-Allow-Origin": "http://localhost:8000/api/v1",
+          "Access-Control-Allow-Origin": "http://pantpoe.com/api/v1",
         },
         data: formdata,
       });
@@ -264,15 +283,20 @@ const AuthProvider = ({ children }) => {
       .then((res) => {
         if (res.status === 200) {
           let result = res.data.data;
-          console.log(result);
+
           let user = localStorage.getItem("user");
           let user_obj = JSON.parse(user);
           user_obj.profile_image = result.profile_image;
+          user_obj.name = result?.user?.name;
           user_obj.profile_url = result.profile_url;
           user_obj.role = result.user.role.name;
           localStorage.setItem("user", JSON.stringify(user_obj));
           localStorage.removeItem("selectedCategory");
           localStorage.removeItem("sexual_content");
+          dispatch({
+            type: "SUCCESS_ALERT",
+          });
+          handleOpen();
         }
       })
       .catch((error) => console.log(error));
@@ -351,6 +375,9 @@ const AuthProvider = ({ children }) => {
         searchByprofileUrl,
         updateUserProfile,
         resetAlert,
+        handleClose,
+        handleOpen,
+        modalOpen,
       }}>
       {children}
     </AuthContext.Provider>

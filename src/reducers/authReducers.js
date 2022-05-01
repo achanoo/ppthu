@@ -33,6 +33,7 @@ const auth_reducers = (state, action) => {
       token: token,
       user: action.payload,
       success_status: true,
+      errors: [],
     };
   }
 
@@ -56,6 +57,10 @@ const auth_reducers = (state, action) => {
 
   if (action.type === "LOGOUT_ACTION") {
     return { ...state, isAuthenticated: false, user: {}, token: "" };
+  }
+
+  if (action.type === "SUCCESS_ALERT") {
+    return { ...state, errors: [], failed_status: false, success_status: true };
   }
 
   if (action.type === "UPDATE_USER") {

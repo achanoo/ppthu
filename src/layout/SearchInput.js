@@ -8,6 +8,7 @@ import InputBase from "@mui/material/InputBase";
 import LoadingButton from "@mui/lab/LoadingButton";
 import SearchIcon from "@mui/icons-material/Search";
 import Box from "@mui/material/Box";
+import DOMPurify from "dompurify";
 import Popper from "@mui/material/Popper";
 import { withStyles } from "@material-ui/core/styles";
 import axios from "axios";
@@ -133,6 +134,10 @@ const SearchInput = (props) => {
   const canBeOpen = open && Boolean(anchorEl);
   const id = canBeOpen ? "transition-popper" : undefined;
 
+  const sanitizedData = (data) => ({
+    __html: DOMPurify.sanitize(data),
+  });
+
   const getData = async (keyword) => {
     let cancel;
     if (cancel) {
@@ -215,9 +220,11 @@ const SearchInput = (props) => {
                       <h5 style={{ margin: "0px" }}>
                         {item.user_info.user.name}({item.user_info.profile_url})
                       </h5>
-                      <span style={{ fontSize: "0.825rem" }}>
-                        {item.user_info.bio}
-                      </span>
+                      <span
+                        style={{ fontSize: "0.825rem" }}
+                        dangerouslySetInnerHTML={sanitizedData(
+                          item?.user_info?.bio
+                        )}></span>
                     </div>
                   </BoxItem>
                 </Link>

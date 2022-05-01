@@ -268,8 +268,6 @@ const Login = () => {
           <div className={classes.liner}></div>
         </div>
 
-        <Google />
-
         <FacebookLogin />
         <Button
           onClick={handlePhoneDivOpen}

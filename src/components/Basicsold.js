@@ -10,7 +10,9 @@ import TextField from "@mui/material/TextField";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
+import Alert from "@mui/material/Alert";
 import JoditEditor from "jodit-react";
+import Stack from "@mui/material/Stack";
 import Link from "@mui/material/Link";
 import { CheckCircle, RadioButtonUnchecked } from "@mui/icons-material";
 import "../assets/style.css";
@@ -20,12 +22,37 @@ import Editor from "./Editor";
 import defaultCover from "./../assets/images/download.png";
 import { useAuthContext } from "../context/AuthContext";
 import { getFullUrl } from "../helpers/Constant";
+import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
+
+import Box from "@mui/material/Box";
+import Modal from "@mui/material/Modal";
+
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  bgcolor: "background.paper",
+  border: "2px solid #000",
+  boxShadow: 24,
+  p: 4,
+};
 
 const Basic = ({ user, changeTab }) => {
   const cover = useRef(null);
   const profile = useRef(null);
   const editor = useRef(null);
-  const { upgradetoCreator, user: authUser } = useAuthContext();
+  const {
+    upgradetoCreator,
+    user: authUser,
+    errors,
+    failed_status,
+    success_status,
+    modalOpen,
+    handleClose,
+    handleOpen,
+  } = useAuthContext();
   const [content, setContent] = useState("");
   const [state, setState] = useState({
     name: "",
@@ -36,6 +63,7 @@ const Basic = ({ user, changeTab }) => {
     plans: [],
     new_profile_image: "",
     new_cover: "",
+    bio: "",
   });
 
   const showimage = (image) => {
@@ -71,6 +99,7 @@ const Basic = ({ user, changeTab }) => {
     let formData = new FormData();
     formData.append("name", state.name);
     formData.append("role_id", 2);
+    formData.append("description", state.desc);
     formData.append(
       "cover_photo",
       state.new_cover === "" ? state.cover : state.new_cover
@@ -106,7 +135,7 @@ const Basic = ({ user, changeTab }) => {
       plans: user?.subscription_plans || [],
       region_id: user?.user_info?.region?.id || user?.user?.region_id,
     }));
-    setContent(user?.user_info?.bio || "nonw");
+    setContent(user?.user_info?.bio);
   }, [user]);
 
   return (
@@ -123,9 +152,10 @@ const Basic = ({ user, changeTab }) => {
           Basics
         </Typography>
         <Typography gutterBottom textAlign="center">
-          Set your creator details
+          Set your creator details helow
         </Typography>
       </Grid>
+
       <Grid
         item
         container
@@ -217,7 +247,7 @@ const Basic = ({ user, changeTab }) => {
                       src={
                         (state.new_profile_image &&
                           showimage(state.new_profile_image)) ||
-                        state.profile
+                        getFullUrl(state.profile)
                       }
                       alt="Avatar"
                       className="image circle-img"
@@ -266,7 +296,7 @@ const Basic = ({ user, changeTab }) => {
                       <img
                         src={
                           (state.new_cover && showimage(state.new_cover)) ||
-                          state.cover ||
+                          getFullUrl(state.cover) ||
                           defaultCover
                         }
                         alt="div"
@@ -488,6 +518,24 @@ const Basic = ({ user, changeTab }) => {
           </CardContent>
         </Card>
       </Grid>
+      <Modal
+        open={modalOpen}
+        onClose={() => {
+          handleClose();
+        }}
+        aria-labelledby="parent-modal-title"
+        aria-describedby="parent-modal-description">
+        <Box sx={{ ...style, width: 400 }}>
+          <h2 id="parent-modal-title">
+            <AutoAwesomeIcon />
+            Success Message!
+          </h2>
+
+          <p id="parent-modal-description">
+            Success Fully Updated to Creator !
+          </p>
+        </Box>
+      </Modal>
     </Grid>
   );
 };

@@ -18,13 +18,14 @@ import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
-import Editor from "./../components/Editor";
+import Editor from "./Editor";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import "../assets/style.css";
 import { useAuthContext } from "../context/AuthContext";
+import { getFullUrl } from "../helpers/Constant";
 
 const useStyles = makeStyles((theme) => ({
   tierImage: {
@@ -55,8 +56,13 @@ let initialdata = {
 const Tiers = () => {
   const classes = useStyles();
   const { user } = useAuthContext();
-  const { getSubscriptions, subscriptions, isloading, createSubscriptions } =
-    useSubscriptionContext();
+  const {
+    getSubscriptions,
+    subscriptions,
+    updateSubscription,
+    isloading,
+    createSubscriptions,
+  } = useSubscriptionContext();
   // console.log(data)
   const [state, setState] = React.useState(initialdata);
   // const [open, setOpen] = React.useState(false);
@@ -95,11 +101,25 @@ const Tiers = () => {
       editDialog: false,
     });
   };
-  const edithandleOpen = (e) => {
+  const edithandleOpen = (id) => {
+    const subscription = subscriptions.filter((item) => item.id === id)[0];
+
     setState({
-      ...state,
+      subcriptPlans: [],
+      newDialog: false,
+      level: subscription?.level,
+      price: subscription?.price,
+      image: getFullUrl(subscription?.image),
+      desc: subscription?.desc,
       editDialog: true,
+      id: id,
+      isError: {
+        title: "",
+        price: "",
+        image: "",
+      },
     });
+    setContent(subscription?.description);
   };
 
   // console.log(state)
@@ -206,10 +226,33 @@ const Tiers = () => {
     //   desc: state.desc,
     // }
     // console.log(newformData)
-    createSubscriptions(formData);
-    setState((prevState) => ({
-      initialdata,
-    }));
+    try {
+      createSubscriptions(formData);
+      setState(initialdata);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const updateTier = () => {
+    const formData = new FormData();
+    formData.append("level", state.level);
+    formData.append("price", state.price);
+    formData.append("image", state.image);
+    formData.append("description", state.desc);
+    // const newformData = {
+    //   level: state.title,
+    //   price: state.price,
+    //   image: state.image,
+    //   desc: state.desc,
+    // }
+    // console.log(newformData)
+    try {
+      updateSubscription(formData, state?.id);
+      setState(initialdata);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   if (user.role === "user") {
@@ -330,7 +373,7 @@ const Tiers = () => {
                                 <a
                                   href="#"
                                   className="blue-link"
-                                  onClick={edithandleOpen}
+                                  onClick={() => edithandleOpen(id)}
                                   data-name="editPlan">
                                   Edit Tier
                                 </a>
@@ -509,10 +552,9 @@ const Tiers = () => {
                 required
                 id="outlined-required"
                 label="Required"
-                defaultValue="Official Patron"
-                placeholder="Official Patron"
                 color="info"
                 name="level"
+                defaultValue={state.level}
                 onChange={EditformInputValue}
               />
             </Grid>
@@ -527,7 +569,7 @@ const Tiers = () => {
                 required
                 id="outlined-required"
                 label="Required"
-                defaultValue="Official Patron"
+                defaultValue={state.price}
                 placeholder="300000"
                 color="info"
                 name="price"
@@ -568,7 +610,7 @@ const Tiers = () => {
           <Button onClick={edithandleClose} data-name="editPlan">
             Cancel
           </Button>
-          <Button onClick={() => console.log("sure")}>Save</Button>
+          <Button onClick={updateTier}>Save</Button>
         </DialogActions>
       </Dialog>
     </>

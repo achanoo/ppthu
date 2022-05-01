@@ -104,6 +104,46 @@ const SubscriptionProvider = ({ children }) => {
     }
   };
 
+  const updateSubscription = async (data, id) => {
+    //console.log(data);
+
+    //console.log(formData)
+
+    dispatch({ type: "SET_LOADING" });
+    try {
+      const response = await axios({
+        method: "PUT",
+        url: `${BaseUrl}/subscription-plan/${id}`,
+        data: data,
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (response.data.data) {
+        const payload = response.data.data;
+        dispatch({ type: "NEWDATA_LOADED", payload: payload });
+        dispatch({ type: "UNSET_LOADING" });
+      }
+
+      //   // axios
+      //   //   .post(`${BaseUrl}/subscription-plan`, formData, {
+      //   //     headers: {
+      //   //       Accept: 'application/json',
+      //   //       'Content-Type': 'multipart/form-data',
+      //   //       Authorization: `Bearer ${token}`,
+      //   //     },
+      //   //   })
+      //   //   .then((res) => res.json())
+      //   //   .then((res) => {
+      //   //     console.log(res)
+      //   //   })
+    } catch (error) {
+      console.log("there is error!");
+    }
+  };
+
   const getCategories = async () => {
     dispatch({ type: "SET_LOADING" });
 
@@ -165,6 +205,7 @@ const SubscriptionProvider = ({ children }) => {
         getUserSubscriptions,
         getEarningOverview,
         terminateSubscription,
+        updateSubscription,
       }}>
       {children}
     </SubscriptionContext.Provider>

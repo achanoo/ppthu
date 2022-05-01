@@ -194,8 +194,6 @@ const Register = () => {
         </div>
       )}
       <div className={`${classes.container} FaintBox `}>
-        <Google />
-        <FacebookLogin />
         <Button
           onClick={RegisterByPhone}
           fullWidth

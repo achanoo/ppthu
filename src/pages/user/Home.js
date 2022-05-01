@@ -19,6 +19,7 @@ import { getFullUrl, BaseUrl } from "../../helpers/Constant";
 import api from "../../services/apifinal.service";
 import axios from "axios";
 import { PostBlogProvider } from "../../context/PostBlogContext";
+import SuccessAlert from "./../../layout/SuccessAlert";
 
 const useStyle = makeStyles((theme) => ({
   root: {
@@ -66,7 +67,7 @@ const useStyle = makeStyles((theme) => ({
 
 //first user view/ not creator view
 const UserHome = () => {
-  const { token, user } = useAuthContext();
+  const { token, user, success_status } = useAuthContext();
   const history = useHistory();
   const classes = useStyle();
   const theme = useTheme();
@@ -107,7 +108,12 @@ const UserHome = () => {
     };
   }, []);
 
-  //
+  React.useEffect(() => {
+    if (success_status) {
+      return <SuccessAlert />;
+    }
+  }, []);
+
   return (
     <div className={classes.wrapper}>
       <section className={classes.container}>
