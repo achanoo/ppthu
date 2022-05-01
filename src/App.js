@@ -63,39 +63,43 @@ function App() {
         <Route path="/register/phone" component={PhoneSignUp} />
         <Route path="/login/phone" component={PhoneLogin} />
 
-        <Route path="/edit" component={Edit} />
-        <Route path="/rsmanager" component={RSManager} />
-        <Route path="/earnings-overview" component={EarningsOverview} />
-        <Route path="/membership" component={Membership} />
-        <Route
+        <Route exact={true} path="/edit" component={Edit} />
+        <Route exact={true} path="/rsmanager" component={RSManager} />
+        <Route exact={true} path="/earnings-overview" component={EarningsOverview} />
+        <Route exact={true} path="/membership" component={Membership} />
+        <Route exact={true}
           path="/earnings-overview-detail"
           component={EarningsOverviewDetail}
         />
-        <Route path="/membership" component={Membership} />
+        <Route exact={true} path="/membership" component={Membership} />
 
-        <Route path="/home">
+        <Route exact={true} path="/home">
           <UserHome />
         </Route>
 
-        <Route path="/user-profile">
+        <Route exact={true} path="/user-profile">
           <UserProfile />
         </Route>
 
-        <Route path="/creator-home">
+        <Route exact={true} path="/creator-home">
           <CreatorHome />
+        </Route>
+
+        <Route exact={true} path="/faq">
+          <Faq />
         </Route>
 
         <Route exact={true} path="/:username">
           <CreatorProfile />
         </Route>
 
-        <Route path="/join/:username">
+        <Route extact={true} path="/join/:username">
           <CheckOutModel />
         </Route>
 
         {/* <Route path='/creator-profile'>
           <CreatorProfile />
-        </Route> */}
+        </Route> 
         <Route path="/faq">
           <Faq />
         </Route>
@@ -103,35 +107,35 @@ function App() {
           <TermsAndCondition />
         </Route>
 
+       
+
+         <Route path='/gi'>
+          <ImageGrid />
+        </Route> */}
+
         <Route path="/creator-edit/">
           <EditProfile />
         </Route>
 
-        {/* <Route path='/gi'>
-          <ImageGrid />
-        </Route> */}
-
         <Route exact={true} path="/post-create" component={PostCreate} />
 
-        <Route path="/post-detail/:id">
+        <Route exact={true} path="/post-detail/:id">
           <PostDetail />
         </Route>
 
-        <Route path="/post-edit/:id">
+        <Route exact={true} path="/post-edit/:id">
           <PostEdit />
         </Route>
 
         <Route extact={true} path="/step/1">
           <StepOne />
         </Route>
-        <Route path="/step/2">
+        <Route exact={true} path="/step/2">
           <StepTwo />
         </Route>
 
-        <Route path="/faq">
-          <Faq />
-        </Route>
-        <Route path="/policy/legal">
+       
+        <Route exact={true} path="/policy/legal">
           <TermsAndCondition />
         </Route>
 
