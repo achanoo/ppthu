@@ -209,7 +209,7 @@ const SearchInput = (props) => {
             {result.map((item, index) => {
               return (
                 <Link
-                  to={`/creator-profile/${item.user_info.profile_url}`}
+                  to={`/${item.user_info.profile_url}`}
                   onClick={() => {
                     setResult([]);
                     setOpen(false);

@@ -9,6 +9,7 @@ import { useAuthContext } from "../../context/AuthContext";
 
 const Profile = () => {
   const { username } = useParams();
+
   const { token, searchByprofileUrl } = useAuthContext();
 
   const history = useHistory();

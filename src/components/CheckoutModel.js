@@ -132,7 +132,7 @@ const CheckOutModel = () => {
   const [content, setContent] = useState("");
   const [collapse, setCollapse] = useState(false);
   const query = new URLSearchParams(useLocation().search);
-  // console.log(moment().add(1, "month"));
+  console.log(username);
   const [data, setData] = React.useState({
     plan: {
       price: 0,
@@ -283,9 +283,7 @@ const CheckOutModel = () => {
       <div className={classes.container}>
         <Typography variant="h5" gutterBottom component="div" paddingBottom={4}>
           <span>Complete your monthly payment to </span>
-          <Link
-            to={`/creator-profile/${username}`}
-            className={classes.creatorName}>
+          <Link to={`/${username}`} className={classes.creatorName}>
             {`${username}`}
           </Link>
         </Typography>
@@ -430,7 +428,7 @@ const CheckOutModel = () => {
                   <Button
                     style={{ display: "none" }}
                     onClick={() =>
-                      history.push(`/creator-profile/$
+                      history.push(`/$
                       {username}`)
                     }>
                     Edit

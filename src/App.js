@@ -85,7 +85,7 @@ function App() {
           <CreatorHome />
         </Route>
 
-        <Route path="/creator-profile/:username">
+        <Route exact={true} path="/:username">
           <CreatorProfile />
         </Route>
 
