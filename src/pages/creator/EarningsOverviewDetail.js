@@ -5,7 +5,7 @@ import { Box } from "@mui/system";
 import { makeStyles } from "@mui/styles";
 import { Grid, Typography, Card, CardContent, TextField } from "@mui/material";
 import { CustomButtonNormal } from "../../layout/CutomButtonNormal";
-import Paper from "@material-ui/core/Paper";
+import Paper from "@mui/material/Paper";
 import {
   ArgumentAxis,
   ValueAxis,

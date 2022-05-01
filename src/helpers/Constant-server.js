@@ -7,11 +7,12 @@ function validateURL(url) {
   const parsed = new URL(url);
   return ["https:", "http:"].includes(parsed.protocol) ? url : "invaluid route";
 }
-const backendurl = 'http://pantpoe.com';
-export const BaseUrl = validateURL(`${backendurl}/api/v1`);
+//adding
+
+export const BaseUrl = validateURL("http://localhost:8000/api/v1");
 //export const single_product_url = `https://course-api.com/react-store-single-product?id=`
 
-export const ImgUrl = `${backendurl}storage/`;
+export const ImgUrl = "http://localhost:8000/storage/";
 
 export const customFetcher = async (url = "") => {
   const response = await fetch(`https://rlp-proxy.herokuapp.com/v2?url=${url}`);
@@ -21,14 +22,14 @@ export const customFetcher = async (url = "") => {
 };
 
 export const getFullUrl = (path) => {
-  return `${backendurl}/storage/` + path;
+  return `http://localhost:8000/storage/` + path;
 };
 export const FrontEndBaseUrl = "https://localhost:3000/";
 
 export const RBaseUrl = "https://localhost:3000/creator-profile/";
 
 export const profileUrl = (keyword) => {
-  return `https://localhost:3000/${keyword}`;
+  return `https://localhost:3000/creator-profile/${keyword}`;
 };
 
 export const changeSocials = (data) => {
