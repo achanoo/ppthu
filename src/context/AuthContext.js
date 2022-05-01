@@ -85,7 +85,10 @@ const AuthProvider = ({ children }) => {
         data = error.response.data.errors;
         dispatch({
           type: "LOGIN_FAILED",
-          payload: { ...data, message: "invalid" },
+          payload: {
+            ...data,
+            message: "Account is not found!Please try again!",
+          },
         });
       }
 
@@ -93,7 +96,10 @@ const AuthProvider = ({ children }) => {
         data = error.response.data.errors;
         dispatch({
           type: "LOGIN_FAILED",
-          payload: { ...data, message: "Invalid Action!" },
+          payload: {
+            ...data,
+            message: "Account is invalid at the moment!Try again!",
+          },
         });
       }
 

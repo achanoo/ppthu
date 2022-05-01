@@ -366,10 +366,11 @@ const Post = ({ id, post, postPage, ...props }) => {
               {post?.creator.user_info.user.name}
             </Typography>
             <span>
-              {moment(post?.created_at).fromNow(true)} .
-              {post?.type === 3 && <SiOpenaccess />}
-              {post?.type === 2 && <HiUserGroup />}
-              {post?.type === 1 && <MdOutlinePublic />}
+              {(post?.created_at && moment(post?.created_at).fromNow(true)) ||
+                ""}
+              {Number(post?.type) === 3 && <SiOpenaccess />}||
+              {Number(post?.type) === 2 && <HiUserGroup />}||
+              {Number(post?.type === 1) && <MdOutlinePublic />}||''
             </span>
           </Box>
         </Box>
