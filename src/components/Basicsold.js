@@ -308,7 +308,7 @@ const Basic = ({ user, changeTab }) => {
                 </Grid>
                 <Grid item container>
                   <Grid item xs={4} sm={4} md={4} alignSelf="center">
-                    <p className="input-label"> Patreon page URL </p>
+                    <p className="input-label"> PantpoeThu page URL </p>
                   </Grid>
                   <Grid item xs={8} sm={8} md={8}>
                     <p style={{ marginTop: "20px", display: "inline-block" }}>
@@ -345,7 +345,7 @@ const Basic = ({ user, changeTab }) => {
               <Grid container direction="row" spacing={3}>
                 <Grid item container>
                   <Grid alignSelf="center">
-                    <p className="input-label"> About your Patreon page </p>
+                    <p className="input-label"> About your Pantpoethu page </p>
                     <p className="input-required subtitle">Required</p>
                     <span className="subtitle">
                       This is the first thing potential patrons will see when
