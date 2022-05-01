@@ -120,6 +120,7 @@ const Tiers = () => {
       },
     });
     setContent(subscription?.description);
+    setPreview(getFullUrl(subscription.image));
   };
 
   // console.log(state)
@@ -241,6 +242,8 @@ const Tiers = () => {
     try {
       createSubscriptions(formData);
       setState(initialdata);
+      setPreview("");
+      setContent("");
     } catch (error) {
       console.log(error);
     }
@@ -263,6 +266,8 @@ const Tiers = () => {
     try {
       updateSubscription(formData, state?.id);
       setState(initialdata);
+      setPreview("");
+      setContent("");
     } catch (error) {
       console.log(error);
     }
@@ -490,8 +495,8 @@ const Tiers = () => {
                 required
                 id="outlined-required"
                 label="Required"
-                defaultValue="Official Patron"
-                placeholder="Official Patron"
+                defaultValue=""
+                placeholder="Please enter plan  name"
                 color="info"
                 name="level"
                 onChange={NewformInputValue}
@@ -508,8 +513,8 @@ const Tiers = () => {
                 required
                 id="outlined-required"
                 label="Required"
-                defaultValue="Official Patron"
-                placeholder="300000"
+                defaultValue=""
+                placeholder="Please enter Price!"
                 color="info"
                 name="price"
                 onChange={NewformInputValue}
@@ -605,15 +610,17 @@ const Tiers = () => {
               <p className="input-label"> Tier Image </p>
             </Grid>
             <Grid item xs={12} sm={12} md={8} style={{ alignSelf: "center" }}>
-              <input
-                accept="image/*"
-                className=""
-                id="contained-button-file"
-                type="file"
-                name="image"
-                onChange={EditformInputValue}
-              />
-
+              <Box className={classes.tierImage}>
+                <input
+                  accept="image/*"
+                  className=""
+                  id="contained-button-file"
+                  type="file"
+                  name="image"
+                  onChange={EditformInputValue}
+                />
+                <Avatar alt="Remy Sharp" src={preview} />
+              </Box>
               <label htmlFor="contained-button-file"></label>
             </Grid>
           </Grid>

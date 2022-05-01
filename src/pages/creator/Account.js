@@ -366,19 +366,31 @@ const AccountSetting = ({ user, freshData }) => {
     setState((prev) => ({
       ...prev,
       name: user?.user?.name || user?.user_info?.user?.name,
-      email: user?.user?.email || user?.user_info?.email || "",
+      email: user?.user?.email || user?.user_info?.user?.email,
 
       gender: user?.gender || user?.user_info?.gender || "",
-      day: moment(user?.user_info?.dob || user?.dob).get("date") || "",
-      month: moment(user?.user_info?.dob || user?.dob).get("month") + 1 || "",
-
-      year: moment(user?.user_info?.dob || user?.dob).get("year") || "",
-
+      day: user?.user_info?.dob
+        ? moment(user?.user_info?.dob).get("date")
+        : "" || user?.user_info?.dob
+        ? moment(user?.dob).get("date")
+        : "",
+      month: user?.user_info?.dob
+        ? moment(user?.user_info?.dob).get("month") + 1
+        : "" || user?.user_info?.dob
+        ? moment(user?.dob).get("month") + 1
+        : "",
+      year: user?.user_info?.dob
+        ? moment(user?.user_info?.dob).get("year")
+        : "" || user?.user_info?.dob
+        ? moment(user?.dob).get("year")
+        : "",
       list:
         changeSocials(user?.user_info?.socials || user?.socials || []) || [],
       region_id: user?.region?.id || user?.user_info?.region?.id || 0,
       address: user?.address || user?.user_info?.address,
-      phone_1: `+${user?.user_info?.user.phone_no || user?.user.phone_no}`,
+      phone_1: `+${
+        user?.user_info?.user?.phone_no || user?.user?.phone_no || ""
+      }`,
       socials: user?.socials || user?.user_info?.socials || [],
     }));
   }, [user]);

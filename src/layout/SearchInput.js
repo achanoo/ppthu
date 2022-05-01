@@ -83,7 +83,7 @@ const SearchResult = styled("div")(({ theme }) => ({
   [theme.breakpoints.up("xs")]: {
     position: "static",
     zIndex: "1000",
-    width: "500px",
+    width: "300px",
   },
   [theme.breakpoints.only("xs")]: {
     position: "static",
@@ -121,6 +121,8 @@ const SearchInput = (props) => {
   const [error, setError] = React.useState("");
   const [result, setResult] = React.useState([]);
 
+  const [isMore, setIsMore] = React.useState(true);
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
     console.log(event.target.value.length);
@@ -137,6 +139,10 @@ const SearchInput = (props) => {
   const sanitizedData = (data) => ({
     __html: DOMPurify.sanitize(data),
   });
+
+  const toggleReadMore = () => {
+    setIsMore(!isMore);
+  };
 
   const getData = async (keyword) => {
     let cancel;
@@ -223,7 +229,8 @@ const SearchInput = (props) => {
                       <span
                         style={{ fontSize: "0.825rem" }}
                         dangerouslySetInnerHTML={sanitizedData(
-                          item?.user_info?.bio
+                          item?.user_info?.bio.slice(0, 80) + "..." ||
+                            item?.user_info?.bio
                         )}></span>
                     </div>
                   </BoxItem>
