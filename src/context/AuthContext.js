@@ -177,7 +177,7 @@ const AuthProvider = ({ children }) => {
         method: "post",
         url: `${BaseUrl}/auth/register`,
         headers: {
-          "Access-Control-Allow-Origin": "http://pantpoe.com/api/v1",
+          "Access-Control-Allow-Origin": "http://adminpanel.pantpoe.com/api/v1",
         },
         data: formdata,
       });
@@ -385,7 +385,8 @@ const AuthProvider = ({ children }) => {
         handleClose,
         handleOpen,
         modalOpen,
-      }}>
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

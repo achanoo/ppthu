@@ -89,21 +89,21 @@ function App() {
           <CreatorProfile />
         </Route>
 
-        <Route path="/join/:username">
+        <Route exact={true} path="/join/:username">
           <CheckOutModel />
         </Route>
 
         {/* <Route path='/creator-profile'>
           <CreatorProfile />
         </Route> */}
-        <Route path="/faq">
+        <Route exact={true} path="/faq">
           <Faq />
         </Route>
-        <Route path="/policy/legal">
+        <Route exact={true} path="/policy/legal">
           <TermsAndCondition />
         </Route>
 
-        <Route path="/creator-edit/">
+        <Route exact={true} path="/creator-edit/">
           <EditProfile />
         </Route>
 

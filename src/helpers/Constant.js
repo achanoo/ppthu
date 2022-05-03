@@ -7,7 +7,7 @@ function validateURL(url) {
   const parsed = new URL(url);
   return ["https:", "http:"].includes(parsed.protocol) ? url : "invaluid route";
 }
-const backendurl = 'http://pantpoe.com';
+const backendurl = "http://adminpanel.pantpoe.com";
 export const BaseUrl = validateURL(`${backendurl}/api/v1`);
 //export const single_product_url = `https://course-api.com/react-store-single-product?id=`
 
