@@ -21,7 +21,7 @@ import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import ImageGrid from "./../components/Gridview";
 import { usePostContext } from "../context/PostContext";
 import { useAuthContext } from "../context/AuthContext";
-import { getFullUrl } from "../helpers/Constant";
+import { getFullUrl, FrontEndBaseUrl } from "../helpers/Constant";
 import { Audio } from "./Audio";
 import LinkPreview from "./LinkPreview";
 import moment from "moment";
@@ -540,7 +540,8 @@ const PostDetailModel = (props) => {
               <video
                 src={getFullUrl(video)}
                 style={{ width: "100%", height: "auto" }}
-                controls></video>
+                controls
+              ></video>
               {/* file upload are include end */}
             </Box>
           )}
@@ -569,14 +570,16 @@ const PostDetailModel = (props) => {
                   style={{
                     opacity: content.length > 250 ? "1" : "0",
                     display: more ? "block" : "none",
-                  }}></div>
+                  }}
+                ></div>
                 <div
                   className={classes.postContent}
                   style={{
                     overflow: more ? "hidden" : "visible",
                     height: more ? "80px" : "100%",
                     transition: "ease-in",
-                  }}>
+                  }}
+                >
                   <p>{content}</p>
                 </div>
               </div>
@@ -584,7 +587,8 @@ const PostDetailModel = (props) => {
               {content.length > 250 && (
                 <span
                   className={classes.readmore}
-                  onClick={() => setMore(!more)}>
+                  onClick={() => setMore(!more)}
+                >
                   {" "}
                   {more ? "continue reading" : "less reading"}
                 </span>
@@ -608,7 +612,8 @@ const PostDetailModel = (props) => {
               boxShadow: "none",
               color: "#444",
               marginTop: "24px",
-            }}>
+            }}
+          >
             announcement
           </Button>
         </Box>
@@ -620,7 +625,8 @@ const PostDetailModel = (props) => {
                 onClick={() => {
                   LikeHandle(postid);
                   props.changeData();
-                }}>
+                }}
+              >
                 <FavoriteBorderIcon fontSize="large" />
               </IconButton>
             )}
@@ -631,7 +637,8 @@ const PostDetailModel = (props) => {
                 onClick={() => {
                   deleteLike(postid);
                   props.changeData();
-                }}>
+                }}
+              >
                 <FavoriteOutlinedIcon fontSize="large" sx={{ color: "red" }} />
               </IconButton>
             )}
@@ -647,15 +654,17 @@ const PostDetailModel = (props) => {
               anchorOrigin={{
                 vertical: "top",
                 horizontal: "right",
-              }}>
+              }}
+            >
               <Box
                 sx={{
                   border: "1px solid rgb(229,227,221)",
                   p: 1,
                   bgcolor: "background.paper",
                   borderRadius: "4px",
-                }}>
-                {`https://localhost:3000/post-detail/${postid}`}
+                }}
+              >
+                {`${FrontEndBaseUrl}post-detail/${postid}`}
               </Box>
             </Popover>
 
@@ -727,7 +736,8 @@ const PostDetailModel = (props) => {
                     {editComment !== comment_id ? (
                       <Box
                         className={classes.commentDetail}
-                        style={{ width: `-webkit-fill-available` }}>
+                        style={{ width: `-webkit-fill-available` }}
+                      >
                         <h4>{name}</h4>
                         <p>{saying}</p>
                         {!iscommentlike ? (
@@ -735,10 +745,12 @@ const PostDetailModel = (props) => {
                             onClick={() => {
                               CommentLikeHandle(comment_id);
                               props.changeData();
-                            }}>
+                            }}
+                          >
                             <StyledBadge
                               badgeContent={comment_like_counts}
-                              color="secondary">
+                              color="secondary"
+                            >
                               <FavoriteBorderIcon fontSize="small" />
                             </StyledBadge>
                           </IconButton>
@@ -747,17 +759,20 @@ const PostDetailModel = (props) => {
                             onClick={() => {
                               CommentlikeRemoveHandle(comment_id);
                               props.changeData();
-                            }}>
+                            }}
+                          >
                             <StyledBadge
                               badgeContent={comment_like_counts}
-                              color="secondary">
+                              color="secondary"
+                            >
                               <FavoriteOutlinedIcon fontSize="small" />
                             </StyledBadge>
                           </IconButton>
                         )}
                         <IconButton
                           aria-label="Example"
-                          onClick={() => setShowReply(comment_id)}>
+                          onClick={() => setShowReply(comment_id)}
+                        >
                           <ChatBubbleOutlineIcon fontSize="small" />
                         </IconButton>
 
@@ -766,7 +781,8 @@ const PostDetailModel = (props) => {
                             aria-label="Example"
                             onClick={() =>
                               EditComment(postid, comment_id, saying)
-                            }>
+                            }
+                          >
                             <EditIcon fontSize="small" />
                           </IconButton>
                         )}
@@ -777,7 +793,8 @@ const PostDetailModel = (props) => {
                             onClick={() => {
                               CommentDelete(comment_id);
                               props.changeData();
-                            }}>
+                            }}
+                          >
                             <DeleteIcon fontSize="small" />
                           </IconButton>
                         )}
@@ -785,7 +802,8 @@ const PostDetailModel = (props) => {
                     ) : (
                       <Box
                         className={classes.commentDetail}
-                        style={{ width: `-webkit-fill-available` }}>
+                        style={{ width: `-webkit-fill-available` }}
+                      >
                         <h4>{name}</h4>
                         {/*  comment input handleing start  */}
                         <div style={{ marginRight: "8px" }}>
@@ -807,9 +825,8 @@ const PostDetailModel = (props) => {
                             type="submit"
                             variant="outlined"
                             className="comments-button"
-                            disabled={
-                              editCommentText.length > 0 ? false : true
-                            }>
+                            disabled={editCommentText.length > 0 ? false : true}
+                          >
                             Save
                           </Button>
                           <Button
@@ -819,9 +836,8 @@ const PostDetailModel = (props) => {
                             type="submit"
                             variant="outlined"
                             className="comments-button"
-                            disabled={
-                              editCommentText.length > 0 ? false : true
-                            }>
+                            disabled={editCommentText.length > 0 ? false : true}
+                          >
                             Cancel
                           </Button>
                         </div>
@@ -875,7 +891,8 @@ const PostDetailModel = (props) => {
                                 variant="outlined"
                                 className="comments-button"
                                 color="secondary"
-                                disabled={reply.length > 0 ? false : true}>
+                                disabled={reply.length > 0 ? false : true}
+                              >
                                 Cancel
                               </Button>
                               <Button
@@ -884,7 +901,8 @@ const PostDetailModel = (props) => {
                                 type="submit"
                                 variant="outlined"
                                 className="comments-button"
-                                disabled={reply.length > 0 ? false : true}>
+                                disabled={reply.length > 0 ? false : true}
+                              >
                                 Save
                               </Button>
                             </div>
@@ -900,7 +918,8 @@ const PostDetailModel = (props) => {
                                 aria-label="Example"
                                 onClick={() =>
                                   editReplyHandle(comment_id, rid, reply)
-                                }>
+                                }
+                              >
                                 <EditIcon fontSize="small" />
                               </IconButton>
                             )}
@@ -910,7 +929,8 @@ const PostDetailModel = (props) => {
                                 onClick={() => {
                                   ReplyDelete(rid);
                                   props.changeData();
-                                }}>
+                                }}
+                              >
                                 <DeleteIcon fontSize="small" />
                               </IconButton>
                             )}
@@ -933,7 +953,8 @@ const PostDetailModel = (props) => {
                 <div
                   className={`${
                     comment_id === showReply ? classes.reply : classes.hideReply
-                  }`}>
+                  }`}
+                >
                   <div className={classes.replyInfo}>
                     <Avatar
                       alt={`${authUser.name}`}
@@ -962,7 +983,8 @@ const PostDetailModel = (props) => {
                           type="submit"
                           variant="outlined"
                           className="comments-button"
-                          disabled={reply.length > 0 ? false : true}>
+                          disabled={reply.length > 0 ? false : true}
+                        >
                           Reply
                         </Button>
                       </div>
@@ -984,7 +1006,8 @@ const PostDetailModel = (props) => {
 
               <Box
                 className={classes.commentDetail}
-                style={{ width: `-webkit-fill-available` }}>
+                style={{ width: `-webkit-fill-available` }}
+              >
                 <h4>{authUser.name}</h4>
                 {/*  comment input handleing start  */}
                 <div style={{ marginRight: "3px" }}>
@@ -1006,7 +1029,8 @@ const PostDetailModel = (props) => {
                     type="submit"
                     variant="outlined"
                     className="comments-button"
-                    disabled={comment.length > 0 ? false : true}>
+                    disabled={comment.length > 0 ? false : true}
+                  >
                     Post
                   </Button>
                 </div>

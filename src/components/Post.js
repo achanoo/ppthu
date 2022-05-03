@@ -20,7 +20,7 @@ import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import ImageGrid from "./../components/Gridview";
 import { usePostContext } from "../context/PostContext";
 import { useAuthContext } from "../context/AuthContext";
-import { getFullUrl, BaseUrl } from "../helpers/Constant";
+import { getFullUrl, BaseUrl, FrontEndBaseUrl } from "../helpers/Constant";
 import { Audio } from "./Audio";
 import LinkPreview from "./LinkPreview";
 import moment from "moment";
@@ -362,7 +362,8 @@ const Post = ({ id, post, postPage, ...props }) => {
             <Typography
               variant="h6"
               style={{ fontWeight: "800" }}
-              component="h2">
+              component="h2"
+            >
               {post?.creator.user_info.user.name}
             </Typography>
             <span>
@@ -404,7 +405,8 @@ const Post = ({ id, post, postPage, ...props }) => {
               <video
                 src={getFullUrl(post?.video)}
                 style={{ width: "100%", height: "auto" }}
-                controls></video>
+                controls
+              ></video>
               {/* file upload are include end */}
             </Box>
           )}
@@ -433,14 +435,16 @@ const Post = ({ id, post, postPage, ...props }) => {
                   style={{
                     opacity: post?.content.length > 250 ? "1" : "0",
                     display: more ? "block" : "none",
-                  }}></div>
+                  }}
+                ></div>
                 <div
                   className={classes.postContent}
                   style={{
                     overflow: more ? "hidden" : "visible",
                     height: more ? "80px" : "100%",
                     transition: "ease-in",
-                  }}>
+                  }}
+                >
                   <Typography component="div" vairant="title1">
                     {post?.content}
                   </Typography>
@@ -450,7 +454,8 @@ const Post = ({ id, post, postPage, ...props }) => {
               {post?.content.length > 250 && (
                 <span
                   className={classes.readmore}
-                  onClick={() => setMore(!more)}>
+                  onClick={() => setMore(!more)}
+                >
                   {" "}
                   {more ? "continue reading" : "less reading"}
                 </span>
@@ -468,7 +473,8 @@ const Post = ({ id, post, postPage, ...props }) => {
               boxShadow: "none",
               color: "#444",
               marginTop: "24px",
-            }}>
+            }}
+          >
             announcement
           </Button>
         </Box>
@@ -497,15 +503,17 @@ const Post = ({ id, post, postPage, ...props }) => {
               anchorOrigin={{
                 vertical: "top",
                 horizontal: "right",
-              }}>
+              }}
+            >
               <Box
                 sx={{
                   border: "1px solid rgb(229,227,221)",
                   p: 1,
                   bgcolor: "background.paper",
                   borderRadius: "4px",
-                }}>
-                {`https://localhost:3000/post-detail/${id}`}
+                }}
+              >
+                {`${FrontEndBaseUrl}/post-detail/${id}`}
               </Box>
             </Popover>
 

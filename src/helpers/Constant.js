@@ -23,12 +23,12 @@ export const customFetcher = async (url = "") => {
 export const getFullUrl = (path) => {
   return `${backendurl}/storage/` + path;
 };
-export const FrontEndBaseUrl = "https://localhost:3000/";
+export const FrontEndBaseUrl = "http://pantpoe.com/";
 
-export const RBaseUrl = "https://localhost:3000/creator-profile/";
+export const RBaseUrl = "http://pantpoe.com/creator-profile/";
 
 export const profileUrl = (keyword) => {
-  return `https://localhost:3000/${keyword}`;
+  return `http://pantpoe.com/${keyword}`;
 };
 
 export const changeSocials = (data) => {

@@ -12,7 +12,7 @@ function AlertMessage({ type = "success", msg = "success message", alert }) {
       resetAlert();
     }, 2000);
     return () => clearTimeout(timeout);
-  }, [alert]);
+  }, [resetAlert]);
 
   return (
     <Stack sx={{ width: "100%" }} mb={2} spacing={2}>

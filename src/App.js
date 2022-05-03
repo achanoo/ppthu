@@ -93,23 +93,9 @@ function App() {
           <CheckOutModel />
         </Route>
 
-        {/* <Route path='/creator-profile'>
-          <CreatorProfile />
-        </Route> */}
-        <Route exact={true} path="/faq">
-          <Faq />
-        </Route>
-        <Route exact={true} path="/policy/legal">
-          <TermsAndCondition />
-        </Route>
-
         <Route exact={true} path="/creator-edit/">
           <EditProfile />
         </Route>
-
-        {/* <Route path='/gi'>
-          <ImageGrid />
-        </Route> */}
 
         <Route exact={true} path="/post-create" component={PostCreate} />
 
